@@ -6,19 +6,21 @@ public class Main extends PApplet {
 
     public void setup() {
         BayernMunchen = new Team("http://api.football-data.org/v1/teams/5");
-        println(BayernMunchen.fixtures);
+
     }
 
     public void draw() {
         background(0);
         smooth();
         pushMatrix();
-        //shape(BayernMunchen.emblem);
         textSize(32);
-        text(BayernMunchen.name, 100, 100);
+
+        int i = 1;
+        for (Player player: BayernMunchen.players) {
+            text(player.name, 100, i *30);
+            i++;
+        }
         popMatrix();
-
-
     }
 
     public void settings() {
