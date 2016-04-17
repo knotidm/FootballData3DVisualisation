@@ -5,8 +5,7 @@ public class Main extends PApplet {
     Team BayernMunchen;
 
     public void setup() {
-        BayernMunchen = new Team("http://api.football-data.org/v1/teams/5");
-
+        BayernMunchen = new Team("http://api.football-data.org/v1/teams/8");
     }
 
     public void draw() {
@@ -16,8 +15,17 @@ public class Main extends PApplet {
         textSize(32);
 
         int i = 1;
-        for (Player player: BayernMunchen.players) {
-            text(player.name, 100, i *30);
+//        for (Player player: BayernMunchen.players) {
+//            text(player.name, 100, i *30);
+//            text(player.jerseyNumber, 400, i *30);
+//            text(player.nationality, 500, i *30);
+//            i++;
+//        }
+
+        for (Fixture fixture: BayernMunchen.fixtures) {
+            text(fixture.date, 100, i *30);
+            text(fixture.awayTeamName, 400, i *30);
+            text(fixture.homeTeamName, 500, i *30);
             i++;
         }
         popMatrix();

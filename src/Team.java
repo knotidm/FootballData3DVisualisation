@@ -5,11 +5,10 @@ import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
-public class Team extends Main {
+public class Team {
     //JSONObject fixtures;
     ArrayList<Player> players;
-    JSONArray playersJSON;
-    String playerslink;
+    ArrayList<Fixture> fixtures;
     String name;
     String squadMarketValue;
     PShape emblem;
@@ -20,12 +19,11 @@ public class Team extends Main {
         getRequest.send();
 
         JSONObject teamContent = JSONObject.parse(getRequest.getContent());
-        //fixtures = JSONObject.parse(teamContent.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
 
-        playerslink = teamContent.getJSONObject("_links").getJSONObject("players").getString("href");
-        GetPlayers(playerslink);
+        GetPlayers(teamContent.getJSONObject("_links").getJSONObject("players").getString("href"));
+        GetFixtures(teamContent.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         name = teamContent.getString("name");
-        squadMarketValue = teamContent.getString("squadMarketValue");
+        //squadMarketValue = teamContent.getString("squadMarketValue");
         //emblem = loadShape(teamContent.getString("crestUrl"));
         //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
     }
@@ -37,8 +35,7 @@ public class Team extends Main {
         getRequest.send();
 
         JSONObject playersContent = JSONObject.parse(getRequest.getContent());
-
-        playersJSON = playersContent.getJSONArray("players");
+        JSONArray playersJSON = playersContent.getJSONArray("players");
 
         players = new ArrayList<Player>();
 
@@ -47,6 +44,21 @@ public class Team extends Main {
             players.add(new Player(playersJSON.getJSONObject(i)));
         }
 
+    }
 
+    public void GetFixtures(String link){
+        GetRequest getRequest = new GetRequest(link);
+        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
+        getRequest.send();
+
+        JSONObject fixturesContent = JSONObject.parse(getRequest.getContent());
+        JSONArray fixturesJSON = fixturesContent.getJSONArray("fixtures");
+
+        fixtures = new ArrayList<Fixture>();
+
+        for (int i = 0; i < fixturesJSON.size(); i++ )
+        {
+            fixtures.add(new Fixture(fixturesJSON.getJSONObject(i)));
+        }
     }
 }
