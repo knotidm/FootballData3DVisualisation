@@ -1,6 +1,6 @@
 import processing.data.JSONObject;
 
-public class Fixture {
+class Fixture {
 
     String date;
     String status;
@@ -9,7 +9,7 @@ public class Fixture {
     String awayTeamName;
     Result result;
 
-    public Fixture(JSONObject fixture) {
+    Fixture(JSONObject fixture) {
         date = fixture.getString("date");
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");
@@ -24,7 +24,7 @@ class Result {
     Integer goalsHomeTeam;
     Integer goalsAwayTeam;
 
-    public Result(JSONObject result) {
+    Result(JSONObject result) {
 
         if (!result.isNull("goalsHomeTeam")) {
             goalsHomeTeam = result.getInt("goalsHomeTeam");

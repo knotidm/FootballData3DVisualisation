@@ -1,6 +1,6 @@
 import processing.data.JSONObject;
 
-public class Player {
+class Player {
     String name;
     String position;
     Integer jerseyNumber;
@@ -9,7 +9,7 @@ public class Player {
     String contractUntil;
     String marketValue;
 
-    public Player(JSONObject player) {
+    Player(JSONObject player) {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber");

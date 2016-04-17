@@ -1,9 +1,21 @@
+import processing.data.JSONArray;
 import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
-public class LeagueTable {
+class LeagueTable {
     ArrayList<Standing> standings;
+
+    LeagueTable(JSONObject leagueTable){
+
+        standings = new ArrayList<Standing>();
+        JSONArray leagueTableJSON = leagueTable.getJSONArray("standings");
+
+        for (int i = 0; i < leagueTableJSON.size(); i++ )
+        {
+            standings.add(new Standing(leagueTableJSON.getJSONObject(i)));
+        }
+    }
 }
 
 class Standing {
@@ -20,7 +32,7 @@ class Standing {
     Home home;
     Away away;
 
-    public Standing(JSONObject standing){
+    Standing(JSONObject standing){
         position = standing.getInt("position");
         teamName = standing.getString("teamName");
         playedGames = standing.getInt("playedGames");
@@ -34,7 +46,6 @@ class Standing {
         home = new Home(standing.getJSONObject("home"));
         away = new Away(standing.getJSONObject("away"));
     }
-
 }
 
 class Home {
@@ -44,7 +55,7 @@ class Home {
     Integer draws;
     Integer losses;
 
-    public Home(JSONObject home){
+    Home(JSONObject home){
         goals = home.getInt("goals");
         goalsAgainst = home.getInt("goalsAgainst");
         wins = home.getInt("wins");
@@ -60,7 +71,7 @@ class Away {
     Integer draws;
     Integer losses;
 
-    public Away(JSONObject away){
+    Away(JSONObject away){
         goals = away.getInt("goals");
         goalsAgainst = away.getInt("goalsAgainst");
         wins = away.getInt("wins");

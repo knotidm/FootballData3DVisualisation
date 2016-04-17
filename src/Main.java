@@ -2,10 +2,10 @@ import processing.core.PApplet;
 
 public class Main extends PApplet {
 
-    Team BayernMunchen;
+    SoccerSeason Bundesliga;
 
     public void setup() {
-        BayernMunchen = new Team("http://api.football-data.org/v1/teams/8");
+        //Bundesliga = new SoccerSeason("http://api.football-data.org/v1/teams/5");
     }
 
     public void draw() {
@@ -16,25 +16,25 @@ public class Main extends PApplet {
 
         int i = 1;
 //        for (Player player: BayernMunchen.players) {
-//            text(player.name, 100, i *30);
-//            text(player.jerseyNumber, 400, i *30);
-//            text(player.nationality, 500, i *30);
+//            textSize(20);
+//            text(player.name, 100, i *25);
+//            text(player.jerseyNumber, 400, i *25);
+//            text(player.nationality, 500, i *25);
 //            i++;
 //        }
 
-        for (Fixture fixture: BayernMunchen.fixtures) {
-            text(fixture.date, 100, i *30);
-            text(fixture.awayTeamName, 400, i *30);
-            text(fixture.homeTeamName, 500, i *30);
-            i++;
-        }
+//        for (Fixture fixture: BayernMunchen.fixtures) {
+//            text(fixture.date, 100, i *30);
+//            text(fixture.awayTeamName, 400, i *30);
+//            text(fixture.homeTeamName, 500, i *30);
+//            i++;
+//        }
         popMatrix();
     }
 
     public void settings() {
         size(800, 600, P3D);
     }
-
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
         if (passedArgs != null) {
