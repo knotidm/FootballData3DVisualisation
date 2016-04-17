@@ -29,7 +29,6 @@ class Result {
         if (!result.isNull("goalsHomeTeam")) {
             goalsHomeTeam = result.getInt("goalsHomeTeam");
             goalsAwayTeam = result.getInt("goalsAwayTeam");
-
         }
     }
 }

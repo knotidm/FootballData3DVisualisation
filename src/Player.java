@@ -12,10 +12,10 @@ class Player {
     Player(JSONObject player) {
         name = player.getString("name");
         position = player.getString("position");
-        jerseyNumber = player.getInt("jerseyNumber");
+        if (!player.isNull("jerseyNumber")) jerseyNumber = player.getInt("jerseyNumber");
         dateOfBirth = player.getString("dateOfBirth");
         nationality = player.getString("nationality");
-        contractUntil = player.getString("contractUntil");
-        marketValue = player.getString("marketValue");
+        if (!player.isNull("contractUntil")) contractUntil = player.getString("contractUntil");
+        if (!player.isNull("marketValue")) marketValue = player.getString("marketValue");
     }
 }

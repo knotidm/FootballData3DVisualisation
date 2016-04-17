@@ -4,7 +4,7 @@ import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
-public class SoccerSeason extends Main {
+class SoccerSeason {
 
     ArrayList<Team> teams;
     ArrayList<Fixture> fixtures;
@@ -13,21 +13,21 @@ public class SoccerSeason extends Main {
     Integer id;
     String leagueName;
     String year;
-    Integer currentMachday;
+    Integer currentMatchday;
     Integer numberOfMatchdays;
     Integer numberOfTeams;
     Integer numberOfGames;
 
-    public SoccerSeason(JSONObject soccerSeason){
+    SoccerSeason(JSONObject soccerSeason){
 
         GetTeams(soccerSeason.getJSONObject("_links").getJSONObject("teams").getString("href"));
         GetFixtures(soccerSeason.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         GetLeagueTable(soccerSeason.getJSONObject("_links").getJSONObject("leagueTable").getString("href"));
 
         id = soccerSeason.getInt("id");
-        leagueName = soccerSeason.getString("leagueName");
+        leagueName = soccerSeason.getString("caption");
         year = soccerSeason.getString("year");
-        currentMachday = soccerSeason.getInt("currentMachday");
+        currentMatchday = soccerSeason.getInt("currentMatchday");
         numberOfMatchdays = soccerSeason.getInt("numberOfMatchdays");
         numberOfTeams = soccerSeason.getInt("numberOfTeams");
         numberOfGames = soccerSeason.getInt("numberOfGames");

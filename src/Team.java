@@ -20,7 +20,7 @@ class Team {
         GetPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
 
         name = team.getString("name");
-        //squadMarketValue = teamContent.getString("squadMarketValue");
+        if (!team.isNull("squadMarketValue")) squadMarketValue = team.getString("squadMarketValue");
         //emblem = loadShape(teamContent.getString("crestUrl"));
         //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
     }

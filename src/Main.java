@@ -1,11 +1,18 @@
+import http.requests.GetRequest;
 import processing.core.PApplet;
+import processing.data.JSONObject;
 
 public class Main extends PApplet {
 
     SoccerSeason Bundesliga;
 
     public void setup() {
-        //Bundesliga = new SoccerSeason("http://api.football-data.org/v1/teams/5");
+        GetRequest getRequest = new GetRequest("http://api.football-data.org/v1/soccerseasons/425");
+        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
+        getRequest.send();
+
+        JSONObject soccerSeasonContent = JSONObject.parse(getRequest.getContent());
+        Bundesliga = new SoccerSeason(soccerSeasonContent);
     }
 
     public void draw() {
@@ -15,13 +22,13 @@ public class Main extends PApplet {
         textSize(32);
 
         int i = 1;
-//        for (Player player: BayernMunchen.players) {
-//            textSize(20);
-//            text(player.name, 100, i *25);
-//            text(player.jerseyNumber, 400, i *25);
-//            text(player.nationality, 500, i *25);
-//            i++;
-//        }
+        for (Team team: Bundesliga.teams) {
+            textSize(20);
+            text(team.name, 100, i *25);
+            text(team.squadMarketValue, 400, i *25);
+            //text(player.nationality, 500, i *25);
+            i++;
+        }
 
 //        for (Fixture fixture: BayernMunchen.fixtures) {
 //            text(fixture.date, 100, i *30);
