@@ -2,54 +2,40 @@ import http.requests.GetRequest;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.data.JSONObject;
-import toxi.geom.AABB;
 import toxi.geom.Vec3D;
-import toxi.physics.VerletPhysics;
 
 import java.util.ArrayList;
 
 public class Main extends PApplet {
     PeasyCam peasyCam;
-    VerletPhysics verletPhysics;
     ArrayList<Particle> particles;
+    SoccerSeason Bundesliga;
+    Filter BundesligaFilter;
+
+    Integer view = 1;
 
     float separate;
     float cohesion;
     float align;
     int minDistance;
     float speedX, speedY, speedZ, accelerationX, accelerationY, accelerationZ, gravityX, gravityY, gravityZ;
-    SoccerSeason Bundesliga;
-
-    static JSONObject GetRequestToJSONObject(String link) {
-        GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token", "324794156b594490a7c6244a6a10a034");
-        getRequest.send();
-        return JSONObject.parse(getRequest.getContent());
-    }
 
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
-        verletPhysics = new VerletPhysics();
-        verletPhysics.setWorldBounds(new AABB(new Vec3D(), 180));
 
         Bundesliga = new SoccerSeason(GetRequestToJSONObject("http://api.football-data.org/v1/soccerseasons/394"));
+        BundesligaFilter = new Filter(Bundesliga);
+        view = 1;
 
-        particles = new ArrayList<Particle>();
-
-        for (int i = 0; i < Bundesliga.leagueTable.standings.size(); i++) {
-            particles.add(new Particle(
-                    new Vec3D(random(width), random(height), random(height)),
-                    Bundesliga.leagueTable.standings.get(i).goals,
-                    Bundesliga.leagueTable.standings.get(i).teamName
-            ));
-        }
+        ChangeView();
+        particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
     }
 
     public void draw() {
         background(0);
         lights();
+
         textSize(32);
-        verletPhysics.update();
 
 //        for (Team team : Bundesliga.teams) {
 //            textSize(20);
@@ -67,17 +53,16 @@ public class Main extends PApplet {
 //        }
 
         translate(-width / 2, -height / 2, -height / 2);
-        for (int i = 0; i < Bundesliga.leagueTable.standings.size(); i++) {
-            particles.get(i).display();
-            particles.get(i).move();
-            particles.get(i).bounce();
-            particles.get(i).gravity();
-            particles.get(i).separate(separate, minDistance);
-            particles.get(i).cohesion(cohesion, minDistance);
-            particles.get(i).align(align, minDistance);
-            particles.get(i).lineBetween(minDistance);
-            //particle.shapeBetween(minDistance);
-
+        for (Particle particle : particles) {
+            particle.display();
+//            particles.get(i).move();
+//            particles.get(i).bounce();
+//            particles.get(i).gravity();
+//            particles.get(i).separate(separate, minDistance);
+//            particles.get(i).cohesion(cohesion, minDistance);
+//            particles.get(i).align(align, minDistance);
+//            particles.get(i).lineBetween(minDistance);
+//            particles.get(i).shapeBetween(minDistance);
         }
     }
 
@@ -107,7 +92,7 @@ public class Main extends PApplet {
 
             hint(DISABLE_DEPTH_TEST);
             textAlign(CENTER);
-            text(text,0,0,0);
+            text(text, 0, 0, 0);
 
             popMatrix();
         }
@@ -216,6 +201,55 @@ public class Main extends PApplet {
                 }
             }
         }
+    }
+
+    private void ChangeView() {
+        switch (view) {
+            case 1:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
+                break;
+            case 2:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Goals());
+                break;
+            case 3:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalsAgainst());
+                break;
+            case 4:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalDifference());
+                break;
+        }
+    }
+
+    public void keyPressed() {
+        switch (key) {
+            case ',':
+                if (view != 1) view--;
+                ChangeView();
+                break;
+            case '.':
+                if (view != 4) view++;
+                ChangeView();
+                break;
+        }
+    }
+
+    private ArrayList<Particle> ChangeFilter(SoccerSeason soccerSeason, ArrayList<Integer> filteredValues) {
+        particles = new ArrayList<Particle>();
+        for (int i = 0; i < soccerSeason.leagueTable.standings.size(); i++) {
+            particles.add(new Particle(
+                    new Vec3D(random(width), random(height), random(height)),
+                    filteredValues.get(i),
+                    soccerSeason.leagueTable.standings.get(i).teamName
+            ));
+        }
+        return particles;
+    }
+
+    static JSONObject GetRequestToJSONObject(String link) {
+        GetRequest getRequest = new GetRequest(link);
+        getRequest.addHeader("X-Auth-Token", "324794156b594490a7c6244a6a10a034");
+        getRequest.send();
+        return JSONObject.parse(getRequest.getContent());
     }
 
     public void settings() {
