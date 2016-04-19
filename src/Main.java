@@ -11,13 +11,13 @@ public class Main extends PApplet {
     ArrayList<Particle> particles;
     SoccerSeason Bundesliga;
     Filter BundesligaFilter;
-
+    ArrayList<Vec3D> initializeRandomVectors;
     Integer view = 1;
 
     float separate;
     float cohesion;
     float align;
-    int minDistance;
+    Integer minDistance = 1000;
     float speedX, speedY, speedZ, accelerationX, accelerationY, accelerationZ, gravityX, gravityY, gravityZ;
 
     public void setup() {
@@ -25,6 +25,12 @@ public class Main extends PApplet {
 
         Bundesliga = new SoccerSeason(GetRequestToJSONObject("http://api.football-data.org/v1/soccerseasons/394"));
         BundesligaFilter = new Filter(Bundesliga);
+        initializeRandomVectors = new ArrayList<Vec3D>();
+
+        for (Standing ignored : Bundesliga.leagueTable.standings) {
+            initializeRandomVectors.add(new Vec3D(random(width), random(height), random(height)));
+        }
+
         view = 1;
 
         ChangeView();
@@ -35,8 +41,9 @@ public class Main extends PApplet {
         background(0);
         lights();
 
-        textSize(32);
-
+        textSize(40);
+        fill(0, 102, 153);
+        text(Bundesliga.leagueName, 0, -height / 2);
 //        for (Team team : Bundesliga.teams) {
 //            textSize(20);
 //            text(team.name, 100, i * 25);
@@ -61,7 +68,7 @@ public class Main extends PApplet {
 //            particles.get(i).separate(separate, minDistance);
 //            particles.get(i).cohesion(cohesion, minDistance);
 //            particles.get(i).align(align, minDistance);
-//            particles.get(i).lineBetween(minDistance);
+            particle.lineBetween(minDistance);
 //            particles.get(i).shapeBetween(minDistance);
         }
     }
@@ -92,7 +99,9 @@ public class Main extends PApplet {
 
             hint(DISABLE_DEPTH_TEST);
             textAlign(CENTER);
-            text(text, 0, 0, 0);
+            textSize(20);
+            fill(255);
+            text(text, 0, -size, 0);
 
             popMatrix();
         }
@@ -117,9 +126,9 @@ public class Main extends PApplet {
             this.speed.addSelf(gravity);
         }
 
-        void separate(float separate, int minDistance) {
+        void separate(float separate, Integer minDistance) {
             Vec3D steer = new Vec3D();
-            int count = 0;
+            Integer count = 0;
             for (Particle other : particles) {
                 float distance = location.distanceTo(other.location);
                 if (distance > 0 && distance < minDistance) {
@@ -136,9 +145,9 @@ public class Main extends PApplet {
             acceleration.addSelf(steer);
         }
 
-        void cohesion(float cohesion, int minDistance) {
+        void cohesion(float cohesion, Integer minDistance) {
             Vec3D sum = new Vec3D();
-            int count = 0;
+            Integer count = 0;
             for (Particle other : particles) {
                 float distance = location.distanceTo(other.location);
                 if (distance > 0 && distance < minDistance) {
@@ -154,9 +163,9 @@ public class Main extends PApplet {
             acceleration.addSelf(steer);
         }
 
-        void align(float align, int minDistance) {
+        void align(float align, Integer minDistance) {
             Vec3D steer = new Vec3D();
-            int count = 0;
+            Integer count = 0;
             for (Particle other : particles) {
                 float distance = location.distanceTo(other.location);
                 if (distance > 0 && distance < minDistance) {
@@ -171,7 +180,7 @@ public class Main extends PApplet {
             acceleration.addSelf(steer);
         }
 
-        void lineBetween(int minDistance) {
+        void lineBetween(Integer minDistance) {
             for (Particle other : particles) {
                 float distance = location.distanceTo(other.location);
                 if (distance > 0 && distance < minDistance) {
@@ -182,11 +191,11 @@ public class Main extends PApplet {
             }
         }
 
-        void shapeBetween(int minDistance) {
-            for (int i = 0; i < particles.size(); i++) {
+        void shapeBetween(Integer minDistance) {
+            for (Integer i = 0; i < particles.size(); i++) {
                 Particle other1 = particles.get(i);
                 float distance1 = location.distanceTo(other1.location);
-                for (int j = 0; j < particles.size() - 1; j++) {
+                for (Integer j = 0; j < particles.size() - 1; j++) {
                     Particle other2 = particles.get(j);
                     float distance2 = location.distanceTo(other2.location);
                     if (distance1 > 0 && distance1 < minDistance && distance2 > 0 && distance2 < minDistance) {
@@ -206,16 +215,28 @@ public class Main extends PApplet {
     private void ChangeView() {
         switch (view) {
             case 1:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Position());
                 break;
             case 2:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Goals());
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
                 break;
             case 3:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalsAgainst());
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Goals());
                 break;
             case 4:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalsAgainst());
+                break;
+            case 5:
                 particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalDifference());
+                break;
+            case 6:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Wins());
+                break;
+            case 7:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Draws());
+                break;
+            case 8:
+                particles = ChangeFilter(Bundesliga, BundesligaFilter.Losses());
                 break;
         }
     }
@@ -223,21 +244,25 @@ public class Main extends PApplet {
     public void keyPressed() {
         switch (key) {
             case ',':
-                if (view != 1) view--;
-                ChangeView();
+                if (view != 1) {
+                    view--;
+                    ChangeView();
+                }
                 break;
             case '.':
-                if (view != 4) view++;
-                ChangeView();
+                if (view != 8) {
+                    view++;
+                    ChangeView();
+                }
                 break;
         }
     }
 
     private ArrayList<Particle> ChangeFilter(SoccerSeason soccerSeason, ArrayList<Integer> filteredValues) {
         particles = new ArrayList<Particle>();
-        for (int i = 0; i < soccerSeason.leagueTable.standings.size(); i++) {
+        for (Integer i = 0; i < soccerSeason.leagueTable.standings.size(); i++) {
             particles.add(new Particle(
-                    new Vec3D(random(width), random(height), random(height)),
+                    new Vec3D(initializeRandomVectors.get(i)),
                     filteredValues.get(i),
                     soccerSeason.leagueTable.standings.get(i).teamName
             ));
