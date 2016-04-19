@@ -1,15 +1,12 @@
-import http.requests.GetRequest;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
 class SoccerSeason {
-
     ArrayList<Team> teams;
     ArrayList<Fixture> fixtures;
     LeagueTable leagueTable;
-
     Integer id;
     String leagueName;
     String year;
@@ -19,11 +16,9 @@ class SoccerSeason {
     Integer numberOfGames;
 
     SoccerSeason(JSONObject soccerSeason){
-
         GetTeams(soccerSeason.getJSONObject("_links").getJSONObject("teams").getString("href"));
         GetFixtures(soccerSeason.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         GetLeagueTable(soccerSeason.getJSONObject("_links").getJSONObject("leagueTable").getString("href"));
-
         id = soccerSeason.getInt("id");
         leagueName = soccerSeason.getString("caption");
         year = soccerSeason.getString("year");
@@ -34,13 +29,7 @@ class SoccerSeason {
     }
 
     private void GetFixtures(String link) {
-        GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
-        getRequest.send();
-
-        JSONObject fixturesContent = JSONObject.parse(getRequest.getContent());
-        JSONArray fixturesJSON = fixturesContent.getJSONArray("fixtures");
-
+        JSONArray fixturesJSON = Main.GetRequestToJSONObject(link).getJSONArray("fixtures");
         fixtures = new ArrayList<Fixture>();
 
         for (int i = 0; i < fixturesJSON.size(); i++ )
@@ -50,13 +39,7 @@ class SoccerSeason {
     }
 
     private void GetTeams(String link){
-        GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
-        getRequest.send();
-
-        JSONObject teamsContent = JSONObject.parse(getRequest.getContent());
-        JSONArray teamsJSON = teamsContent.getJSONArray("teams");
-
+        JSONArray teamsJSON = Main.GetRequestToJSONObject(link).getJSONArray("teams");
         teams = new ArrayList<Team>();
 
         for (int i = 0; i < teamsJSON.size(); i++ )
@@ -66,11 +49,6 @@ class SoccerSeason {
     }
 
     private void GetLeagueTable(String link) {
-        GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
-        getRequest.send();
-
-        JSONObject leagueTableContent = JSONObject.parse(getRequest.getContent());
-        leagueTable = new LeagueTable(leagueTableContent);
+        leagueTable = new LeagueTable(Main.GetRequestToJSONObject(link));
     }
 }

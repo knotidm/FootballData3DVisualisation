@@ -4,13 +4,10 @@ import processing.data.JSONObject;
 import java.util.ArrayList;
 
 class LeagueTable {
-
     ArrayList<Standing> standings;
 
     LeagueTable(JSONObject leagueTable){
-
         standings = new ArrayList<Standing>();
-
         JSONArray leagueTableJSON = leagueTable.getJSONArray("standing");
 
         for (int i = 0; i < leagueTableJSON.size(); i++ )

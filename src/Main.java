@@ -3,16 +3,17 @@ import processing.core.PApplet;
 import processing.data.JSONObject;
 
 public class Main extends PApplet {
-
     SoccerSeason Bundesliga;
 
-    public void setup() {
-        GetRequest getRequest = new GetRequest("http://api.football-data.org/v1/soccerseasons/425");
-        getRequest.addHeader("X-Auth-Token","324794156b594490a7c6244a6a10a034");
+    static JSONObject GetRequestToJSONObject(String link) {
+        GetRequest getRequest = new GetRequest(link);
+        getRequest.addHeader("X-Auth-Token", "324794156b594490a7c6244a6a10a034");
         getRequest.send();
+        return JSONObject.parse(getRequest.getContent());
+    }
 
-        JSONObject soccerSeasonContent = JSONObject.parse(getRequest.getContent());
-        Bundesliga = new SoccerSeason(soccerSeasonContent);
+    public void setup() {
+        Bundesliga = new SoccerSeason(GetRequestToJSONObject("http://api.football-data.org/v1/soccerseasons/394"));
     }
 
     public void draw() {
@@ -22,10 +23,11 @@ public class Main extends PApplet {
         textSize(32);
 
         int i = 1;
-        for (Team team: Bundesliga.teams) {
+
+        for (Team team : Bundesliga.teams) {
             textSize(20);
-            text(team.name, 100, i *25);
-            text(team.squadMarketValue, 400, i *25);
+            text(team.name, 100, i * 25);
+            text(team.squadMarketValue, 400, i * 25);
             //text(player.nationality, 500, i *25);
             i++;
         }

@@ -1,7 +1,6 @@
 import processing.data.JSONObject;
 
 class Fixture {
-
     String date;
     String status;
     Integer matchday;
@@ -20,7 +19,6 @@ class Fixture {
 }
 
 class Result {
-
     Integer goalsHomeTeam;
     Integer goalsAwayTeam;
 

@@ -24,5 +24,6 @@
     <orderEntry type="library" name="toxiclibs" level="application" />
     <orderEntry type="library" name="video" level="application" />
     <orderEntry type="library" name="webSockets" level="application" />
+    <orderEntry type="library" name="net" level="application" />
   </component>
 </module>
