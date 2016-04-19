@@ -43,7 +43,13 @@ public class Main extends PApplet {
 
         textSize(40);
         fill(0, 102, 153);
-        text(Bundesliga.leagueName, 0, -height / 2);
+        pushMatrix();
+        float[] rotations = peasyCam.getRotations();
+        rotateX(rotations[0]);
+        rotateY(rotations[1]);
+        rotateZ(rotations[2]);
+        text(Bundesliga.leagueName, 0, -height );
+        popMatrix();
 //        for (Team team : Bundesliga.teams) {
 //            textSize(20);
 //            text(team.name, 100, i * 25);
@@ -93,7 +99,6 @@ public class Main extends PApplet {
             translate(location.x, location.y, location.z);
             noFill();
             stroke(255, 0, 0);
-
             sphereDetail(10);
             sphere(size);
 
@@ -101,8 +106,12 @@ public class Main extends PApplet {
             textAlign(CENTER);
             textSize(20);
             fill(255);
-            text(text, 0, -size, 0);
 
+            float[] rotations = peasyCam.getRotations();
+            rotateX(rotations[0]);
+            rotateY(rotations[1]);
+            rotateZ(rotations[2]);
+            text(text, 0, -size, 0);
             popMatrix();
         }
 
