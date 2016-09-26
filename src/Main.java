@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Main extends PApplet {
     PeasyCam peasyCam;
     ArrayList<Particle> particles;
-    SoccerSeason Bundesliga;
+    Competition Bundesliga;
     Filter BundesligaFilter;
     ArrayList<Vec3D> initializeRandomVectors;
     Integer view = 1;
@@ -23,7 +23,7 @@ public class Main extends PApplet {
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
 
-        Bundesliga = new SoccerSeason(GetRequestToJSONObject("http://api.football-data.org/v1/soccerseasons/394"));
+        Bundesliga = new Competition(GetRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
         BundesligaFilter = new Filter(Bundesliga);
         initializeRandomVectors = new ArrayList<Vec3D>();
 
@@ -267,7 +267,7 @@ public class Main extends PApplet {
         }
     }
 
-    private ArrayList<Particle> ChangeFilter(SoccerSeason soccerSeason, ArrayList<Integer> filteredValues) {
+    private ArrayList<Particle> ChangeFilter(Competition soccerSeason, ArrayList<Integer> filteredValues) {
         particles = new ArrayList<Particle>();
         for (Integer i = 0; i < soccerSeason.leagueTable.standings.size(); i++) {
             particles.add(new Particle(

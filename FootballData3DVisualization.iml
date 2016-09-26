@@ -19,7 +19,6 @@
     <orderEntry type="library" name="oscP5" level="application" />
     <orderEntry type="library" name="peasycam" level="application" />
     <orderEntry type="library" name="processing core" level="application" />
-    <orderEntry type="library" name="SimpleHTTPServer" level="application" />
     <orderEntry type="library" name="sound" level="application" />
     <orderEntry type="library" name="toxiclibs" level="application" />
     <orderEntry type="library" name="video" level="application" />

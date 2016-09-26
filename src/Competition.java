@@ -3,7 +3,7 @@ import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
-class SoccerSeason {
+class Competition {
     ArrayList<Team> teams;
     ArrayList<Fixture> fixtures;
     LeagueTable leagueTable;
@@ -15,7 +15,7 @@ class SoccerSeason {
     Integer numberOfTeams;
     Integer numberOfGames;
 
-    SoccerSeason(JSONObject soccerSeason){
+    Competition(JSONObject soccerSeason){
         GetTeams(soccerSeason.getJSONObject("_links").getJSONObject("teams").getString("href"));
         GetFixtures(soccerSeason.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         GetLeagueTable(soccerSeason.getJSONObject("_links").getJSONObject("leagueTable").getString("href"));

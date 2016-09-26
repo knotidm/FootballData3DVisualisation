@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
 class Filter {
-    private SoccerSeason soccerSeason;
+    private Competition soccerSeason;
     private ArrayList<Integer> values = new ArrayList<Integer>();
     String filterName;
 
-    Filter(SoccerSeason soccerSeason) {
+    Filter(Competition soccerSeason) {
         this.soccerSeason = soccerSeason;
     }
 
