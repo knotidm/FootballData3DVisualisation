@@ -1,7 +1,5 @@
-import http.requests.GetRequest;
 import peasy.PeasyCam;
 import processing.core.PApplet;
-import processing.data.JSONObject;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class Main extends PApplet {
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
 
-        bundesliga = new Competition(getRequestToJSONObject("http://api.football-data.org/v1/competitions/431"));
+        bundesliga = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/431"));
         bundesligaFilter = new Filter(bundesliga);
         initializeRandomVectors = new ArrayList<Vec3D>();
 
@@ -274,8 +272,8 @@ public class Main extends PApplet {
         particles = new ArrayList<Particle>();
         for (Integer i = 0; i < competition.standings.size(); i++) {
             String squadMarketValueString = "";
-            if (getTeamByCompareStandingTeamName(competition, i).squadMarketValue != 0) {
-                squadMarketValueString = getTeamByCompareStandingTeamName(competition, i).squadMarketValue.toString();
+            if (Util.getTeamByCompareStandingTeamName(competition, i).squadMarketValue != 0) {
+                squadMarketValueString = Util.getTeamByCompareStandingTeamName(competition, i).squadMarketValue.toString() + " €";
             }
             particles.add(new Particle(
                     new Vec3D(initializeRandomVectors.get(i)),
@@ -285,21 +283,6 @@ public class Main extends PApplet {
             ));
         }
         return particles;
-    }
-
-    private static Team getTeamByCompareStandingTeamName(Competition competition, int index) {
-        for (Team team : competition.teams) {
-            if (team.name.equals(competition.standings.get(index).teamName))
-                return team;
-        }
-        return null;
-    }
-
-    static JSONObject getRequestToJSONObject(String link) {
-        GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token", "b95ca7f69f22429d9e82720ea977198e");
-        getRequest.send();
-        return JSONObject.parse(getRequest.getContent());
     }
 
     public void settings() {

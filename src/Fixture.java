@@ -1,9 +1,11 @@
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
+import java.util.Date;
+
 class Fixture {
     @NotNull
-    String date;
+    Date date;
     @NotNull
     String status;
     @NotNull
@@ -16,7 +18,7 @@ class Fixture {
     Result result;
 
     Fixture(JSONObject fixture) {
-        date = fixture.getString("date");
+        date = Util.getDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");
         homeTeamName = fixture.getString("homeTeamName");

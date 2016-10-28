@@ -1,6 +1,8 @@
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
+import java.util.Date;
+
 class Player {
     @NotNull
     String name;
@@ -9,11 +11,11 @@ class Player {
     @NotNull
     Integer jerseyNumber;
     @NotNull
-    String dateOfBirth;
+    Date dateOfBirth;
     @NotNull
     String nationality;
     @NotNull
-    String contractUntil;
+    Date contractUntil;
     @NotNull
     Integer marketValue;
 
@@ -21,17 +23,9 @@ class Player {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber", 0);
-        dateOfBirth = player.getString("dateOfBirth");
+        dateOfBirth = Util.getDate(player.getString("dateOfBirth"));
         nationality = player.getString("nationality");
-        contractUntil = player.getString("contractUntil", "");
-        marketValue = getMarketValue(player);
-    }
-
-    private Integer getMarketValue(JSONObject player) {
-        String marketValueString = player.getString("marketValue", "").replaceAll("[^\\d]+", "");
-        if (!marketValueString.equals("")) {
-            return Integer.parseInt(marketValueString);
-        }
-        return 0;
+        contractUntil = Util.getDate(player.getString("contractUntil", ""));
+        marketValue = Util.getInteger(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
     }
 }
