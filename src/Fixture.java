@@ -1,11 +1,18 @@
+import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
 class Fixture {
+    @NotNull
     String date;
+    @NotNull
     String status;
+    @NotNull
     Integer matchday;
+    @NotNull
     String homeTeamName;
+    @NotNull
     String awayTeamName;
+    @NotNull
     Result result;
 
     Fixture(JSONObject fixture) {
@@ -19,14 +26,13 @@ class Fixture {
 }
 
 class Result {
+    @NotNull
     Integer goalsHomeTeam;
+    @NotNull
     Integer goalsAwayTeam;
 
     Result(JSONObject result) {
-
-        if (!result.isNull("goalsHomeTeam")) {
-            goalsHomeTeam = result.getInt("goalsHomeTeam");
-            goalsAwayTeam = result.getInt("goalsAwayTeam");
-        }
+        goalsHomeTeam = result.getInt("goalsHomeTeam", 0);
+        goalsAwayTeam = result.getInt("goalsAwayTeam", 0);
     }
 }

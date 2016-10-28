@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class Main extends PApplet {
     PeasyCam peasyCam;
     ArrayList<Particle> particles;
-    Competition Bundesliga;
-    Filter BundesligaFilter;
+    Competition bundesliga;
+    Filter bundesligaFilter;
     ArrayList<Vec3D> initializeRandomVectors;
     Integer view = 1;
 
@@ -23,18 +23,18 @@ public class Main extends PApplet {
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
 
-        Bundesliga = new Competition(GetRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
-        BundesligaFilter = new Filter(Bundesliga);
+        bundesliga = new Competition(getRequestToJSONObject("http://api.football-data.org/v1/competitions/431"));
+        bundesligaFilter = new Filter(bundesliga);
         initializeRandomVectors = new ArrayList<Vec3D>();
 
-        for (Standing ignored : Bundesliga.leagueTable.standings) {
+        for (Standing standing : bundesliga.standings) {
             initializeRandomVectors.add(new Vec3D(random(width), random(height), random(height)));
         }
 
         view = 1;
 
-        ChangeView();
-        particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
+        changeView();
+        particles = changeFilter(bundesliga, bundesligaFilter.points());
     }
 
     public void draw() {
@@ -48,11 +48,11 @@ public class Main extends PApplet {
         rotateY(peasyCam.getRotations()[1]);
         rotateZ(peasyCam.getRotations()[2]);
         fill(0, 102, 153);
-        text(Bundesliga.leagueName, 0, -height );
+        text(bundesliga.name, 0, -height);
         fill(255, 0, 0);
-        text(BundesligaFilter.filterName, 0, -height + 40 );
+        text(bundesligaFilter.filterName, 0, -height + 40);
         popMatrix();
-//        for (Team team : Bundesliga.teams) {
+//        for (Team team : bundesliga.teams) {
 //            textSize(20);
 //            text(team.name, 100, i * 25);
 //            text(team.squadMarketValue, 400, i * 25);
@@ -88,11 +88,13 @@ public class Main extends PApplet {
         Vec3D gravity = new Vec3D(gravityX, gravityY, gravityZ);
         Integer size;
         String text;
+        String squadMarketValue;
 
-        Particle(Vec3D location, Integer size, String text) {
+        Particle(Vec3D location, Integer size, String text, String squadMarketValue) {
             this.location = location;
             this.size = size;
             this.text = text;
+            this.squadMarketValue = squadMarketValue;
         }
 
         void display() {
@@ -112,6 +114,7 @@ public class Main extends PApplet {
             rotateY(peasyCam.getRotations()[1]);
             rotateZ(peasyCam.getRotations()[2]);
             text(text, 0, -size, 0);
+            text(squadMarketValue, 0, 4 * -size, 0);
             popMatrix();
         }
 
@@ -221,31 +224,31 @@ public class Main extends PApplet {
         }
     }
 
-    private void ChangeView() {
+    private void changeView() {
         switch (view) {
             case 1:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Position());
+                particles = changeFilter(bundesliga, bundesligaFilter.position());
                 break;
             case 2:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Points());
+                particles = changeFilter(bundesliga, bundesligaFilter.points());
                 break;
             case 3:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Goals());
+                particles = changeFilter(bundesliga, bundesligaFilter.goals());
                 break;
             case 4:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalsAgainst());
+                particles = changeFilter(bundesliga, bundesligaFilter.goalsAgainst());
                 break;
             case 5:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.GoalDifference());
+                particles = changeFilter(bundesliga, bundesligaFilter.goalDifference());
                 break;
             case 6:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Wins());
+                particles = changeFilter(bundesliga, bundesligaFilter.wins());
                 break;
             case 7:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Draws());
+                particles = changeFilter(bundesliga, bundesligaFilter.draws());
                 break;
             case 8:
-                particles = ChangeFilter(Bundesliga, BundesligaFilter.Losses());
+                particles = changeFilter(bundesliga, bundesligaFilter.losses());
                 break;
         }
     }
@@ -255,33 +258,46 @@ public class Main extends PApplet {
             case ',':
                 if (view != 1) {
                     view--;
-                    ChangeView();
+                    changeView();
                 }
                 break;
             case '.':
                 if (view != 8) {
                     view++;
-                    ChangeView();
+                    changeView();
                 }
                 break;
         }
     }
 
-    private ArrayList<Particle> ChangeFilter(Competition soccerSeason, ArrayList<Integer> filteredValues) {
+    private ArrayList<Particle> changeFilter(Competition competition, ArrayList<Integer> filteredValues) {
         particles = new ArrayList<Particle>();
-        for (Integer i = 0; i < soccerSeason.leagueTable.standings.size(); i++) {
+        for (Integer i = 0; i < competition.standings.size(); i++) {
+            String squadMarketValueString = "";
+            if (getTeamByCompareStandingTeamName(competition, i).squadMarketValue != 0) {
+                squadMarketValueString = getTeamByCompareStandingTeamName(competition, i).squadMarketValue.toString();
+            }
             particles.add(new Particle(
                     new Vec3D(initializeRandomVectors.get(i)),
                     filteredValues.get(i),
-                    soccerSeason.leagueTable.standings.get(i).teamName
+                    competition.standings.get(i).teamName,
+                    squadMarketValueString
             ));
         }
         return particles;
     }
 
-    static JSONObject GetRequestToJSONObject(String link) {
+    private static Team getTeamByCompareStandingTeamName(Competition competition, int index) {
+        for (Team team : competition.teams) {
+            if (team.name.equals(competition.standings.get(index).teamName))
+                return team;
+        }
+        return null;
+    }
+
+    static JSONObject getRequestToJSONObject(String link) {
         GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token", "324794156b594490a7c6244a6a10a034");
+        getRequest.addHeader("X-Auth-Token", "b95ca7f69f22429d9e82720ea977198e");
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }

@@ -1,37 +1,33 @@
-import processing.data.JSONArray;
+import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
-import java.util.ArrayList;
-
-class LeagueTable {
-    ArrayList<Standing> standings;
-
-    LeagueTable(JSONObject leagueTable){
-        standings = new ArrayList<Standing>();
-        JSONArray leagueTableJSON = leagueTable.getJSONArray("standing");
-
-        for (int i = 0; i < leagueTableJSON.size(); i++ )
-        {
-            standings.add(new Standing(leagueTableJSON.getJSONObject(i)));
-        }
-    }
-}
-
 class Standing {
+    @NotNull
     Integer position;
+    @NotNull
     String teamName;
+    @NotNull
     Integer playedGames;
+    @NotNull
     Integer points;
+    @NotNull
     Integer goals;
+    @NotNull
     Integer goalsAgainst;
+    @NotNull
     Integer goalDifference;
+    @NotNull
     Integer wins;
+    @NotNull
     Integer draws;
+    @NotNull
     Integer losses;
+    @NotNull
     Home home;
+    @NotNull
     Away away;
 
-    Standing(JSONObject standing){
+    Standing(JSONObject standing) {
         position = standing.getInt("position");
         teamName = standing.getString("teamName");
         playedGames = standing.getInt("playedGames");
@@ -48,13 +44,18 @@ class Standing {
 }
 
 class Home {
+    @NotNull
     Integer goals;
+    @NotNull
     Integer goalsAgainst;
+    @NotNull
     Integer wins;
+    @NotNull
     Integer draws;
+    @NotNull
     Integer losses;
 
-    Home(JSONObject home){
+    Home(JSONObject home) {
         goals = home.getInt("goals");
         goalsAgainst = home.getInt("goalsAgainst");
         wins = home.getInt("wins");
@@ -64,13 +65,18 @@ class Home {
 }
 
 class Away {
+    @NotNull
     Integer goals;
+    @NotNull
     Integer goalsAgainst;
+    @NotNull
     Integer wins;
+    @NotNull
     Integer draws;
+    @NotNull
     Integer losses;
 
-    Away(JSONObject away){
+    Away(JSONObject away) {
         goals = away.getInt("goals");
         goalsAgainst = away.getInt("goalsAgainst");
         wins = away.getInt("wins");

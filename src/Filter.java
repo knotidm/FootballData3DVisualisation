@@ -1,81 +1,81 @@
 import java.util.ArrayList;
 
 class Filter {
-    private Competition soccerSeason;
+    private Competition competition;
     private ArrayList<Integer> values = new ArrayList<Integer>();
     String filterName;
 
-    Filter(Competition soccerSeason) {
-        this.soccerSeason = soccerSeason;
+    Filter(Competition competition) {
+        this.competition = competition;
     }
 
-    ArrayList<Integer> Position() {
+    ArrayList<Integer> position() {
         filterName = "Position";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.position);
         }
         return values;
     }
 
-    ArrayList<Integer> Points() {
+    ArrayList<Integer> points() {
         filterName = "Points";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.points);
         }
         return values;
     }
 
-    ArrayList<Integer> Goals() {
+    ArrayList<Integer> goals() {
         filterName = "Goals";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.goals);
         }
         return values;
     }
 
-    ArrayList<Integer> GoalsAgainst() {
+    ArrayList<Integer> goalsAgainst() {
         filterName = "GoalsAgainst";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.goalsAgainst);
         }
         return values;
     }
 
-    ArrayList<Integer> GoalDifference() {
+    ArrayList<Integer> goalDifference() {
         filterName = "GoalDifference";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.goalDifference);
         }
         return values;
     }
 
-    ArrayList<Integer> Wins() {
+    ArrayList<Integer> wins() {
         filterName = "Wins";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.wins);
         }
         return values;
     }
 
-    ArrayList<Integer> Draws() {
+    ArrayList<Integer> draws() {
         filterName = "Draws";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.draws);
         }
         return values;
     }
 
-    ArrayList<Integer> Losses() {
+    ArrayList<Integer> losses() {
         filterName = "Losses";
         values.clear();
-        for (Standing standing : soccerSeason.leagueTable.standings) {
+        for (Standing standing : competition.standings) {
             values.add(standing.losses);
         }
         return values;
