@@ -21,7 +21,7 @@ public class Main extends PApplet {
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
 
-        bundesliga = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/431"));
+        bundesliga = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
         bundesligaFilter = new Filter(bundesliga);
         initializeRandomVectors = new ArrayList<Vec3D>();
 
