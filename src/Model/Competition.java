@@ -1,16 +1,19 @@
+package Model;
+
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
+import Util.Util;
 
 import java.util.ArrayList;
 
-class Competition {
+public class Competition {
     @NotNull
-    ArrayList<Team> teams;
+    public ArrayList<Team> teams;
     @NotNull
-    ArrayList<Standing> standings;
+    public ArrayList<Standing> standings;
     @NotNull
-    String name;
+    public String name;
     @NotNull
     String year;
     @NotNull
@@ -20,7 +23,7 @@ class Competition {
     @NotNull
     Integer numberOfGames;
 
-    Competition(JSONObject competition) {
+    public Competition(JSONObject competition) {
         teams = getTeams(competition.getJSONObject("_links").getJSONObject("teams").getString("href"));
         standings = getStandings(competition.getJSONObject("_links").getJSONObject("leagueTable").getString("href"));
         name = competition.getString("caption");

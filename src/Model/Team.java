@@ -1,3 +1,5 @@
+package Model;
+import Util.Util;
 import com.sun.istack.internal.NotNull;
 import processing.core.PShape;
 import processing.data.JSONArray;
@@ -5,19 +7,19 @@ import processing.data.JSONObject;
 
 import java.util.ArrayList;
 
-class Team {
+public class Team {
     @NotNull
     ArrayList<Fixture> fixtures;
     @NotNull
     ArrayList<Player> players;
     @NotNull
-    String name;
+    public String name;
     @NotNull
-    Integer squadMarketValue;
+    public Integer squadMarketValue;
     @NotNull
     PShape emblem;
 
-    Team(JSONObject team) {
+    public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
         name = team.getString("name");

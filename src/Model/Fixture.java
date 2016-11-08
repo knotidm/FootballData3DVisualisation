@@ -1,9 +1,12 @@
+package Model;
+
+import Util.Util;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
 import java.util.Date;
 
-class Fixture {
+public class Fixture {
     @NotNull
     Date date;
     @NotNull
@@ -17,7 +20,7 @@ class Fixture {
     @NotNull
     Result result;
 
-    Fixture(JSONObject fixture) {
+    public Fixture(JSONObject fixture) {
         date = Util.getDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");
@@ -33,7 +36,7 @@ class Result {
     @NotNull
     Integer goalsAwayTeam;
 
-    Result(JSONObject result) {
+    public Result(JSONObject result) {
         goalsHomeTeam = result.getInt("goalsHomeTeam", 0);
         goalsAwayTeam = result.getInt("goalsAwayTeam", 0);
     }

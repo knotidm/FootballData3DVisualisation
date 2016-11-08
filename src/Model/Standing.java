@@ -1,11 +1,13 @@
+package Model;
+
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
-class Standing {
+public class Standing {
     @NotNull
     Integer position;
     @NotNull
-    String teamName;
+    public String teamName;
     @NotNull
     Integer playedGames;
     @NotNull

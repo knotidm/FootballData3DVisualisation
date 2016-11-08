@@ -1,9 +1,12 @@
+package Model;
+
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
+import Util.Util;
 
 import java.util.Date;
 
-class Player {
+public class Player {
     @NotNull
     String name;
     @NotNull
@@ -19,7 +22,7 @@ class Player {
     @NotNull
     Integer marketValue;
 
-    Player(JSONObject player) {
+    public Player(JSONObject player) {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber", 0);

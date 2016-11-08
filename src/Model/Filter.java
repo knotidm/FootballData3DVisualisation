@@ -1,15 +1,18 @@
+package Model;
+
 import java.util.ArrayList;
 
-class Filter {
+public class Filter {
     private Competition competition;
-    private ArrayList<Integer> values = new ArrayList<Integer>();
-    String filterName;
+    private ArrayList<Integer> values;
+    public String filterName;
 
-    Filter(Competition competition) {
+    public Filter(Competition competition) {
         this.competition = competition;
+        values = new ArrayList<Integer>();
     }
 
-    ArrayList<Integer> position() {
+    public ArrayList<Integer> position() {
         filterName = "Position";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -18,7 +21,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> points() {
+    public ArrayList<Integer> points() {
         filterName = "Points";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -27,7 +30,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> goals() {
+    public ArrayList<Integer> goals() {
         filterName = "Goals";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -36,7 +39,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> goalsAgainst() {
+    public ArrayList<Integer> goalsAgainst() {
         filterName = "GoalsAgainst";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -45,7 +48,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> goalDifference() {
+    public ArrayList<Integer> goalDifference() {
         filterName = "GoalDifference";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -54,7 +57,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> wins() {
+    public ArrayList<Integer> wins() {
         filterName = "Wins";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -63,7 +66,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> draws() {
+    public ArrayList<Integer> draws() {
         filterName = "Draws";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -72,7 +75,7 @@ class Filter {
         return values;
     }
 
-    ArrayList<Integer> losses() {
+    public ArrayList<Integer> losses() {
         filterName = "Losses";
         values.clear();
         for (Standing standing : competition.standings) {
