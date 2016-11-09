@@ -1,3 +1,5 @@
+package Object3D;
+
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -5,53 +7,34 @@ import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
 
-public class Particle {
-    PApplet pApplet;
-    Vec3D location = new Vec3D();
+public class Particle{
+    private PApplet pApplet;
+    public Vec3D location;
     Vec3D acceleration;
     Vec3D speed;
     Vec3D gravity;
-    Integer size;
-    String text;
-    String squadMarketValue;
+    public Integer size;
 
-    Particle(PApplet pApplet, Vec3D location, Integer size, String text, String squadMarketValue) {
+    public Particle(PApplet pApplet, Vec3D location, Integer size) {
         this.pApplet = pApplet;
         this.location = location;
         this.size = size;
-        this.text = text;
-        this.squadMarketValue = squadMarketValue;
     }
 
-    void display(PeasyCam peasyCam) {
-        pApplet.pushMatrix();
-
+    public void draw(PeasyCam peasyCam) {
         pApplet.translate(location.x, location.y, location.z);
-        pApplet.noFill();
-        pApplet.stroke(255, 0, 0);
         pApplet.sphereDetail(10);
         pApplet.sphere(size);
-
-        pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
-        pApplet.textAlign(PConstants.CENTER);
-        pApplet.textSize(20);
-        pApplet.fill(255);
-        pApplet.rotateX(peasyCam.getRotations()[0]);
-        pApplet.rotateY(peasyCam.getRotations()[1]);
-        pApplet.rotateZ(peasyCam.getRotations()[2]);
-        pApplet.text(text, 0, -size, 0);
-        pApplet.text(squadMarketValue, 0, 4 * -size, 0);
-        pApplet.popMatrix();
     }
 
-    void move() {
+    public void move() {
         this.speed.addSelf(acceleration);
         this.speed.limit(8);
         location.addSelf(speed);
         this.acceleration.clear();
     }
 
-    void bounce() {
+    public void bounce() {
         if (location.x > pApplet.width) speed.x = speed.x * -1;
         if (location.x < 0) speed.x = speed.x * -1;
         if (location.y > pApplet.height) speed.y = speed.y * -1;
@@ -60,11 +43,11 @@ public class Particle {
         if (location.z < 0) speed.z = speed.z * -1;
     }
 
-    void gravity() {
+    public void gravity() {
         this.speed.addSelf(gravity);
     }
 
-    void separate(ArrayList<Particle> particles, float separate, Integer minDistance) {
+    public void separate(ArrayList<Particle> particles, float separate, Integer minDistance) {
         Vec3D steer = new Vec3D();
         Integer count = 0;
         for (Particle other : particles) {
@@ -83,7 +66,7 @@ public class Particle {
         acceleration.addSelf(steer);
     }
 
-    void cohesion(ArrayList<Particle> particles, float cohesion, Integer minDistance) {
+    public void cohesion(ArrayList<Particle> particles, float cohesion, Integer minDistance) {
         Vec3D sum = new Vec3D();
         Integer count = 0;
         for (Particle other : particles) {
@@ -101,7 +84,7 @@ public class Particle {
         acceleration.addSelf(steer);
     }
 
-    void align(ArrayList<Particle> particles, float align, Integer minDistance) {
+    public void align(ArrayList<Particle> particles, float align, Integer minDistance) {
         Vec3D steer = new Vec3D();
         Integer count = 0;
         for (Particle other : particles) {
@@ -118,7 +101,7 @@ public class Particle {
         acceleration.addSelf(steer);
     }
 
-    void lineBetween(ArrayList<Particle> particles, Integer minDistance) {
+    public void lineBetween(ArrayList<TeamObject3D> particles, Integer minDistance) {
         for (Particle other : particles) {
             float distance = location.distanceTo(other.location);
             if (distance > 0 && distance < minDistance) {
@@ -129,7 +112,7 @@ public class Particle {
         }
     }
 
-    void shapeBetween(ArrayList<Particle> particles, Integer minDistance) {
+    public void shapeBetween(ArrayList<Particle> particles, Integer minDistance) {
         for (Integer i = 0; i < particles.size(); i++) {
             Particle other1 = particles.get(i);
             float distance1 = location.distanceTo(other1.location);

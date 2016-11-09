@@ -3,6 +3,8 @@ package Util;
 import Model.Competition;
 import Model.Team;
 import http.requests.GetRequest;
+import peasy.PeasyCam;
+import processing.core.PApplet;
 import processing.data.JSONObject;
 
 import java.text.DateFormat;
@@ -18,7 +20,6 @@ public class Util {
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }
-
     public static Team getTeamByCompareStandingTeamName(Competition competition, int index) {
         for (Team team : competition.teams) {
             if (team.name.equals(competition.standings.get(index).teamName))
@@ -26,14 +27,12 @@ public class Util {
         }
         return null;
     }
-
     public static Integer getInteger(String integerString) {
         if (!integerString.equals("")) {
             return Integer.parseInt(integerString);
         }
         return 0;
     }
-
     public static Date getDate(String dateString) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
         if (!dateString.equals(""))
@@ -43,5 +42,10 @@ public class Util {
                 e.printStackTrace();
             }
         return null;
+    }
+    public static void alwaysOnFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam){
+        pApplet.rotateX(peasyCam.getRotations()[0]);
+        pApplet.rotateY(peasyCam.getRotations()[1]);
+        pApplet.rotateZ(peasyCam.getRotations()[2]);
     }
 }
