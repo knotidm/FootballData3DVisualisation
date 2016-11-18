@@ -1,18 +1,18 @@
 package Object3D;
 
-import Util.IDraggable;
 import Util.Util;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import toxi.geom.Vec3D;
 
-public class TeamObject3D extends Particle implements IDraggable {
+public class TeamObject3D extends Particle {
     private PApplet pApplet;
     public Integer index;
-    private boolean isSelected;
     public String teamName;
     public String squadMarketValue;
+    public Boolean isSelected;
+    public Boolean isClicked;
 
     public TeamObject3D(PApplet pApplet, Integer index, Vec3D location, Integer size, String teamName, String squadMarketValue) {
         super(pApplet, location, size);
@@ -20,21 +20,18 @@ public class TeamObject3D extends Particle implements IDraggable {
         this.index = index;
         this.teamName = teamName;
         this.squadMarketValue = squadMarketValue;
-    }
-
-    @Override
-    public void isSelected(boolean isSelected) {
-        this.isSelected = isSelected;
+        this.isSelected = false;
+        this.isClicked = false;
     }
 
     @Override
     public void draw(PeasyCam peasyCam) {
-
         pApplet.pushMatrix();
 
         pApplet.noFill();
         pApplet.stroke(255, 0, 0);
         if (isSelected) pApplet.stroke(255, 150, 0);
+        if (isClicked) pApplet.stroke(150, 250, 0);
         super.draw(peasyCam);
 
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);

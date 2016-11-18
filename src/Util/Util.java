@@ -7,6 +7,7 @@ import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.data.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,18 +21,18 @@ public class Util {
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }
-    public static Team getTeamByCompareStandingTeamName(Competition competition, int index) {
+    public static Team getTeamByCompareTeamName(Competition competition, int index) {
         for (Team team : competition.teams) {
             if (team.name.equals(competition.standings.get(index).teamName))
                 return team;
         }
         return null;
     }
-    public static Integer getInteger(String integerString) {
+    public static BigDecimal getBigDecimal(String integerString) {
         if (!integerString.equals("")) {
-            return Integer.parseInt(integerString);
+            return new BigDecimal(integerString);
         }
-        return 0;
+        return new BigDecimal(0);
     }
     public static Date getDate(String dateString) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);

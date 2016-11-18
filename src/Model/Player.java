@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 import Util.Util;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Player {
@@ -20,7 +21,7 @@ public class Player {
     @NotNull
     Date contractUntil;
     @NotNull
-    Integer marketValue;
+    BigDecimal marketValue;
 
     public Player(JSONObject player) {
         name = player.getString("name");
@@ -29,6 +30,6 @@ public class Player {
         dateOfBirth = Util.getDate(player.getString("dateOfBirth"));
         nationality = player.getString("nationality");
         contractUntil = Util.getDate(player.getString("contractUntil", ""));
-        marketValue = Util.getInteger(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
+        marketValue = Util.getBigDecimal(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
     }
 }

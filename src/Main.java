@@ -9,7 +9,9 @@ import peasy.PeasyCam;
 import processing.core.PApplet;
 import toxi.geom.Vec3D;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Main extends PApplet {
     PeasyCam peasyCam;
@@ -22,14 +24,15 @@ public class Main extends PApplet {
     ArrayList<TeamObject3D> teamObjects3D; // ilosc pol grawitacyjnych
     Grid grid;
 
-    boolean mouseStillPressed = false;
     int indexGF = 0;
     int indexGrid = 0;
+    float mouseShortestDistance;
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
 
     Integer minDistance = 1000;
 
+    @Override
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
 
@@ -51,6 +54,7 @@ public class Main extends PApplet {
         teamObjects3D = changeFilter(bundesliga, bundesligaFilter.points());
     }
 
+    @Override
     public void draw() {
         background(0);
         lights();
@@ -69,7 +73,7 @@ public class Main extends PApplet {
 
         userInterface.enableUserInterfaceOnTopOfPeasyCam(peasyCam);
 
-        dragObject();
+        changeMode();
 
         grid.resetZ();
 
@@ -113,6 +117,7 @@ public class Main extends PApplet {
         }
     }
 
+    @Override
     public void keyPressed() {
         switch (key) {
             case ',':
@@ -132,63 +137,99 @@ public class Main extends PApplet {
 
     private ArrayList<TeamObject3D> changeFilter(Competition competition, ArrayList<Integer> filteredValues) {
         teamObjects3D = new ArrayList<TeamObject3D>();
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         for (Integer i = 0; i < competition.standings.size(); i++) {
-            String squadMarketValueString = "";
-            if (Util.getTeamByCompareStandingTeamName(competition, i).squadMarketValue != 0) {
-                squadMarketValueString = Util.getTeamByCompareStandingTeamName(competition, i).squadMarketValue.toString() + " €";
-            }
             teamObjects3D.add(new TeamObject3D(this, i,
                     new Vec3D(initializeRandomVectors.get(i)),
                     filteredValues.get(i),
                     competition.standings.get(i).teamName,
-                    squadMarketValueString
+                    numberFormat.format(Util.getTeamByCompareTeamName(competition, i).squadMarketValue)
             ));
         }
         return teamObjects3D;
     }
 
-    private void dragObject() {
-        for (TeamObject3D teamObject3D : teamObjects3D)
-            teamObject3D.isSelected(false); // stan niezaznaczenia dla pola grawitacyjnego
-        if (keyPressed) {
-            if (key == 'm' || key == 'M') {
-                peasyCam.setActive(false); // wylacza peasyCam
-                if (!mouseStillPressed) {
-                    float mouseShortestDistance = sqrt(sq(mouseX - screenX(teamObjects3D.get(indexGF).location.x, teamObjects3D.get(indexGF).location.y, 0)) + sq(mouseY - screenY(teamObjects3D.get(indexGF).location.x, teamObjects3D.get(indexGF).location.y, 0))); // najmniejszy dopuszczalny dystans myszki jesli myszka nie wcisnieta
-                    for (TeamObject3D teamObject3D : teamObjects3D) {
-                        float mouseDistance = sqrt(sq(mouseX - screenX(teamObject3D.location.x, teamObject3D.location.y, 0)) + sq(mouseY - screenY(teamObject3D.location.x, teamObject3D.location.y, 0))); // aktualny dystans myszki jesli myszka nie wcisnieta
-                        if (mouseDistance <= mouseShortestDistance) {
-                            indexGF = teamObject3D.index;
-                            mouseShortestDistance = mouseDistance;
-                        }
-                    }
-                }
-                teamObjects3D.get(indexGF).isSelected(true); // stan zaznaczenia dla pola grawitacyjnego
-                float mouseShortestDistance = sqrt(sq(mouseX - screenX(grid.x[indexGrid], grid.y[indexGrid], 0)) + sq(mouseY - screenY(grid.x[indexGrid], grid.y[indexGrid], 0))); // najmniejszy dopuszczalny dystans myszki jesli myszka wcisnieta
-                for (int i = 0; i < grid.x.length; i++) {
-                    float mouseDistance = sqrt(sq(mouseX - screenX(grid.x[i], grid.y[i], 0)) + sq(mouseY - screenY(grid.x[i], grid.y[i], 0))); // aktualny dystans myszki jesli myszka wcisnieta
-                    if (mouseDistance <= mouseShortestDistance) {
-                        indexGrid = i;
-                        mouseShortestDistance = mouseDistance;
-                    }
-                }
-                if (mousePressed) {
-                    mouseStillPressed = true;
-                    if (mouseButton == LEFT) {
-                        teamObjects3D.get(indexGF).location.x += (grid.x[indexGrid] - teamObjects3D.get(indexGF).location.x) / 6; // translacja w osi x (ostatnia zmienna spowolnienie)
-                        teamObjects3D.get(indexGF).location.y += (grid.y[indexGrid] - teamObjects3D.get(indexGF).location.y) / 6; // translacja w osi y (ostatnia zmienna spowolnienie)
-                    }
-                } else {
-                    mouseStillPressed = false;
-                }
-            }
-        } else {
-            peasyCam.setActive(true); // wlacza peasyCam
+    private void changeMode() {
+        switch (userInterface.modeValue) {
+            case 0:
+                peasyCam.setActive(true);
+                resetAllTeamObjects3DStates();
+                break;
+            case 1:
+                peasyCam.setActive(false);
+                dragObject();
+                break;
+            case 2:
+                peasyCam.setActive(false);
+                clickObject();
+                break;
         }
     }
 
+    private void dragObject() {
+        resetAllTeamObjects3DStates();
+        teamObjects3D.get(indexGF).isSelected = true;
+        positionInRelationToGrid();
+
+        if (mousePressed) {
+            if (mouseButton == LEFT) {
+                teamObjects3D.get(indexGF).location.x += (grid.x[indexGrid] - teamObjects3D.get(indexGF).location.x) / 6;
+                teamObjects3D.get(indexGF).location.y += (grid.y[indexGrid] - teamObjects3D.get(indexGF).location.y) / 6;
+            }
+            if (mouseButton == RIGHT) {
+                teamObjects3D.get(indexGF).location.z += pmouseY - mouseY;
+            }
+        } else {
+            closestObjectInRelationToPosition();
+        }
+    }
+
+    private void clickObject() {
+        resetAllTeamObjects3DStates();
+        teamObjects3D.get(indexGF).isSelected = true;
+        positionInRelationToGrid();
+
+        if (mousePressed) {
+            if (mouseButton == LEFT) {
+                teamObjects3D.get(indexGF).isClicked = true;
+            }
+        } else {
+            closestObjectInRelationToPosition();
+        }
+    }
+
+    private void resetAllTeamObjects3DStates() {
+        for (TeamObject3D teamObject3D : teamObjects3D) {
+            teamObject3D.isSelected = false;
+            teamObject3D.isClicked = false;
+        }
+    }
+
+    private void positionInRelationToGrid() {
+        mouseShortestDistance = sqrt(sq(mouseX - screenX(grid.x[indexGrid], grid.y[indexGrid], 0)) + sq(mouseY - screenY(grid.x[indexGrid], grid.y[indexGrid], 0)));
+        for (int i = 0; i < grid.x.length; i++) {
+            float mouseDistance = sqrt(sq(mouseX - screenX(grid.x[i], grid.y[i], 0)) + sq(mouseY - screenY(grid.x[i], grid.y[i], 0)));
+            if (mouseDistance <= mouseShortestDistance) {
+                indexGrid = i;
+                mouseShortestDistance = mouseDistance;
+            }
+        }
+    }
+
+    private void closestObjectInRelationToPosition() {
+        mouseShortestDistance = sqrt(sq(mouseX - screenX(teamObjects3D.get(indexGF).location.x, teamObjects3D.get(indexGF).location.y, 0)) + sq(mouseY - screenY(teamObjects3D.get(indexGF).location.x, teamObjects3D.get(indexGF).location.y, 0)));
+        for (TeamObject3D teamObject3D : teamObjects3D) {
+            float mouseDistance = sqrt(sq(mouseX - screenX(teamObject3D.location.x, teamObject3D.location.y, 0)) + sq(mouseY - screenY(teamObject3D.location.x, teamObject3D.location.y, 0)));
+            if (mouseDistance <= mouseShortestDistance) {
+                indexGF = teamObject3D.index;
+                mouseShortestDistance = mouseDistance;
+            }
+        }
+    }
+
+    @Override
     public void settings() {
-        size(800, 600, P3D);
+        size(1280, 720, P3D);
         smooth();
     }
 

@@ -8,21 +8,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="controlP5" level="application" />
-    <orderEntry type="library" name="generativedesign" level="application" />
-    <orderEntry type="library" name="geomerative" level="application" />
     <orderEntry type="library" name="gicentreUtils" level="application" />
-    <orderEntry type="library" name="hemesh" level="application" />
     <orderEntry type="library" name="httprequests_processing" level="application" />
-    <orderEntry type="library" name="minim" level="application" />
-    <orderEntry type="library" name="OBJLoader" level="application" />
-    <orderEntry type="library" name="opencv" level="application" />
-    <orderEntry type="library" name="oscP5" level="application" />
     <orderEntry type="library" name="peasycam" level="application" />
     <orderEntry type="library" name="processing core" level="application" />
-    <orderEntry type="library" name="sound" level="application" />
     <orderEntry type="library" name="toxiclibs" level="application" />
-    <orderEntry type="library" name="video" level="application" />
-    <orderEntry type="library" name="webSockets" level="application" />
-    <orderEntry type="library" name="net" level="application" />
   </component>
 </module>
