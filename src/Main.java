@@ -47,11 +47,9 @@ public class Main extends PApplet {
         view = 1;
         userInterface = new UserInterface(this);
 
-        changeView();
-
         grid = new Grid(this, gridSize, grilleSize);
 
-        teamObjects3D = changeFilter(bundesliga, bundesligaFilter.points());
+        teamObjects3D = initialize(bundesliga, bundesligaFilter.points());
     }
 
     @Override
@@ -62,18 +60,19 @@ public class Main extends PApplet {
         textSize(40);
 
         pushMatrix();
-        Util.alwaysOnFrontOfPeasyCam(this, peasyCam);
+        Util.onFrontOfPeasyCam(this, peasyCam);
         fill(0, 102, 153);
         text(bundesliga.name, 0, -height);
         fill(255, 0, 0);
         text(bundesligaFilter.filterName, 0, -height + 40);
         popMatrix();
 
-        translate(-width / 2, -height / 2, -height / 2);
+        translate(((-width / 2) + (-height / 2)) / 2, ((-width / 2) + (-height / 2)) / 2, 0);
 
-        userInterface.enableUserInterfaceOnTopOfPeasyCam(peasyCam);
+        userInterface.onFrontOfPeasyCam(peasyCam);
+        switchView();
 
-        changeMode();
+        switchMode();
 
         grid.resetZ();
 
@@ -88,31 +87,31 @@ public class Main extends PApplet {
         }
     }
 
-    private void changeView() {
+    private void switchView() {
         switch (view) {
             case 1:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.position());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.position());
                 break;
             case 2:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.points());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.points());
                 break;
             case 3:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.goals());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goals());
                 break;
             case 4:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.goalsAgainst());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goalsAgainst());
                 break;
             case 5:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.goalDifference());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goalDifference());
                 break;
             case 6:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.wins());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.wins());
                 break;
             case 7:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.draws());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.draws());
                 break;
             case 8:
-                teamObjects3D = changeFilter(bundesliga, bundesligaFilter.losses());
+                teamObjects3D = setFilter(bundesliga, bundesligaFilter.losses());
                 break;
         }
     }
@@ -123,19 +122,19 @@ public class Main extends PApplet {
             case ',':
                 if (view != 1) {
                     view--;
-                    changeView();
+                    switchView();
                 }
                 break;
             case '.':
                 if (view != 8) {
                     view++;
-                    changeView();
+                    switchView();
                 }
                 break;
         }
     }
 
-    private ArrayList<TeamObject3D> changeFilter(Competition competition, ArrayList<Integer> filteredValues) {
+    private ArrayList<TeamObject3D> initialize(Competition competition, ArrayList<Integer> filteredValues) {
         teamObjects3D = new ArrayList<TeamObject3D>();
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         for (Integer i = 0; i < competition.standings.size(); i++) {
@@ -149,7 +148,14 @@ public class Main extends PApplet {
         return teamObjects3D;
     }
 
-    private void changeMode() {
+    private ArrayList<TeamObject3D> setFilter(Competition competition, ArrayList<Integer> filteredValues) {
+        for (Integer i = 0; i < competition.standings.size(); i++) {
+            teamObjects3D.get(i).size = filteredValues.get(i);
+        }
+        return teamObjects3D;
+    }
+
+    private void switchMode() {
         switch (userInterface.modeValue) {
             case 0:
                 peasyCam.setActive(true);

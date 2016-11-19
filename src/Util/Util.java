@@ -44,7 +44,7 @@ public class Util {
             }
         return null;
     }
-    public static void alwaysOnFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam){
+    public static void onFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam){
         pApplet.rotateX(peasyCam.getRotations()[0]);
         pApplet.rotateY(peasyCam.getRotations()[1]);
         pApplet.rotateZ(peasyCam.getRotations()[2]);

@@ -51,7 +51,7 @@ public class UserInterface {
         }
     }
 
-    public void enableUserInterfaceOnTopOfPeasyCam(PeasyCam peasyCam) {
+    public void onFrontOfPeasyCam(PeasyCam peasyCam) {
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         peasyCam.beginHUD();
         switchModeText();

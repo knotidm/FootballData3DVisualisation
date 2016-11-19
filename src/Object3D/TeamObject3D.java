@@ -38,7 +38,7 @@ public class TeamObject3D extends Particle {
         pApplet.textAlign(PConstants.CENTER);
         pApplet.textSize(20);
         pApplet.fill(255);
-        Util.alwaysOnFrontOfPeasyCam(pApplet, peasyCam);
+        Util.onFrontOfPeasyCam(pApplet, peasyCam);
         pApplet.text(teamName, 0, -size, 0);
         pApplet.text(squadMarketValue, 0, 4 * -size, 0);
 
