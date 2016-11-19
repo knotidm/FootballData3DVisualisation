@@ -9,7 +9,7 @@ public class Filter {
 
     public Filter(Competition competition) {
         this.competition = competition;
-        values = new ArrayList<Integer>();
+        values = new ArrayList<>();
     }
 
     public ArrayList<Integer> position() {

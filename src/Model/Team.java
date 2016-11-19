@@ -31,7 +31,7 @@ public class Team {
 
     private ArrayList<Fixture> getFixtures(String link) {
         JSONArray fixturesJSON = Util.getRequestToJSONObject(link).getJSONArray("fixtures");
-        fixtures = new ArrayList<Fixture>();
+        fixtures = new ArrayList<>();
 
         for (int i = 0; i < fixturesJSON.size(); i++) {
             fixtures.add(new Fixture(fixturesJSON.getJSONObject(i)));
@@ -41,7 +41,7 @@ public class Team {
 
     private ArrayList<Player> getPlayers(String link) {
         JSONArray playersJSON = Util.getRequestToJSONObject(link).getJSONArray("players");
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
 
         for (int i = 0; i < playersJSON.size(); i++) {
             players.add(new Player(playersJSON.getJSONObject(i)));

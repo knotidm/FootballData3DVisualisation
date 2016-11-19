@@ -1,7 +1,6 @@
 import Interaction.Interaction;
 import Model.Competition;
 import Model.Filter;
-import Model.Standing;
 import Object3D.Grid;
 import Object3D.TeamObject3D;
 import UI.UserInterface;
@@ -19,12 +18,10 @@ public class Main extends PApplet {
     Competition bundesliga;
     Filter bundesligaFilter;
     ArrayList<Vec3D> initializeRandomVectors;
-    Integer view = 1;
     UserInterface userInterface;
 
     ArrayList<TeamObject3D> teamObjects3D;
     Grid grid;
-
 
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
@@ -37,13 +34,10 @@ public class Main extends PApplet {
 
         bundesliga = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
         bundesligaFilter = new Filter(bundesliga);
-        initializeRandomVectors = new ArrayList<Vec3D>();
+        initializeRandomVectors = new ArrayList<>();
 
-        for (Standing standing : bundesliga.standings) {
-            initializeRandomVectors.add(new Vec3D(random(width), random(height), random(height)));
-        }
+        bundesliga.standings.forEach((standing) -> initializeRandomVectors.add(new Vec3D(random(width), random(height), random(height))));
 
-        view = 1;
         userInterface = new UserInterface(this);
 
         grid = new Grid(this, gridSize, grilleSize);
@@ -69,14 +63,14 @@ public class Main extends PApplet {
         translate(((-width / 2) + (-height / 2)) / 2, ((-width / 2) + (-height / 2)) / 2, 0);
 
         userInterface.onFrontOfPeasyCam(peasyCam);
-        switchView();
 
         Interaction.switchMode(this, userInterface, peasyCam, grid, teamObjects3D);
+        teamObjects3D = Interaction.switchFilter(userInterface.indexFilter, bundesliga, teamObjects3D, bundesligaFilter);
 
         grid.resetZ();
 
         for (TeamObject3D teamObject3D : teamObjects3D) {
-            grid.setZ(teamObject3D.location.x, teamObject3D.location.y, teamObject3D.size - teamObject3D.location.z * 0.01f );
+            grid.setZ(teamObject3D.location.x, teamObject3D.location.y, teamObject3D.size - teamObject3D.location.z * 0.01f);
         }
 
         grid.draw();
@@ -87,55 +81,28 @@ public class Main extends PApplet {
         }
     }
 
-    private void switchView() {
-        switch (view) {
-            case 1:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.position());
-                break;
-            case 2:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.points());
-                break;
-            case 3:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goals());
-                break;
-            case 4:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goalsAgainst());
-                break;
-            case 5:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.goalDifference());
-                break;
-            case 6:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.wins());
-                break;
-            case 7:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.draws());
-                break;
-            case 8:
-                teamObjects3D = setFilter(bundesliga, bundesligaFilter.losses());
-                break;
-        }
-    }
-
     @Override
     public void keyPressed() {
         switch (key) {
             case ',':
-                if (view != 1) {
-                    view--;
-                    switchView();
+                if (userInterface.indexFilter != 1) {
+                    userInterface.indexFilter--;
                 }
                 break;
             case '.':
-                if (view != 8) {
-                    view++;
-                    switchView();
+                if (userInterface.indexFilter != 8) {
+                    userInterface.indexFilter++;
                 }
+                break;
+            case 'm':
+                userInterface.indexMode++;
+                if (userInterface.indexMode == 3) userInterface.indexMode = 0;
                 break;
         }
     }
 
     private ArrayList<TeamObject3D> initialize(Competition competition, ArrayList<Integer> filteredValues) {
-        teamObjects3D = new ArrayList<TeamObject3D>();
+        teamObjects3D = new ArrayList<>();
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new TeamObject3D(this, i,
@@ -144,13 +111,6 @@ public class Main extends PApplet {
                     competition.standings.get(i).teamName,
                     numberFormat.format(Util.getTeamByCompareTeamName(competition, i).squadMarketValue)
             ));
-        }
-        return teamObjects3D;
-    }
-
-    private ArrayList<TeamObject3D> setFilter(Competition competition, ArrayList<Integer> filteredValues) {
-        for (Integer i = 0; i < competition.standings.size(); i++) {
-            teamObjects3D.get(i).size = filteredValues.get(i);
         }
         return teamObjects3D;
     }
