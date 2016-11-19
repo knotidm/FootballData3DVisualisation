@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Filter {
     private Competition competition;
     private ArrayList<Integer> values;
-    public String filterName;
+    public String name;
 
     public Filter(Competition competition) {
         this.competition = competition;
@@ -13,7 +13,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> position() {
-        filterName = "Position";
+        name = "Position";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.position);
@@ -22,7 +22,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> points() {
-        filterName = "Points";
+        name = "Points";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.points);
@@ -31,7 +31,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> goals() {
-        filterName = "Goals";
+        name = "Goals";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.goals);
@@ -40,7 +40,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> goalsAgainst() {
-        filterName = "GoalsAgainst";
+        name = "GoalsAgainst";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.goalsAgainst);
@@ -49,7 +49,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> goalDifference() {
-        filterName = "GoalDifference";
+        name = "GoalDifference";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.goalDifference);
@@ -58,7 +58,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> wins() {
-        filterName = "Wins";
+        name = "Wins";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.wins);
@@ -67,7 +67,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> draws() {
-        filterName = "Draws";
+        name = "Draws";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.draws);
@@ -76,7 +76,7 @@ public class Filter {
     }
 
     public ArrayList<Integer> losses() {
-        filterName = "Losses";
+        name = "Losses";
         values.clear();
         for (Standing standing : competition.standings) {
             values.add(standing.losses);

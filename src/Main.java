@@ -15,9 +15,10 @@ import java.util.Locale;
 
 public class Main extends PApplet {
     PeasyCam peasyCam;
-    Competition bundesliga;
-    Filter bundesligaFilter;
-    ArrayList<Vec3D> initializeRandomVectors;
+    ArrayList<Vec3D> randomVectors;
+
+    Competition competition;
+    Filter filter;
     UserInterface userInterface;
 
     ArrayList<TeamObject3D> teamObjects3D;
@@ -31,18 +32,16 @@ public class Main extends PApplet {
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, 120);
-
-        bundesliga = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
-        bundesligaFilter = new Filter(bundesliga);
-        initializeRandomVectors = new ArrayList<>();
-
-        bundesliga.standings.forEach((standing) -> initializeRandomVectors.add(new Vec3D(random(width), random(height), random(height))));
-
         userInterface = new UserInterface(this);
-
         grid = new Grid(this, gridSize, grilleSize);
 
-        teamObjects3D = initialize(bundesliga, bundesligaFilter.points());
+        competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
+        filter = new Filter(competition);
+
+        randomVectors = new ArrayList<>();
+        competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
+
+        teamObjects3D = initialize(competition, filter.points());
     }
 
     @Override
@@ -55,17 +54,17 @@ public class Main extends PApplet {
         pushMatrix();
         Util.onFrontOfPeasyCam(this, peasyCam);
         fill(0, 102, 153);
-        text(bundesliga.name, 0, -height);
+        text(competition.name, 0, -height);
         fill(255, 0, 0);
-        text(bundesligaFilter.filterName, 0, -height + 40);
+        text(filter.name, 0, -height + 40);
         popMatrix();
 
-        translate(((-width / 2) + (-height / 2)) / 2, ((-width / 2) + (-height / 2)) / 2, 0);
+        //  translate(((-width / 2) + (-height / 2)) / 2, ((-width / 2) + (-height / 2)) / 2, 0);
 
         userInterface.onFrontOfPeasyCam(peasyCam);
 
-        Interaction.switchMode(this, userInterface, peasyCam, grid, teamObjects3D);
-        teamObjects3D = Interaction.switchFilter(userInterface.indexFilter, bundesliga, teamObjects3D, bundesligaFilter);
+        Interaction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+        teamObjects3D = Interaction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
 
         grid.resetZ();
 
@@ -98,6 +97,20 @@ public class Main extends PApplet {
                 userInterface.indexMode++;
                 if (userInterface.indexMode == 3) userInterface.indexMode = 0;
                 break;
+            case '1':
+                competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
+                filter = new Filter(competition);
+                randomVectors.clear();
+                competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
+                teamObjects3D = initialize(competition, filter.goals());
+                break;
+            case '2':
+                competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/438"));
+                filter = new Filter(competition);
+                randomVectors.clear();
+                competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
+                teamObjects3D = initialize(competition, filter.goals());
+                break;
         }
     }
 
@@ -106,7 +119,7 @@ public class Main extends PApplet {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new TeamObject3D(this, i,
-                    new Vec3D(initializeRandomVectors.get(i)),
+                    new Vec3D(randomVectors.get(i)),
                     filteredValues.get(i),
                     competition.standings.get(i).teamName,
                     numberFormat.format(Util.getTeamByCompareTeamName(competition, i).squadMarketValue)

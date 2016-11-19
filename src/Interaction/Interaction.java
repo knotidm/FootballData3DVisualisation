@@ -16,7 +16,7 @@ public class Interaction {
     private static int indexTeamObject3D = 0;
     private static float mouseShortestDistance;
 
-    public static ArrayList<TeamObject3D> switchFilter(Integer indexFilter, Competition competition, ArrayList<TeamObject3D> teamObjects3D, Filter filter) {
+    public static ArrayList<TeamObject3D> switchFilter(Competition competition, ArrayList<TeamObject3D> teamObjects3D, Filter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
                 return setFilter(competition, teamObjects3D, filter.position());
@@ -38,7 +38,7 @@ public class Interaction {
         return null;
     }
 
-    public static void switchMode(PApplet pApplet, UserInterface userInterface, PeasyCam peasyCam, Grid grid, ArrayList<TeamObject3D> teamObjects3D) {
+    public static void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<TeamObject3D> teamObjects3D) {
         switch (userInterface.indexMode) {
             case 0:
                 peasyCam.setActive(true);
