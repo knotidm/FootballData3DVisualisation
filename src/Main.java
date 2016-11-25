@@ -27,11 +27,11 @@ public class Main extends PApplet {
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
 
-    Integer minDistance = 1000;
+    Integer minDistance = 10;
 
     @Override
     public void setup() {
-        peasyCam = new PeasyCam(this, 120);
+        peasyCam = new PeasyCam(this, gridSize / 2);
         userInterface = new UserInterface(this);
         grid = new Grid(this, gridSize, grilleSize);
 
@@ -39,7 +39,7 @@ public class Main extends PApplet {
         filter = new Filter(competition);
 
         randomVectors = new ArrayList<>();
-        competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
+        competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
 
         teamObjects3D = initialize(competition, filter.points());
     }
@@ -49,17 +49,17 @@ public class Main extends PApplet {
         background(0);
         lights();
 
-        textSize(40);
-
         pushMatrix();
+        textSize(40);
         Util.onFrontOfPeasyCam(this, peasyCam);
         fill(0, 102, 153);
-        text(competition.name, 0, -height);
+        text(competition.name, 0, 0);
         fill(255, 0, 0);
-        text(filter.name, 0, -height + 40);
+        text(filter.name, 0, 40);
         popMatrix();
 
-        //  translate(((-width / 2) + (-height / 2)) / 2, ((-width / 2) + (-height / 2)) / 2, 0);
+        rotateX(PI / 2);
+        translate(-gridSize / 2, -gridSize / 2, 0);
 
         userInterface.onFrontOfPeasyCam(peasyCam);
 

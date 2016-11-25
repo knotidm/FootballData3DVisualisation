@@ -29,11 +29,14 @@ public class TeamObject3D extends Particle {
         pApplet.pushMatrix();
 
         pApplet.noFill();
+
         pApplet.stroke(255, 0, 0);
         if (isSelected) pApplet.stroke(255, 150, 0);
         if (isClicked) pApplet.stroke(150, 250, 0);
+
         super.draw(peasyCam);
 
+        pApplet.rotateX(-PConstants.PI / 2);
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         pApplet.textAlign(PConstants.CENTER);
         pApplet.textSize(20);
