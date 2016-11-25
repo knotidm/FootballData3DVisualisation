@@ -15,8 +15,7 @@ public class Interaction {
     private static int indexGrid = 0;
     private static int indexTeamObject3D = 0;
     private static float mouseShortestDistance;
-    public static float x;
-    public static float z;
+
 
     public static ArrayList<TeamObject3D> switchFilter(Competition competition, ArrayList<TeamObject3D> teamObjects3D, Filter filter, Integer indexFilter) {
         switch (indexFilter) {
@@ -53,10 +52,6 @@ public class Interaction {
             case 2:
                 peasyCam.setActive(false);
                 clickTeamObject3D(pApplet, grid, teamObjects3D);
-                break;
-            case 3:
-                peasyCam.setActive(false);
-                pApplet.translate(x, z, 0);
                 break;
         }
     }

@@ -28,7 +28,8 @@ public class Main extends PApplet {
     int gridSize = 1000;
 
     Integer minDistance = 10;
-
+    public static float x;
+    public static float z;
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
@@ -64,6 +65,8 @@ public class Main extends PApplet {
 
         userInterface.onFrontOfPeasyCam(peasyCam);
 
+        translate(x, z, 0);
+
         Interaction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
         teamObjects3D = Interaction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
 
@@ -84,6 +87,10 @@ public class Main extends PApplet {
     @Override
     public void keyPressed() {
         switch (key) {
+            case 'm':
+                userInterface.indexMode++;
+                if (userInterface.indexMode == 3) userInterface.indexMode = 0;
+                break;
             case ',':
                 if (userInterface.indexFilter != 1) {
                     userInterface.indexFilter--;
@@ -93,10 +100,6 @@ public class Main extends PApplet {
                 if (userInterface.indexFilter != 8) {
                     userInterface.indexFilter++;
                 }
-                break;
-            case 'm':
-                userInterface.indexMode++;
-                if (userInterface.indexMode == 4) userInterface.indexMode = 0;
                 break;
             case '1':
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
@@ -116,16 +119,16 @@ public class Main extends PApplet {
 
         if (key == CODED) {
             if (keyCode == UP) {
-                Interaction.z++;
+                z++;
             }
             if (keyCode == DOWN) {
-                Interaction.z--;
+                z--;
             }
             if (keyCode == LEFT) {
-                Interaction.x++;
+                x++;
             }
             if (keyCode == RIGHT) {
-                Interaction.x--;
+                x--;
             }
         }
     }

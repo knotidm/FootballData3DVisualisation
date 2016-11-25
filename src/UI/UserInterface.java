@@ -38,7 +38,7 @@ public class UserInterface {
 
         modeButton.onClick(callbackEvent -> {
             indexMode++;
-            if (indexMode == 4) indexMode = 0;
+            if (indexMode == 3) indexMode = 0;
         });
 
         filterBackButton.onClick(callbackEvent -> {
@@ -60,9 +60,6 @@ public class UserInterface {
                 break;
             case 2:
                 modeText.setText("CLICK");
-                break;
-            case 3:
-                modeText.setText("MOVE");
                 break;
         }
     }
