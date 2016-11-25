@@ -32,6 +32,7 @@ public class Main extends PApplet {
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
+        peasyCam.setResetOnDoubleClick(false);
         userInterface = new UserInterface(this);
         grid = new Grid(this, gridSize, grilleSize);
 
@@ -95,7 +96,7 @@ public class Main extends PApplet {
                 break;
             case 'm':
                 userInterface.indexMode++;
-                if (userInterface.indexMode == 3) userInterface.indexMode = 0;
+                if (userInterface.indexMode == 4) userInterface.indexMode = 0;
                 break;
             case '1':
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
@@ -111,6 +112,21 @@ public class Main extends PApplet {
                 competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
                 teamObjects3D = initialize(competition, filter.goals());
                 break;
+        }
+
+        if (key == CODED) {
+            if (keyCode == UP) {
+                Interaction.z++;
+            }
+            if (keyCode == DOWN) {
+                Interaction.z--;
+            }
+            if (keyCode == LEFT) {
+                Interaction.x++;
+            }
+            if (keyCode == RIGHT) {
+                Interaction.x--;
+            }
         }
     }
 
