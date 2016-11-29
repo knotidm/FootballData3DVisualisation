@@ -2,6 +2,7 @@ package Util;
 
 import Model.Competition;
 import Model.Team;
+import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
 import peasy.PeasyCam;
 import processing.core.PApplet;
@@ -21,12 +22,14 @@ public class Util {
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }
+    @NotNull
     public static Team getTeamByCompareTeamName(Competition competition, int index) {
+        Team resultTeam = new Team();
         for (Team team : competition.teams) {
             if (team.name.equals(competition.standings.get(index).teamName))
-                return team;
+                resultTeam = team;
         }
-        return null;
+        return resultTeam;
     }
     public static BigDecimal getBigDecimal(String integerString) {
         if (!integerString.equals("")) {

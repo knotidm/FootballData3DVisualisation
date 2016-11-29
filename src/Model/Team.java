@@ -20,6 +20,7 @@ public class Team {
     @NotNull
     PShape emblem;
 
+    public Team (){};
     public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));

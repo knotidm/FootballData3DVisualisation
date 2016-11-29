@@ -28,8 +28,14 @@ public class Main extends PApplet {
     int gridSize = 1000;
 
     Integer minDistance = 10;
-    public static float x;
-    public static float z;
+    public static float x = 0;
+    public static float y = 0;
+    private boolean moveUp = false;
+    private boolean moveDown = false;
+    private boolean moveLeft = false;
+    private boolean moveRight = false;
+
+
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
@@ -65,7 +71,20 @@ public class Main extends PApplet {
 
         userInterface.onFrontOfPeasyCam(peasyCam);
 
-        translate(x, z, 0);
+        if (moveUp) {
+            y++;
+        }
+        if (moveDown) {
+            y--;
+        }
+        if (moveLeft) {
+            x++;
+        }
+        if (moveRight) {
+            x--;
+        }
+
+        translate(x, y, 0);
 
         Interaction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
         teamObjects3D = Interaction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
@@ -73,7 +92,7 @@ public class Main extends PApplet {
         grid.resetZ();
 
         for (TeamObject3D teamObject3D : teamObjects3D) {
-            grid.setZ(teamObject3D.location.x, teamObject3D.location.y, teamObject3D.size - teamObject3D.location.z * 0.01f);
+            grid.setZ(teamObject3D.location.x, teamObject3D.location.y, teamObject3D.size - teamObject3D.location.y * 0.01f);
         }
 
         grid.draw();
@@ -119,16 +138,34 @@ public class Main extends PApplet {
 
         if (key == CODED) {
             if (keyCode == UP) {
-                z++;
+                moveUp = true;
             }
             if (keyCode == DOWN) {
-                z--;
+                moveDown = true;
             }
             if (keyCode == LEFT) {
-                x++;
+                moveLeft = true;
             }
             if (keyCode == RIGHT) {
-                x--;
+                moveRight = true;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased() {
+        if (key == CODED) {
+            if (keyCode == UP) {
+                moveUp = false;
+            }
+            if (keyCode == DOWN) {
+                moveDown = false;
+            }
+            if (keyCode == LEFT) {
+                moveLeft = false;
+            }
+            if (keyCode == RIGHT) {
+                moveRight = false;
             }
         }
     }
