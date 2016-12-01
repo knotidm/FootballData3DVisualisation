@@ -11,7 +11,7 @@ import toxi.geom.Vec3D;
 public class Object3D<T> extends Particle {
     private PApplet pApplet;
     public Integer index;
-    private T type;
+    public T type;
     public Boolean isSelected;
     public Boolean isClicked;
 

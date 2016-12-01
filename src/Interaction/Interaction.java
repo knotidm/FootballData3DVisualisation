@@ -2,7 +2,6 @@ package Interaction;
 
 import Model.Competition;
 import Model.Filter;
-import Model.Team;
 import Object3D.Grid;
 import Object3D.Object3D;
 import UI.UserInterface;
@@ -12,97 +11,98 @@ import processing.core.PConstants;
 
 import java.util.ArrayList;
 
-public class Interaction {
+public class Interaction <T>{
     private static int indexGrid = 0;
     private static int indexTeamObject3D = 0;
     private static float mouseShortestDistance;
 
-    public static ArrayList<Object3D<Team>> switchTeamFilter(Competition competition, ArrayList<Object3D<Team>> teamObjects3D, Filter filter, Integer indexFilter) {
+    public ArrayList<Object3D<T>> switchFilter(Competition competition, ArrayList<Object3D<T>> objects3D, Filter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
-                return setTeamFilter(competition, teamObjects3D, filter.position());
+                return setFilter(competition, objects3D, filter.position());
             case 2:
-                return setTeamFilter(competition, teamObjects3D, filter.points());
+                return setFilter(competition, objects3D, filter.points());
             case 3:
-                return setTeamFilter(competition, teamObjects3D, filter.goals());
+                return setFilter(competition, objects3D, filter.goals());
             case 4:
-                return setTeamFilter(competition, teamObjects3D, filter.goalsAgainst());
+                return setFilter(competition, objects3D, filter.goalsAgainst());
             case 5:
-                return setTeamFilter(competition, teamObjects3D, filter.goalDifference());
+                return setFilter(competition, objects3D, filter.goalDifference());
             case 6:
-                return setTeamFilter(competition, teamObjects3D, filter.wins());
+                return setFilter(competition, objects3D, filter.wins());
             case 7:
-                return setTeamFilter(competition, teamObjects3D, filter.draws());
+                return setFilter(competition, objects3D, filter.draws());
             case 8:
-                return setTeamFilter(competition, teamObjects3D, filter.losses());
+                return setFilter(competition, objects3D, filter.losses());
         }
         return null;
     }
 
-    public static void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<Object3D<Team>> teamObjects3D) {
+    public void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
         switch (userInterface.indexMode) {
             case 0:
                 peasyCam.setActive(true);
-                resetAllTeamObjects3DStates(teamObjects3D);
+                resetAllObjects3DStates(objects3D);
                 break;
             case 1:
                 peasyCam.setActive(false);
-                dragTeamObject3D(pApplet, grid, teamObjects3D);
+                dragObject3D(pApplet, grid, objects3D);
                 break;
             case 2:
                 peasyCam.setActive(false);
-                clickTeamObject3D(pApplet, grid, teamObjects3D);
+                clickObject3D(pApplet, grid, objects3D);
                 break;
         }
     }
 
-    private static ArrayList<Object3D<Team>> setTeamFilter(Competition competition, ArrayList<Object3D<Team>> teamObjects3D, ArrayList<Integer> filteredValues) {
+    private ArrayList<Object3D<T>> setFilter(Competition competition, ArrayList<Object3D<T>> objects3D, ArrayList<Integer> filteredValues) {
         for (Integer i = 0; i < competition.standings.size(); i++) {
-            teamObjects3D.get(i).size = filteredValues.get(i);
+            objects3D.get(i).size = filteredValues.get(i);
         }
-        return teamObjects3D;
+        return objects3D;
     }
 
-    private static void dragTeamObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<Team>> teamObjects3D) {
-        resetAllTeamObjects3DStates(teamObjects3D);
-        teamObjects3D.get(indexTeamObject3D).isSelected = true;
+    private void dragObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
+        resetAllObjects3DStates(objects3D);
+        objects3D.get(indexTeamObject3D).isSelected = true;
         positionInRelationToGrid(pApplet, grid);
 
         if (pApplet.mousePressed) {
             if (pApplet.mouseButton == PConstants.LEFT) {
-                teamObjects3D.get(indexTeamObject3D).location.x += (grid.x[indexGrid] - teamObjects3D.get(indexTeamObject3D).location.x) / 6;
-                teamObjects3D.get(indexTeamObject3D).location.y += (grid.y[indexGrid] - teamObjects3D.get(indexTeamObject3D).location.y) / 6;
+                objects3D.get(indexTeamObject3D).location.x += (grid.x[indexGrid] - objects3D.get(indexTeamObject3D).location.x) / 6;
+                objects3D.get(indexTeamObject3D).location.y += (grid.y[indexGrid] - objects3D.get(indexTeamObject3D).location.y) / 6;
             }
             if (pApplet.mouseButton == PConstants.RIGHT) {
-                teamObjects3D.get(indexTeamObject3D).location.z += pApplet.pmouseY - pApplet.mouseY;
+                objects3D.get(indexTeamObject3D).location.z += pApplet.pmouseY - pApplet.mouseY;
             }
         } else {
-            closestTeamObject3DInRelationToPosition(pApplet, teamObjects3D);
+            closestObject3DInRelationToPosition(pApplet, objects3D);
         }
     }
 
-    private static void clickTeamObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<Team>> teamObjects3D) {
-        resetAllTeamObjects3DStates(teamObjects3D);
-        teamObjects3D.get(indexTeamObject3D).isSelected = true;
+    private void clickObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
+        resetAllObjects3DStates(objects3D);
+        objects3D.get(indexTeamObject3D).isSelected = true;
         positionInRelationToGrid(pApplet, grid);
 
         if (pApplet.mousePressed) {
             if (pApplet.mouseButton == PConstants.LEFT) {
-                teamObjects3D.get(indexTeamObject3D).isClicked = true;
+                objects3D.get(indexTeamObject3D).isClicked = true;
+
             }
         } else {
-            closestTeamObject3DInRelationToPosition(pApplet, teamObjects3D);
+            closestObject3DInRelationToPosition(pApplet, objects3D);
         }
     }
 
-    private static void resetAllTeamObjects3DStates(ArrayList<Object3D<Team>> teamObjects3D) {
-        for (Object3D<Team> teamObject3D : teamObjects3D) {
-            teamObject3D.isSelected = false;
-            teamObject3D.isClicked = false;
+    private void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {
+        for (Object3D<T> object3D : objects3D) {
+            object3D.isSelected = false;
+            object3D.isClicked = false;
         }
     }
 
-    private static void positionInRelationToGrid(PApplet pApplet, Grid grid) {
+    private void positionInRelationToGrid(PApplet pApplet, Grid grid) {
         mouseShortestDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(grid.x[indexGrid], grid.y[indexGrid], 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(grid.x[indexGrid], grid.y[indexGrid], 0)));
         for (int i = 0; i < grid.x.length; i++) {
             float mouseDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(grid.x[i], grid.y[i], 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(grid.x[i], grid.y[i], 0)));
@@ -113,12 +113,12 @@ public class Interaction {
         }
     }
 
-    private static void closestTeamObject3DInRelationToPosition(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D) {
-        mouseShortestDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(teamObjects3D.get(indexTeamObject3D).location.x, teamObjects3D.get(indexTeamObject3D).location.y, 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(teamObjects3D.get(indexTeamObject3D).location.x, teamObjects3D.get(indexTeamObject3D).location.y, 0)));
-        for (Object3D<Team> teamObject3D : teamObjects3D) {
-            float mouseDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(teamObject3D.location.x, teamObject3D.location.y, 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(teamObject3D.location.x, teamObject3D.location.y, 0)));
+    private void closestObject3DInRelationToPosition(PApplet pApplet, ArrayList<Object3D<T>> objects3D) {
+        mouseShortestDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(objects3D.get(indexTeamObject3D).location.x, objects3D.get(indexTeamObject3D).location.y, 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(objects3D.get(indexTeamObject3D).location.x, objects3D.get(indexTeamObject3D).location.y, 0)));
+        for (Object3D<T> object3D : objects3D) {
+            float mouseDistance = PApplet.sqrt(PApplet.sq(pApplet.mouseX - pApplet.screenX(object3D.location.x, object3D.location.y, 0)) + PApplet.sq(pApplet.mouseY - pApplet.screenY(object3D.location.x, object3D.location.y, 0)));
             if (mouseDistance <= mouseShortestDistance) {
-                indexTeamObject3D = teamObject3D.index;
+                indexTeamObject3D = object3D.index;
                 mouseShortestDistance = mouseDistance;
             }
         }

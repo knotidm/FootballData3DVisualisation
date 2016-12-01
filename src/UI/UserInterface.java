@@ -16,6 +16,8 @@ public class UserInterface {
     private Button filterBackButton;
     private Button filterNextButton;
     public Integer indexFilter = 1;
+    public boolean competitionLevel = true;
+    public boolean teamLevel = false;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;

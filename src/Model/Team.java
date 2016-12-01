@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public class Team {
     @NotNull
-    ArrayList<Fixture> fixtures;
+    public ArrayList<Fixture> fixtures;
     @NotNull
-    ArrayList<Player> players;
+    public ArrayList<Player> players;
     @NotNull
     public String name;
     @NotNull
