@@ -10,6 +10,7 @@ import processing.data.JSONObject;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Util {
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }
+
     @NotNull
     public static Team getTeamByCompareTeamName(Competition competition, int index) {
         Team resultTeam = new Team();
@@ -31,12 +33,14 @@ public class Util {
         }
         return resultTeam;
     }
+
     public static BigDecimal getBigDecimal(String integerString) {
         if (!integerString.equals("")) {
             return new BigDecimal(integerString);
         }
         return new BigDecimal(0);
     }
+
     public static Date getDate(String dateString) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
         if (!dateString.equals(""))
@@ -47,7 +51,13 @@ public class Util {
             }
         return null;
     }
-    public static void onFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam){
+
+    public static String bigDecimalToString(BigDecimal bigDecimal) {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+        return numberFormat.format(bigDecimal);
+    }
+
+    public static void onFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam) {
         pApplet.rotateX(peasyCam.getRotations()[0]);
         pApplet.rotateY(peasyCam.getRotations()[1]);
         pApplet.rotateZ(peasyCam.getRotations()[2]);

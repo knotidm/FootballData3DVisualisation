@@ -1,17 +1,16 @@
 import Interaction.Interaction;
 import Model.Competition;
 import Model.Filter;
+import Model.Team;
 import Object3D.Grid;
-import Object3D.TeamObject3D;
+import Object3D.Object3D;
 import UI.UserInterface;
 import Util.Util;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import toxi.geom.Vec3D;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class Main extends PApplet {
     PeasyCam peasyCam;
@@ -21,20 +20,21 @@ public class Main extends PApplet {
     Filter filter;
     UserInterface userInterface;
 
-    ArrayList<TeamObject3D> teamObjects3D;
+    ArrayList<Object3D<Team>> teamObjects3D;
     Grid grid;
 
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
 
-    Integer minDistance = 10;
+    Integer minDistance = 100;
     public static float x = 0;
     public static float y = 0;
     private boolean moveUp = false;
     private boolean moveDown = false;
     private boolean moveLeft = false;
     private boolean moveRight = false;
-
+    public boolean competitionLevel = true;
+    public boolean teamLevel = false;
 
     @Override
     public void setup() {
@@ -47,7 +47,7 @@ public class Main extends PApplet {
         filter = new Filter(competition);
 
         randomVectors = new ArrayList<>();
-        competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
+        competition.standings.forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
 
         teamObjects3D = initialize(competition, filter.points());
     }
@@ -86,21 +86,23 @@ public class Main extends PApplet {
 
         translate(x, y, 0);
 
-        Interaction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+        Object3D<Object>[] objects3D = (Object3D<Object>[]) teamObjects3D.toArray();
+
+        Interaction.switchMode(this, peasyCam, userInterface, grid, objects3D);
         teamObjects3D = Interaction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
 
-        grid.resetZ();
+        if (competitionLevel) {
+            grid.resetZ();
 
-        for (TeamObject3D teamObject3D : teamObjects3D) {
-            grid.setZ(teamObject3D.location.x, teamObject3D.location.y, teamObject3D.size - teamObject3D.location.y * 0.01f);
+            for (Object3D<Team> object3D : teamObjects3D) {
+                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                object3D.draw(peasyCam);
+                object3D.lineBetween(objects3D, minDistance);
+            }
         }
 
         grid.draw();
 
-        for (TeamObject3D teamObject3D : teamObjects3D) {
-            teamObject3D.draw(peasyCam);
-            teamObject3D.lineBetween(teamObjects3D, minDistance);
-        }
     }
 
     @Override
@@ -170,15 +172,14 @@ public class Main extends PApplet {
         }
     }
 
-    private ArrayList<TeamObject3D> initialize(Competition competition, ArrayList<Integer> filteredValues) {
+    private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
         teamObjects3D = new ArrayList<>();
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         for (Integer i = 0; i < competition.standings.size(); i++) {
-            teamObjects3D.add(new TeamObject3D(this, i,
+            teamObjects3D.add(new Object3D<Team>(this,
                     new Vec3D(randomVectors.get(i)),
                     filteredValues.get(i),
-                    competition.standings.get(i).teamName,
-                    numberFormat.format(Util.getTeamByCompareTeamName(competition, i).squadMarketValue)
+                    i,
+                    Util.getTeamByCompareTeamName(competition, i)
             ));
         }
         return teamObjects3D;

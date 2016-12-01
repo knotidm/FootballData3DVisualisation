@@ -35,7 +35,7 @@ public class Competition {
 
     private ArrayList<Team> getTeams(String link) {
         JSONArray teamsJSON = Util.getRequestToJSONObject(link).getJSONArray("teams");
-        teams = new ArrayList<Team>();
+        teams = new ArrayList<>();
 
         for (int i = 0; i < teamsJSON.size(); i++) {
             teams.add(new Team(teamsJSON.getJSONObject(i)));
@@ -45,7 +45,7 @@ public class Competition {
 
     private ArrayList<Standing> getStandings(String link) {
         JSONArray standingsJSON = Util.getRequestToJSONObject(link).getJSONArray("standing");
-        standings = new ArrayList<Standing>();
+        standings = new ArrayList<>();
 
         for (int i = 0; i < standingsJSON.size(); i++) {
             standings.add(new Standing(standingsJSON.getJSONObject(i)));

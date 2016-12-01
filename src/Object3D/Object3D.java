@@ -1,25 +1,26 @@
 package Object3D;
 
+import Model.Player;
+import Model.Team;
 import Util.Util;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import toxi.geom.Vec3D;
 
-public class TeamObject3D extends Particle {
+public class Object3D<T> extends Particle {
     private PApplet pApplet;
     public Integer index;
-    public String teamName;
-    public String squadMarketValue;
+    private T type;
     public Boolean isSelected;
     public Boolean isClicked;
 
-    public TeamObject3D(PApplet pApplet, Integer index, Vec3D location, Integer size, String teamName, String squadMarketValue) {
+
+    public Object3D(PApplet pApplet, Vec3D location, Integer size, Integer index, T type) {
         super(pApplet, location, size);
         this.pApplet = pApplet;
         this.index = index;
-        this.teamName = teamName;
-        this.squadMarketValue = squadMarketValue;
+        this.type = type;
         this.isSelected = false;
         this.isClicked = false;
     }
@@ -42,8 +43,16 @@ public class TeamObject3D extends Particle {
         pApplet.textSize(20);
         pApplet.fill(255);
         Util.onFrontOfPeasyCam(pApplet, peasyCam);
-        pApplet.text(teamName, 0, -size, 0);
-        pApplet.text(squadMarketValue, 0, 4 * -size, 0);
+
+        if (type == Team.class) {
+            Team team = (Team) type;
+            pApplet.text(team.name, 0, -size, 0);
+            pApplet.text(Util.bigDecimalToString(team.squadMarketValue), 0, 4 * -size, 0);
+        } else if (type == Player.class) {
+            Player player = (Player) type;
+            pApplet.text(player.name, 0, -size, 0);
+            pApplet.text(Util.bigDecimalToString(player.marketValue), 0, 4 * -size, 0);
+        }
 
         pApplet.popMatrix();
     }

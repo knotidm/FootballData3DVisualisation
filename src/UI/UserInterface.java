@@ -21,10 +21,10 @@ public class UserInterface {
         this.pApplet = pApplet;
         controlP5 = new ControlP5(pApplet);
         modeButton = controlP5.addButton("SWITCH MODE").setValue(indexMode).setPosition(10, 10);
-        modeText = controlP5.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(80, 15);
+        modeText = controlP5.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(85, 15);
 
         filterBackButton = controlP5.addButton("BACK FILTER").setValue(indexMode).setPosition(10, 35);
-        filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexMode).setPosition(80, 35);
+        filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexMode).setPosition(85, 35);
 
         controlP5.setAutoDraw(false);
 

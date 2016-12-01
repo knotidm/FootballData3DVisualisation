@@ -9,19 +9,19 @@ import java.util.Date;
 
 public class Player {
     @NotNull
-    String name;
+    public String name;
     @NotNull
-    String position;
+    public String position;
     @NotNull
-    Integer jerseyNumber;
+    public Integer jerseyNumber;
     @NotNull
-    Date dateOfBirth;
+    public Date dateOfBirth;
     @NotNull
-    String nationality;
+    public String nationality;
     @NotNull
-    Date contractUntil;
+    public Date contractUntil;
     @NotNull
-    BigDecimal marketValue;
+    public BigDecimal marketValue;
 
     public Player(JSONObject player) {
         name = player.getString("name");
