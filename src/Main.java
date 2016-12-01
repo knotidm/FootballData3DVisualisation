@@ -86,10 +86,8 @@ public class Main extends PApplet {
 
         translate(x, y, 0);
 
-        Object3D<Object>[] objects3D = (Object3D<Object>[]) teamObjects3D.toArray();
-
-        Interaction.switchMode(this, peasyCam, userInterface, grid, objects3D);
-        teamObjects3D = Interaction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
+        Interaction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+        teamObjects3D = Interaction.switchTeamFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
 
         if (competitionLevel) {
             grid.resetZ();
@@ -97,7 +95,7 @@ public class Main extends PApplet {
             for (Object3D<Team> object3D : teamObjects3D) {
                 grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                 object3D.draw(peasyCam);
-                object3D.lineBetween(objects3D, minDistance);
+                object3D.lineBetween(teamObjects3D, minDistance);
             }
         }
 

@@ -1,5 +1,6 @@
 package Object3D;
 
+import Model.Team;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -7,7 +8,7 @@ import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
 
-public class Particle{
+public class Particle {
     private PApplet pApplet;
     public Vec3D location;
     Vec3D acceleration;
@@ -101,7 +102,7 @@ public class Particle{
         acceleration.addSelf(steer);
     }
 
-    public void lineBetween(Object3D<Object>[] particles, Integer minDistance) {
+    public void lineBetween(ArrayList<Object3D<Team>> particles, Integer minDistance) {
         for (Particle other : particles) {
             float distance = location.distanceTo(other.location);
             if (distance > 0 && distance < minDistance) {

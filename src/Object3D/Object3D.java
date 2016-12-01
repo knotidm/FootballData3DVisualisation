@@ -15,7 +15,6 @@ public class Object3D<T> extends Particle {
     public Boolean isSelected;
     public Boolean isClicked;
 
-
     public Object3D(PApplet pApplet, Vec3D location, Integer size, Integer index, T type) {
         super(pApplet, location, size);
         this.pApplet = pApplet;
@@ -44,11 +43,11 @@ public class Object3D<T> extends Particle {
         pApplet.fill(255);
         Util.onFrontOfPeasyCam(pApplet, peasyCam);
 
-        if (type == Team.class) {
+        if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.name, 0, -size, 0);
             pApplet.text(Util.bigDecimalToString(team.squadMarketValue), 0, 4 * -size, 0);
-        } else if (type == Player.class) {
+        } else if (type.getClass() == Player.class) {
             Player player = (Player) type;
             pApplet.text(player.name, 0, -size, 0);
             pApplet.text(Util.bigDecimalToString(player.marketValue), 0, 4 * -size, 0);
