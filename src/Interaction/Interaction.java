@@ -3,7 +3,6 @@ package Interaction;
 import Filter.FilterPlayer;
 import Filter.FilterTeam;
 import Model.Competition;
-import Model.Player;
 import Model.Team;
 import Object3D.Grid;
 import Object3D.Object3D;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 public class Interaction<T> {
     private static int indexGrid = 0;
-    private static int indexObject3D = 0;
+    public static int indexObject3D = 0;
     private static float mouseShortestDistance;
 
     public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, FilterTeam filter, Integer indexFilter) {
@@ -81,8 +80,6 @@ public class Interaction<T> {
     }
 
     private void dragObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
-        resetAllObjects3DStates(objects3D);
-        objects3D.get(indexObject3D).isSelected = true;
         positionInRelationToGrid(pApplet, grid);
 
         if (pApplet.mousePressed) {
@@ -94,40 +91,29 @@ public class Interaction<T> {
                 objects3D.get(indexObject3D).location.z += pApplet.pmouseY - pApplet.mouseY;
             }
         } else {
+            resetAllObjects3DStates(objects3D);
             closestObject3DInRelationToPosition(pApplet, objects3D);
+            objects3D.get(indexObject3D).isSelected = true;
         }
     }
 
     private void clickObject3D(PApplet pApplet, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
-        resetAllObjects3DStates(objects3D);
-        objects3D.get(indexObject3D).isSelected = true;
         positionInRelationToGrid(pApplet, grid);
 
         if (pApplet.mousePressed) {
             if (pApplet.mouseButton == PConstants.LEFT) {
                 objects3D.get(indexObject3D).isClicked = true;
-                if (objects3D.get(indexObject3D).type.getClass() == Team.class) {
-                    userInterface.competitionLevel = false;
-                    userInterface.teamLevel = true;
-                }
-                if (objects3D.get(indexObject3D).type.getClass() == Player.class) {
-                    userInterface.competitionLevel = true;
-                    userInterface.teamLevel = false;
-                }
+                userInterface.competitionLevel = false;
+                userInterface.teamLevel = true;
             }
         } else {
-
+            indexObject3D = 0;
+            resetAllObjects3DStates(objects3D);
             closestObject3DInRelationToPosition(pApplet, objects3D);
-
+            objects3D.get(indexObject3D).isSelected = true;
+            userInterface.competitionLevel = true;
+            userInterface.teamLevel = false;
         }
-
-//        if (objects3D.get(indexObject3D).type.getClass() == Team.class) {
-//            userInterface.competitionLevel = false;
-//            userInterface.teamLevel = true;
-//        } else if (objects3D.get(indexObject3D).type.getClass() == Player.class) {
-//            userInterface.competitionLevel = true;
-//            userInterface.teamLevel = false;
-//        }
     }
 
     private void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {

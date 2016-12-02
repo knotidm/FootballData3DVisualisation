@@ -56,9 +56,8 @@ public class Main extends PApplet {
         teamInteraction = new Interaction<Team>();
 
         playerObjects3D = new ArrayList<>();
-        for (Object3D<Team> object3D : teamObjects3D) {
-            filterPlayer = new FilterPlayer(object3D.type);
-            playerObjects3D = initialize(object3D.type, filterPlayer.jerseyNumber());
+        for (Object3D<Team> teamObject3D : teamObjects3D) {
+            playerObjects3D = initialize(teamObject3D.type);
         }
         playerInteraction = new Interaction<Player>();
 
@@ -119,7 +118,7 @@ public class Main extends PApplet {
 
             for (Object3D<Team> object3D : teamObjects3D) {
                 if (object3D.isClicked)
-                    playerObjects3D = initialize(object3D.type, filterPlayer.jerseyNumber());
+                    playerObjects3D = initialize(object3D.type);
             }
 
             grid.resetZ();
@@ -200,6 +199,19 @@ public class Main extends PApplet {
         }
     }
 
+//    public void mousePressed()
+//    {
+//        if (teamObjects3D.get(Interaction.indexObject3D).type.getClass() == Team.class) {
+//            userInterface.competitionLevel = false;
+//            userInterface.teamLevel = true;
+//        }
+//        if (playerObjects3D.get(Interaction.indexObject3D).type.getClass() == Player.class) {
+//            playerObjects3D.get(Interaction.indexObject3D).isClicked = true;
+//            userInterface.competitionLevel = true;
+//            userInterface.teamLevel = false;
+//        }
+//    }
+
     private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
         teamObjects3D.clear();
         for (Integer i = 0; i < competition.standings.size(); i++) {
@@ -213,14 +225,15 @@ public class Main extends PApplet {
         return teamObjects3D;
     }
 
-    private ArrayList<Object3D<Player>> initialize(Team team, ArrayList<Integer> filteredValues) {
+    private ArrayList<Object3D<Player>> initialize(Team team) {
+        filterPlayer = new FilterPlayer(team);
         playerObjects3D.clear();
         randomVectors.clear();
         team.players.forEach((player) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
         for (Integer i = 0; i < team.players.size(); i++) {
             playerObjects3D.add(new Object3D<Player>(this,
                     new Vec3D(randomVectors.get(i)),
-                    filteredValues.get(i),
+                    filterPlayer.jerseyNumber().get(i),
                     i,
                     team.players.get(i)
             ));
