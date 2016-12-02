@@ -1,6 +1,5 @@
 package Object3D;
 
-import Model.Team;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -102,7 +101,7 @@ public class Particle {
         acceleration.addSelf(steer);
     }
 
-    public void lineBetween(ArrayList<Object3D<Team>> particles, Integer minDistance) {
+    public void lineBetween(ArrayList<Object3D<Object>> particles, Integer minDistance) {
         for (Particle other : particles) {
             float distance = location.distanceTo(other.location);
             if (distance > 0 && distance < minDistance) {

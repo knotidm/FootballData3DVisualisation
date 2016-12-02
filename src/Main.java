@@ -1,6 +1,7 @@
+import Filter.FilterPlayer;
+import Filter.FilterTeam;
 import Interaction.Interaction;
 import Model.Competition;
-import Model.Filter;
 import Model.Player;
 import Model.Team;
 import Object3D.Grid;
@@ -18,7 +19,8 @@ public class Main extends PApplet {
     ArrayList<Vec3D> randomVectors;
 
     Competition competition;
-    Filter filter;
+    FilterTeam filterTeam;
+    FilterPlayer filterPlayer;
     UserInterface userInterface;
 
     ArrayList<Object3D<Team>> teamObjects3D;
@@ -27,7 +29,6 @@ public class Main extends PApplet {
     Interaction<Player> playerInteraction;
 
     Grid grid;
-
 
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
@@ -40,7 +41,6 @@ public class Main extends PApplet {
     private boolean moveLeft = false;
     private boolean moveRight = false;
 
-
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
@@ -50,12 +50,11 @@ public class Main extends PApplet {
         playerInteraction = new Interaction<Player>();
         grid = new Grid(this, gridSize, grilleSize);
         competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
-        filter = new Filter(competition);
-
+        filterTeam = new FilterTeam(competition);
         randomVectors = new ArrayList<>();
         competition.standings.forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
 
-        teamObjects3D = initialize(competition, filter.points());
+        teamObjects3D = initialize(competition, filterTeam.points());
     }
 
     @Override
@@ -69,7 +68,7 @@ public class Main extends PApplet {
         fill(0, 102, 153);
         text(competition.name, 0, 0);
         fill(255, 0, 0);
-        text(filter.name, 0, 40);
+        text(filterTeam.name, 0, 40);
         popMatrix();
 
         rotateX(PI / 2);
@@ -95,16 +94,36 @@ public class Main extends PApplet {
         if (userInterface.competitionLevel) {
 
             teamInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
-            teamObjects3D = teamInteraction.switchFilter(competition, teamObjects3D, filter, userInterface.indexFilter);
+            teamObjects3D = teamInteraction.switchFilter(competition, teamObjects3D, filterTeam, userInterface.indexFilter);
 
             grid.resetZ();
 
             for (Object3D<Team> object3D : teamObjects3D) {
                 grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                 object3D.draw(peasyCam);
-                object3D.lineBetween(teamObjects3D, minDistance);
+                //object3D.lineBetween(teamObjects3D, minDistance);
             }
-        } else if (userInterface.teamLevel) {
+        }
+
+        if (userInterface.teamLevel) {
+
+            for (Object3D<Team> object3D : teamObjects3D) {
+                if (object3D.isClicked) {
+                    filterPlayer = new FilterPlayer(object3D.type);
+                    playerObjects3D = initialize(object3D, filterPlayer.jerseyNumber());
+                }
+            }
+
+            playerInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
+
+
+            grid.resetZ();
+
+            for (Object3D<Player> object3D : playerObjects3D) {
+                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                object3D.draw(peasyCam);
+                //object3D.lineBetween(playerObjects3D, minDistance);
+            }
 
         }
 
@@ -131,17 +150,17 @@ public class Main extends PApplet {
                 break;
             case '1':
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
-                filter = new Filter(competition);
+                filterTeam = new FilterTeam(competition);
                 randomVectors.clear();
                 competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
-                teamObjects3D = initialize(competition, filter.goals());
+                teamObjects3D = initialize(competition, filterTeam.goals());
                 break;
             case '2':
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/438"));
-                filter = new Filter(competition);
+                filterTeam = new FilterTeam(competition);
                 randomVectors.clear();
                 competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
-                teamObjects3D = initialize(competition, filter.goals());
+                teamObjects3D = initialize(competition, filterTeam.goals());
                 break;
         }
 
@@ -194,18 +213,19 @@ public class Main extends PApplet {
 
     private ArrayList<Object3D<Player>> initialize(Object3D<Team> teamObject3D, ArrayList<Integer> filteredValues) {
         playerObjects3D = new ArrayList<>();
+        randomVectors.clear();
+        teamObject3D.type.players.forEach((player) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
 
-        if (teamObject3D.isClicked) {
-            for (Integer i = 0; i < teamObject3D.type.players.size(); i++) {
-                playerObjects3D.add(new Object3D<Player>(this,
-                        new Vec3D(randomVectors.get(i)),
-                        filteredValues.get(i),
-                        i,
-                        teamObject3D.type.players.get(i)
-                ));
-            }
+        for (Integer i = 0; i < teamObject3D.type.players.size(); i++) {
+            playerObjects3D.add(new Object3D<Player>(this,
+                    new Vec3D(randomVectors.get(i)),
+                    filteredValues.get(i),
+                    i,
+                    teamObject3D.type.players.get(i)
+            ));
         }
-            return playerObjects3D;
+
+        return playerObjects3D;
     }
 
     @Override

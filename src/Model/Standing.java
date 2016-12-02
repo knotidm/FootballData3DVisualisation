@@ -5,29 +5,29 @@ import processing.data.JSONObject;
 
 public class Standing {
     @NotNull
-    Integer position;
+    public Integer position;
     @NotNull
     public String teamName;
     @NotNull
-    Integer playedGames;
+    public Integer playedGames;
     @NotNull
-    Integer points;
+    public Integer points;
     @NotNull
-    Integer goals;
+    public Integer goals;
     @NotNull
-    Integer goalsAgainst;
+    public Integer goalsAgainst;
     @NotNull
-    Integer goalDifference;
+    public Integer goalDifference;
     @NotNull
-    Integer wins;
+    public Integer wins;
     @NotNull
-    Integer draws;
+    public Integer draws;
     @NotNull
-    Integer losses;
+    public Integer losses;
     @NotNull
-    Home home;
+    public Home home;
     @NotNull
-    Away away;
+    public Away away;
 
     Standing(JSONObject standing) {
         position = standing.getInt("position");
