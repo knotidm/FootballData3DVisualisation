@@ -15,20 +15,20 @@ import toxi.geom.Vec3D;
 import java.util.ArrayList;
 
 public class Main extends PApplet {
-    PeasyCam peasyCam;
-    ArrayList<Vec3D> randomVectors;
+    private PeasyCam peasyCam;
+    private UserInterface userInterface;
+    private Competition competition;
+    private ArrayList<Vec3D> randomVectors;
 
-    Competition competition;
-    FilterTeam filterTeam;
-    FilterPlayer filterPlayer;
-    UserInterface userInterface;
+    private ArrayList<Object3D<Team>> teamObjects3D;
+    private FilterTeam filterTeam;
+    private Interaction<Team> teamInteraction;
 
-    ArrayList<Object3D<Team>> teamObjects3D;
-    Interaction<Team> teamInteraction;
-    ArrayList<Object3D<Player>> playerObjects3D;
-    Interaction<Player> playerInteraction;
+    private ArrayList<Object3D<Player>> playerObjects3D;
+    private FilterPlayer filterPlayer;
+    private Interaction<Player> playerInteraction;
 
-    Grid grid;
+    private Grid grid;
 
     int grilleSize = 10; // rozmiar kratki w siatce
     int gridSize = 1000;
@@ -46,15 +46,23 @@ public class Main extends PApplet {
         peasyCam = new PeasyCam(this, gridSize / 2);
         peasyCam.setResetOnDoubleClick(false);
         userInterface = new UserInterface(this);
-        teamInteraction = new Interaction<Team>();
-        playerInteraction = new Interaction<Player>();
-        grid = new Grid(this, gridSize, grilleSize);
         competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
-        filterTeam = new FilterTeam(competition);
         randomVectors = new ArrayList<>();
         competition.standings.forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
 
+        teamObjects3D = new ArrayList<>();
+        filterTeam = new FilterTeam(competition);
         teamObjects3D = initialize(competition, filterTeam.points());
+        teamInteraction = new Interaction<Team>();
+
+        playerObjects3D = new ArrayList<>();
+        for (Object3D<Team> object3D : teamObjects3D) {
+            filterPlayer = new FilterPlayer(object3D.type);
+            playerObjects3D = initialize(object3D.type, filterPlayer.jerseyNumber());
+        }
+        playerInteraction = new Interaction<Player>();
+
+        grid = new Grid(this, gridSize, grilleSize);
     }
 
     @Override
@@ -94,7 +102,7 @@ public class Main extends PApplet {
         if (userInterface.competitionLevel) {
 
             teamInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
-            teamObjects3D = teamInteraction.switchFilter(competition, teamObjects3D, filterTeam, userInterface.indexFilter);
+            teamObjects3D = teamInteraction.switchTeamFilter(competition, teamObjects3D, filterTeam, userInterface.indexFilter);
 
             grid.resetZ();
 
@@ -107,15 +115,12 @@ public class Main extends PApplet {
 
         if (userInterface.teamLevel) {
 
-            for (Object3D<Team> object3D : teamObjects3D) {
-                if (object3D.isClicked) {
-                    filterPlayer = new FilterPlayer(object3D.type);
-                    playerObjects3D = initialize(object3D, filterPlayer.jerseyNumber());
-                }
-            }
-
             playerInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
 
+            for (Object3D<Team> object3D : teamObjects3D) {
+                if (object3D.isClicked)
+                    playerObjects3D = initialize(object3D.type, filterPlayer.jerseyNumber());
+            }
 
             grid.resetZ();
 
@@ -124,11 +129,8 @@ public class Main extends PApplet {
                 object3D.draw(peasyCam);
                 //object3D.lineBetween(playerObjects3D, minDistance);
             }
-
         }
-
         grid.draw();
-
     }
 
     @Override
@@ -199,7 +201,7 @@ public class Main extends PApplet {
     }
 
     private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
-        teamObjects3D = new ArrayList<>();
+        teamObjects3D.clear();
         for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new Object3D<Team>(this,
                     new Vec3D(randomVectors.get(i)),
@@ -211,20 +213,18 @@ public class Main extends PApplet {
         return teamObjects3D;
     }
 
-    private ArrayList<Object3D<Player>> initialize(Object3D<Team> teamObject3D, ArrayList<Integer> filteredValues) {
-        playerObjects3D = new ArrayList<>();
+    private ArrayList<Object3D<Player>> initialize(Team team, ArrayList<Integer> filteredValues) {
+        playerObjects3D.clear();
         randomVectors.clear();
-        teamObject3D.type.players.forEach((player) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
-
-        for (Integer i = 0; i < teamObject3D.type.players.size(); i++) {
+        team.players.forEach((player) -> randomVectors.add(new Vec3D(random(width), random(height), random(height))));
+        for (Integer i = 0; i < team.players.size(); i++) {
             playerObjects3D.add(new Object3D<Player>(this,
                     new Vec3D(randomVectors.get(i)),
                     filteredValues.get(i),
                     i,
-                    teamObject3D.type.players.get(i)
+                    team.players.get(i)
             ));
         }
-
         return playerObjects3D;
     }
 

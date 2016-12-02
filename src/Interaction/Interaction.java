@@ -1,5 +1,6 @@
 package Interaction;
 
+import Filter.FilterPlayer;
 import Filter.FilterTeam;
 import Model.Competition;
 import Model.Player;
@@ -18,24 +19,32 @@ public class Interaction<T> {
     private static int indexObject3D = 0;
     private static float mouseShortestDistance;
 
-    public ArrayList<Object3D<T>> switchFilter(Competition competition, ArrayList<Object3D<T>> objects3D, FilterTeam filter, Integer indexFilter) {
+    public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, FilterTeam filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
-                return setFilter(competition, objects3D, filter.position());
+                return setTeamFilter(competition, objects3D, filter.position());
             case 2:
-                return setFilter(competition, objects3D, filter.points());
+                return setTeamFilter(competition, objects3D, filter.points());
             case 3:
-                return setFilter(competition, objects3D, filter.goals());
+                return setTeamFilter(competition, objects3D, filter.goals());
             case 4:
-                return setFilter(competition, objects3D, filter.goalsAgainst());
+                return setTeamFilter(competition, objects3D, filter.goalsAgainst());
             case 5:
-                return setFilter(competition, objects3D, filter.goalDifference());
+                return setTeamFilter(competition, objects3D, filter.goalDifference());
             case 6:
-                return setFilter(competition, objects3D, filter.wins());
+                return setTeamFilter(competition, objects3D, filter.wins());
             case 7:
-                return setFilter(competition, objects3D, filter.draws());
+                return setTeamFilter(competition, objects3D, filter.draws());
             case 8:
-                return setFilter(competition, objects3D, filter.losses());
+                return setTeamFilter(competition, objects3D, filter.losses());
+        }
+        return null;
+    }
+
+    public ArrayList<Object3D<T>> switchPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, FilterPlayer filter, Integer indexFilter) {
+        switch (indexFilter) {
+            case 1:
+                return setPlayerFilter(team, objects3D, filter.jerseyNumber());
         }
         return null;
     }
@@ -57,8 +66,15 @@ public class Interaction<T> {
         }
     }
 
-    private ArrayList<Object3D<T>> setFilter(Competition competition, ArrayList<Object3D<T>> objects3D, ArrayList<Integer> filteredValues) {
+    private ArrayList<Object3D<T>> setTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, ArrayList<Integer> filteredValues) {
         for (Integer i = 0; i < competition.standings.size(); i++) {
+            objects3D.get(i).size = filteredValues.get(i);
+        }
+        return objects3D;
+    }
+
+    private ArrayList<Object3D<T>> setPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, ArrayList<Integer> filteredValues) {
+        for (Integer i = 0; i < team.players.size(); i++) {
             objects3D.get(i).size = filteredValues.get(i);
         }
         return objects3D;
@@ -93,14 +109,25 @@ public class Interaction<T> {
                 if (objects3D.get(indexObject3D).type.getClass() == Team.class) {
                     userInterface.competitionLevel = false;
                     userInterface.teamLevel = true;
-                } else if (objects3D.get(indexObject3D).type.getClass() == Player.class) {
+                }
+                if (objects3D.get(indexObject3D).type.getClass() == Player.class) {
                     userInterface.competitionLevel = true;
                     userInterface.teamLevel = false;
                 }
             }
         } else {
+
             closestObject3DInRelationToPosition(pApplet, objects3D);
+
         }
+
+//        if (objects3D.get(indexObject3D).type.getClass() == Team.class) {
+//            userInterface.competitionLevel = false;
+//            userInterface.teamLevel = true;
+//        } else if (objects3D.get(indexObject3D).type.getClass() == Player.class) {
+//            userInterface.competitionLevel = true;
+//            userInterface.teamLevel = false;
+//        }
     }
 
     private void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {

@@ -47,15 +47,15 @@ public class Standing {
 
 class Home {
     @NotNull
-    Integer goals;
+    public Integer goals;
     @NotNull
-    Integer goalsAgainst;
+    public Integer goalsAgainst;
     @NotNull
-    Integer wins;
+    public Integer wins;
     @NotNull
-    Integer draws;
+    public Integer draws;
     @NotNull
-    Integer losses;
+    public Integer losses;
 
     Home(JSONObject home) {
         goals = home.getInt("goals");
@@ -68,15 +68,15 @@ class Home {
 
 class Away {
     @NotNull
-    Integer goals;
+    public Integer goals;
     @NotNull
-    Integer goalsAgainst;
+    public Integer goalsAgainst;
     @NotNull
-    Integer wins;
+    public Integer wins;
     @NotNull
-    Integer draws;
+    public Integer draws;
     @NotNull
-    Integer losses;
+    public Integer losses;
 
     Away(JSONObject away) {
         goals = away.getInt("goals");

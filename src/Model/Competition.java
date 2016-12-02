@@ -15,13 +15,13 @@ public class Competition {
     @NotNull
     public String name;
     @NotNull
-    String year;
+    public String year;
     @NotNull
-    Integer currentMatchday;
+    public Integer currentMatchday;
     @NotNull
-    Integer numberOfMatchdays;
+    public Integer numberOfMatchdays;
     @NotNull
-    Integer numberOfGames;
+    public Integer numberOfGames;
 
     public Competition(JSONObject competition) {
         teams = getTeams(competition.getJSONObject("_links").getJSONObject("teams").getString("href"));

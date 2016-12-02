@@ -8,17 +8,17 @@ import java.util.Date;
 
 public class Fixture {
     @NotNull
-    Date date;
+    public Date date;
     @NotNull
-    String status;
+    public String status;
     @NotNull
-    Integer matchday;
+    public Integer matchday;
     @NotNull
-    String homeTeamName;
+    public String homeTeamName;
     @NotNull
-    String awayTeamName;
+    public String awayTeamName;
     @NotNull
-    Result result;
+    public Result result;
 
     public Fixture(JSONObject fixture) {
         date = Util.getDate(fixture.getString("date"));
@@ -32,9 +32,9 @@ public class Fixture {
 
 class Result {
     @NotNull
-    Integer goalsHomeTeam;
+    public Integer goalsHomeTeam;
     @NotNull
-    Integer goalsAwayTeam;
+    public Integer goalsAwayTeam;
 
     public Result(JSONObject result) {
         goalsHomeTeam = result.getInt("goalsHomeTeam", 0);
