@@ -60,7 +60,7 @@ public class Interaction<T> {
                 break;
             case 2:
                 peasyCam.setActive(false);
-                clickObject3D(pApplet, userInterface, grid, objects3D);
+                clickObject3D(pApplet, grid, objects3D);
                 break;
         }
     }
@@ -91,35 +91,34 @@ public class Interaction<T> {
                 objects3D.get(indexObject3D).location.z += pApplet.pmouseY - pApplet.mouseY;
             }
         } else {
-            resetAllObjects3DStates(objects3D);
-            closestObject3DInRelationToPosition(pApplet, objects3D);
-            objects3D.get(indexObject3D).isSelected = true;
-        }
-    }
-
-    private void clickObject3D(PApplet pApplet, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
-        positionInRelationToGrid(pApplet, grid);
-
-        if (pApplet.mousePressed) {
-            if (pApplet.mouseButton == PConstants.LEFT) {
-                objects3D.get(indexObject3D).isClicked = true;
-                userInterface.competitionLevel = false;
-                userInterface.teamLevel = true;
-            }
-        } else {
             indexObject3D = 0;
             resetAllObjects3DStates(objects3D);
             closestObject3DInRelationToPosition(pApplet, objects3D);
             objects3D.get(indexObject3D).isSelected = true;
-            userInterface.competitionLevel = true;
-            userInterface.teamLevel = false;
         }
     }
 
-    private void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {
+    private void clickObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
+        positionInRelationToGrid(pApplet, grid);
+
+        if (!pApplet.mousePressed) {
+            indexObject3D = 0;
+            resetIsSelectedObjects3DState(objects3D);
+            closestObject3DInRelationToPosition(pApplet, objects3D);
+            objects3D.get(indexObject3D).isSelected = true;
+        }
+    }
+
+    public void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {
         for (Object3D<T> object3D : objects3D) {
             object3D.isSelected = false;
             object3D.isClicked = false;
+        }
+    }
+
+    private void resetIsSelectedObjects3DState(ArrayList<Object3D<T>> objects3D) {
+        for (Object3D<T> object3D : objects3D) {
+            object3D.isSelected = false;
         }
     }
 

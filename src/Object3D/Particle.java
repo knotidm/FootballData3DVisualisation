@@ -101,7 +101,7 @@ public class Particle {
         acceleration.addSelf(steer);
     }
 
-    public void lineBetween(ArrayList<Object3D<Object>> particles, Integer minDistance) {
+    public void lineBetween(ArrayList<Particle> particles, Integer minDistance) {
         for (Particle other : particles) {
             float distance = location.distanceTo(other.location);
             if (distance > 0 && distance < minDistance) {

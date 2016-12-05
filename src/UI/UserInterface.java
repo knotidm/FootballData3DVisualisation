@@ -6,27 +6,28 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public class UserInterface {
-    PApplet pApplet;
-    ControlP5 controlP5;
+    private PApplet pApplet;
+    public ControlP5 controlP5;
 
-    private Button modeButton;
     public Integer indexMode = 0;
     private Textlabel modeText;
 
-    private Button filterBackButton;
-    private Button filterNextButton;
+    private Textlabel levelText;
+
     public Integer indexFilter = 1;
-    public boolean competitionLevel = true;
-    public boolean teamLevel = false;
+    public Integer indexLevel = 1;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
         controlP5 = new ControlP5(pApplet);
-        modeButton = controlP5.addButton("SWITCH MODE").setValue(indexMode).setPosition(10, 10);
+        Button modeButton = controlP5.addButton("SWITCH MODE").setValue(indexMode).setPosition(10, 10);
         modeText = controlP5.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(85, 15);
 
-        filterBackButton = controlP5.addButton("BACK FILTER").setValue(indexMode).setPosition(10, 35);
-        filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexMode).setPosition(85, 35);
+        Button filterBackButton = controlP5.addButton("BACK FILTER").setValue(indexMode).setPosition(10, 35);
+        Button filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexMode).setPosition(85, 35);
+
+        Button levelBackButton = controlP5.addButton("LEVEL BACK").setValue(indexLevel).setPosition(10, 60);
+        levelText = controlP5.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
 
         controlP5.setAutoDraw(false);
 
@@ -50,6 +51,11 @@ public class UserInterface {
         filterNextButton.onClick(callbackEvent -> {
             if (indexFilter != 8) indexFilter++;
         });
+
+        levelBackButton.onClick(callbackEvent -> {
+            indexLevel--;
+            if (indexLevel == 0) indexLevel = 1;
+        });
     }
 
     private void switchModeText() {
@@ -66,10 +72,25 @@ public class UserInterface {
         }
     }
 
+    private void switchLevelText() {
+        switch (indexLevel) {
+            case 1:
+                levelText.setText("COMPETITION LEVEL");
+                break;
+            case 2:
+                levelText.setText("TEAM LEVEL");
+                break;
+            case 3:
+                levelText.setText("PLAYER LEVEL");
+                break;
+        }
+    }
+
     public void onFrontOfPeasyCam(PeasyCam peasyCam) {
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         peasyCam.beginHUD();
         switchModeText();
+        switchLevelText();
         controlP5.draw();
         peasyCam.endHUD();
         pApplet.hint(PConstants.ENABLE_DEPTH_TEST);
