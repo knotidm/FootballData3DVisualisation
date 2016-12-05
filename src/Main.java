@@ -2,6 +2,7 @@ import Filter.FilterPlayer;
 import Filter.FilterTeam;
 import Interaction.Interaction;
 import Model.Competition;
+import Model.Fixture;
 import Model.Player;
 import Model.Team;
 import Object3D.Grid;
@@ -41,6 +42,11 @@ public class Main extends PApplet {
     private boolean moveLeft = false;
     private boolean moveRight = false;
 
+    Object3D<Team> homeTeamObject3D;
+    Object3D<Team> awayTeamObject3D;
+    private Fixture resultFixture;
+    private Player resultPlayer;
+
     @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
@@ -69,10 +75,30 @@ public class Main extends PApplet {
         pushMatrix();
         textSize(40);
         Util.onFrontOfPeasyCam(this, peasyCam);
-        fill(0, 102, 153);
-        text(competition.name, 0, 0);
-        fill(255, 0, 0);
-        text(filterTeam.name, 0, 40);
+        if (userInterface.clickedObjects3D == 2) {
+            fill(0, 102, 153);
+            text(String.format("Matchday: %s - Status: %s", resultFixture.matchday, resultFixture.status), 0, 0);
+            fill(255, 0, 0);
+            text(String.format("Date: %s", String.valueOf(resultFixture.date)), 0, 40);
+            fill(0, 102, 153);
+            text(String.format("%s vs %s", resultFixture.homeTeamName, resultFixture.awayTeamName), 0, 80);
+            fill(255, 0, 0);
+            text(String.format("Result: %s - %s", resultFixture.result.goalsHomeTeam, resultFixture.result.goalsAwayTeam), 0, 120);
+        } else if (userInterface.indexLevel == 2) {
+            fill(0, 102, 153);
+            text(resultPlayer.name, 0, 0);
+            fill(255, 0, 0);
+            text(String.format("Date Of Birth: %s", String.valueOf(resultPlayer.dateOfBirth)), 0, 40);
+            fill(0, 102, 153);
+            text(String.format("Nationality: %s - Position: %s - Jersey Number: %s", resultPlayer.nationality, resultPlayer.position, resultPlayer.jerseyNumber), 0, 80);
+            fill(255, 0, 0);
+            text(String.format("Market Value: %s - Contract Until: %s", Util.bigDecimalToString(resultPlayer.marketValue), String.valueOf(resultPlayer.contractUntil)), 0, 120);
+        } else {
+            fill(0, 102, 153);
+            text(competition.name, 0, 0);
+            fill(255, 0, 0);
+            text(filterTeam.name, 0, 40);
+        }
         popMatrix();
 
         rotateX(PI / 2);
@@ -80,23 +106,11 @@ public class Main extends PApplet {
 
         userInterface.onFrontOfPeasyCam(peasyCam);
 
-        if (moveUp) {
-            y++;
-        }
-        if (moveDown) {
-            y--;
-        }
-        if (moveLeft) {
-            x++;
-        }
-        if (moveRight) {
-            x--;
-        }
+        move();
 
         translate(x, y, 0);
 
-        if (userInterface.indexLevel == 1) {
-
+        if (userInterface.indexLevel == 0) {
             teamInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
             teamObjects3D = teamInteraction.switchTeamFilter(competition, teamObjects3D, filterTeam, userInterface.indexFilter);
 
@@ -107,9 +121,12 @@ public class Main extends PApplet {
                 object3D.draw(peasyCam);
                 object3D.lineBetween(new ArrayList<>(teamObjects3D), minDistance);
             }
+
+            grid.draw();
         }
 
-        if (userInterface.indexLevel == 2) {
+        if (userInterface.indexLevel == 1 && userInterface.clickedObjects3D != 2) {
+
             for (Object3D<Team> object3D : teamObjects3D) {
                 if (object3D.isClicked)
                     playerObjects3D = initialize(object3D.type);
@@ -124,12 +141,137 @@ public class Main extends PApplet {
                 object3D.draw(peasyCam);
                 object3D.lineBetween(new ArrayList<>(playerObjects3D), minDistance);
             }
+
+            grid.draw();
+
         }
 
+        if (userInterface.indexLevel == 2) {
+        }
 
-        grid.draw();
+        //          grid.draw();
     }
 
+    @Override
+    public void mousePressed() {
+        if (userInterface.indexMode == 2 && !userInterface.controlP5.isMouseOver() && userInterface.clickedObjects3D != 2) {
+            if (mouseButton == LEFT) {
+                switch (userInterface.indexLevel) {
+                    case 0:
+                        teamInteraction.resetAllObjects3DStates(teamObjects3D);
+                        Object3D<Team> teamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                        teamObject3D.isClicked = true;
+                        randomVectors.clear();
+                        teamObject3D.type.players.forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
+                        userInterface.indexLevel = 1;
+                        break;
+                    case 1:
+                        playerInteraction.resetAllObjects3DStates(playerObjects3D);
+                        resultPlayer = playerObjects3D.get(Interaction.indexObject3D).type;
+                        userInterface.indexLevel = 2;
+                        break;
+                }
+            }
+            if (mouseButton == RIGHT) {
+                switch (userInterface.indexLevel) {
+                    case 0:
+                        switch (userInterface.clickedObjects3D) {
+                            case 0:
+                                homeTeamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                                homeTeamObject3D.isClicked = true;
+                                userInterface.clickedObjects3D++;
+                                break;
+                            case 1:
+                                awayTeamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                                if (awayTeamObject3D.isClicked) {
+                                    awayTeamObject3D.isClicked = false;
+                                    userInterface.clickedObjects3D--;
+                                } else {
+                                    awayTeamObject3D.isClicked = true;
+                                    userInterface.clickedObjects3D++;
+                                    resultFixture = getFixture(homeTeamObject3D, awayTeamObject3D);
+                                    userInterface.indexLevel = 1;
+                                }
+                                break;
+                        }
+                        break;
+                    case 1:
+                        Object3D<Player> playerObject3D = playerObjects3D.get(Interaction.indexObject3D);
+                        playerObject3D.isClicked = true;
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased() {
+        if (mouseButton == LEFT) {
+            switch (userInterface.indexLevel) {
+                case 0:
+                    teamInteraction.resetAllObjects3DStates(teamObjects3D);
+                    break;
+                case 1:
+                    playerInteraction.resetAllObjects3DStates(playerObjects3D);
+                    break;
+            }
+        }
+    }
+
+    private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
+        teamObjects3D.clear();
+        for (Integer i = 0; i < competition.standings.size(); i++) {
+            teamObjects3D.add(new Object3D<Team>(this,
+                    new Vec3D(randomVectors.get(i)),
+                    filteredValues.get(i),
+                    i,
+                    Util.getTeamByCompareTeamName(competition, i)
+            ));
+        }
+        return teamObjects3D;
+    }
+
+    private ArrayList<Object3D<Player>> initialize(Team team) {
+        filterPlayer = new FilterPlayer(team);
+        playerObjects3D.clear();
+
+        for (Integer i = 0; i < team.players.size(); i++) {
+            playerObjects3D.add(new Object3D<Player>(this,
+                    new Vec3D(randomVectors.get(i)),
+                    filterPlayer.jerseyNumber().get(i),
+                    i,
+                    team.players.get(i)
+            ));
+        }
+        return playerObjects3D;
+    }
+
+    private void move() {
+        if (moveUp) {
+            y++;
+        }
+        if (moveDown) {
+            y--;
+        }
+        if (moveLeft) {
+            x++;
+        }
+        if (moveRight) {
+            x--;
+        }
+    }
+
+    private Fixture getFixture(Object3D<Team> homeTeamObject3D, Object3D<Team> awayTeamObject3D) {
+        Fixture resultFixture = new Fixture();
+        for (Fixture fixture : homeTeamObject3D.type.fixtures) {
+            if (fixture.homeTeamName.equals(homeTeamObject3D.type.name) && fixture.awayTeamName.equals(awayTeamObject3D.type.name)) {
+                resultFixture = fixture;
+            }
+        }
+        return resultFixture;
+    }
+
+    //region SHORTCUTS
     @Override
     public void keyPressed() {
         switch (key) {
@@ -164,17 +306,19 @@ public class Main extends PApplet {
         }
 
         if (key == CODED) {
-            if (keyCode == UP) {
-                moveUp = true;
-            }
-            if (keyCode == DOWN) {
-                moveDown = true;
-            }
-            if (keyCode == LEFT) {
-                moveLeft = true;
-            }
-            if (keyCode == RIGHT) {
-                moveRight = true;
+            switch (keyCode) {
+                case UP:
+                    moveUp = true;
+                    break;
+                case DOWN:
+                    moveDown = true;
+                    break;
+                case LEFT:
+                    moveLeft = true;
+                    break;
+                case RIGHT:
+                    moveRight = true;
+                    break;
             }
         }
     }
@@ -182,82 +326,23 @@ public class Main extends PApplet {
     @Override
     public void keyReleased() {
         if (key == CODED) {
-            if (keyCode == UP) {
-                moveUp = false;
-            }
-            if (keyCode == DOWN) {
-                moveDown = false;
-            }
-            if (keyCode == LEFT) {
-                moveLeft = false;
-            }
-            if (keyCode == RIGHT) {
-                moveRight = false;
-            }
-        }
-    }
-
-    @Override
-    public void mousePressed() {
-        if (userInterface.indexMode == 2 && !userInterface.controlP5.isMouseOver()) {
-
-            switch (userInterface.indexLevel) {
-                case 1:
-                    Object3D<Team> teamObject3D = teamObjects3D.get(Interaction.indexObject3D);
-                    teamObject3D.isClicked = true;
-                    randomVectors.clear();
-                    teamObject3D.type.players.forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 2))));
-                    userInterface.indexLevel = 2;
+            switch (keyCode) {
+                case UP:
+                    moveUp = false;
                     break;
-                case 2:
-                    Object3D<Player> playerObject3D = playerObjects3D.get(Interaction.indexObject3D);
-                    playerObject3D.isClicked = true;
-                    randomVectors.clear();
-                    userInterface.indexLevel = 3;
-            }
-        }
-    }
-
-    @Override
-    public void mouseReleased() {
-        if (userInterface.indexMode == 2) {
-            switch (userInterface.indexLevel) {
-                case 2:
-                    teamInteraction.resetAllObjects3DStates(teamObjects3D);
+                case DOWN:
+                    moveDown = false;
                     break;
-                case 3:
-                    playerInteraction.resetAllObjects3DStates(playerObjects3D);
+                case LEFT:
+                    moveLeft = false;
+                    break;
+                case RIGHT:
+                    moveRight = false;
+                    break;
             }
         }
     }
-
-    private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
-        teamObjects3D.clear();
-        for (Integer i = 0; i < competition.standings.size(); i++) {
-            teamObjects3D.add(new Object3D<Team>(this,
-                    new Vec3D(randomVectors.get(i)),
-                    filteredValues.get(i),
-                    i,
-                    Util.getTeamByCompareTeamName(competition, i)
-            ));
-        }
-        return teamObjects3D;
-    }
-
-    private ArrayList<Object3D<Player>> initialize(Team team) {
-        filterPlayer = new FilterPlayer(team);
-        playerObjects3D.clear();
-
-        for (Integer i = 0; i < team.players.size(); i++) {
-            playerObjects3D.add(new Object3D<Player>(this,
-                    new Vec3D(randomVectors.get(i)),
-                    filterPlayer.jerseyNumber().get(i),
-                    i,
-                    team.players.get(i)
-            ));
-        }
-        return playerObjects3D;
-    }
+    //endregion
 
     @Override
     public void settings() {

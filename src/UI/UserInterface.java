@@ -1,6 +1,8 @@
 package UI;
 
-import controlP5.*;
+import controlP5.Button;
+import controlP5.ControlP5;
+import controlP5.Textlabel;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -15,7 +17,9 @@ public class UserInterface {
     private Textlabel levelText;
 
     public Integer indexFilter = 1;
-    public Integer indexLevel = 1;
+    public Integer indexLevel = 0;
+
+    public Integer clickedObjects3D = 0;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
@@ -54,7 +58,8 @@ public class UserInterface {
 
         levelBackButton.onClick(callbackEvent -> {
             indexLevel--;
-            if (indexLevel == 0) indexLevel = 1;
+            if (indexLevel == -1) indexLevel = 0;
+            clickedObjects3D = 0;
         });
     }
 
@@ -74,13 +79,13 @@ public class UserInterface {
 
     private void switchLevelText() {
         switch (indexLevel) {
-            case 1:
+            case 0:
                 levelText.setText("COMPETITION LEVEL");
                 break;
-            case 2:
+            case 1:
                 levelText.setText("TEAM LEVEL");
                 break;
-            case 3:
+            case 2:
                 levelText.setText("PLAYER LEVEL");
                 break;
         }

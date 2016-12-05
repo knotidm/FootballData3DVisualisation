@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Util {
-
     public static JSONObject getRequestToJSONObject(String link) {
         GetRequest getRequest = new GetRequest(link);
         getRequest.addHeader("X-Auth-Token", "b95ca7f69f22429d9e82720ea977198e");
@@ -35,6 +34,7 @@ public class Util {
         return resultTeam;
     }
 
+    @NotNull
     public static BigDecimal getBigDecimal(String integerString) {
         if (!integerString.equals("")) {
             return new BigDecimal(integerString);
