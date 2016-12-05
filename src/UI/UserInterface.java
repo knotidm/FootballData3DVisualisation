@@ -11,12 +11,16 @@ public class UserInterface {
     private PApplet pApplet;
     public ControlP5 controlP5;
 
-    public Integer indexMode = 0;
+    private Button modeButton;
     private Textlabel modeText;
+    public Integer indexMode = 0;
 
-    private Textlabel levelText;
-
+    private Button filterBackButton;
+    private Button filterNextButton;
     public Integer indexFilter = 1;
+
+    private Button levelBackButton;
+    private Textlabel levelText;
     public Integer indexLevel = 0;
 
     public Integer clickedObjects3D = 0;
@@ -24,13 +28,14 @@ public class UserInterface {
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
         controlP5 = new ControlP5(pApplet);
-        Button modeButton = controlP5.addButton("SWITCH MODE").setValue(indexMode).setPosition(10, 10);
+
+        modeButton = controlP5.addButton("SWITCH MODE").setValue(indexMode).setPosition(10, 10);
         modeText = controlP5.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(85, 15);
 
-        Button filterBackButton = controlP5.addButton("BACK FILTER").setValue(indexMode).setPosition(10, 35);
-        Button filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexMode).setPosition(85, 35);
+        filterBackButton = controlP5.addButton("BACK FILTER").setValue(indexFilter).setPosition(10, 35);
+        filterNextButton = controlP5.addButton("NEXT FILTER").setValue(indexFilter).setPosition(85, 35);
 
-        Button levelBackButton = controlP5.addButton("LEVEL BACK").setValue(indexLevel).setPosition(10, 60);
+        levelBackButton = controlP5.addButton("LEVEL BACK").setValue(indexLevel).setPosition(10, 60);
         levelText = controlP5.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
 
         controlP5.setAutoDraw(false);

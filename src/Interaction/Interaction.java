@@ -1,7 +1,7 @@
 package Interaction;
 
-import Filter.FilterPlayer;
-import Filter.FilterTeam;
+import Filter.PlayerFilter;
+import Filter.TeamFilter;
 import Model.Competition;
 import Model.Team;
 import Object3D.Grid;
@@ -100,7 +100,7 @@ public class Interaction<T> {
         }
     }
 
-    public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, FilterTeam filter, Integer indexFilter) {
+    public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, TeamFilter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
                 return setTeamFilter(competition, objects3D, filter.position());
@@ -122,7 +122,7 @@ public class Interaction<T> {
         return null;
     }
 
-    public ArrayList<Object3D<T>> switchPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, FilterPlayer filter, Integer indexFilter) {
+    public ArrayList<Object3D<T>> switchPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, PlayerFilter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
                 return setPlayerFilter(team, objects3D, filter.jerseyNumber());

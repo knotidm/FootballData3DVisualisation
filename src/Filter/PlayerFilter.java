@@ -6,10 +6,10 @@ import Model.Team;
 
 import java.util.ArrayList;
 
-public class FilterPlayer extends Filter {
-    Team team;
+public class PlayerFilter extends Filter {
+    private Team team;
 
-    public FilterPlayer(Team team) {
+    public PlayerFilter(Team team) {
         super();
         this.team = team;
     }
