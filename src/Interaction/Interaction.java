@@ -14,9 +14,9 @@ import processing.core.PConstants;
 import java.util.ArrayList;
 
 public class Interaction<T> {
-    private static int indexGrid = 0;
-    private static float mouseShortestDistance;
-    public static int indexObject3D = 0;
+    private static Integer indexGrid = 0;
+    private static Float mouseShortestDistance;
+    public static Integer indexObject3D = 0;
 
     public void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
         switch (userInterface.indexMode) {

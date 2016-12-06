@@ -31,16 +31,16 @@ public class Main extends PApplet {
 
     private Grid grid;
 
-    int grilleSize = 10;
-    int gridSize = 1000;
+    private Integer grilleSize = 10;
+    private Integer gridSize = 1000;
 
-    Integer minDistance = 100;
-    private static float x = 0;
-    private static float y = 0;
-    private boolean moveUp = false;
-    private boolean moveDown = false;
-    private boolean moveLeft = false;
-    private boolean moveRight = false;
+    private Integer minDistance = 100;
+    private Float x = 0f;
+    private Float y = 0f;
+    private Boolean moveUp = false;
+    private Boolean moveDown = false;
+    private Boolean moveLeft = false;
+    private Boolean moveRight = false;
 
     private Object3D<Team> homeTeamObject3D;
     private Object3D<Team> awayTeamObject3D;

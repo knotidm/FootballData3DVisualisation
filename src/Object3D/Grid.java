@@ -7,7 +7,7 @@ public class Grid {
     public Float[] x;
     public Float[] y;
     public Float[] z;
-    Integer grillesOnAxis;
+    private Integer grillesOnAxis;
 
     public Grid(PApplet pApplet, Integer gridSize, Integer grilleSize) {
         this.pApplet = pApplet;

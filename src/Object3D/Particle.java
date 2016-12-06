@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class Particle {
     private PApplet pApplet;
     public Vec3D location;
-    Vec3D acceleration;
-    Vec3D speed;
-    Vec3D gravity;
+    private Vec3D acceleration;
+    private Vec3D speed;
+    private Vec3D gravity;
     public Integer size;
 
     public Particle(PApplet pApplet, Vec3D location, Integer size) {

@@ -20,6 +20,9 @@ public class Fixture {
     @NotNull
     public Result result;
 
+    public Fixture() {
+    }
+
     public Fixture(JSONObject fixture) {
         date = Util.getDate(fixture.getString("date"));
         status = fixture.getString("status");
@@ -27,9 +30,6 @@ public class Fixture {
         homeTeamName = fixture.getString("homeTeamName");
         awayTeamName = fixture.getString("awayTeamName");
         result = new Result(fixture.getJSONObject("result"));
-    }
-
-    public Fixture() {
     }
 }
 

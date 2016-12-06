@@ -18,7 +18,7 @@ public class Team {
     @NotNull
     public BigDecimal squadMarketValue;
     @NotNull
-    PShape emblem;
+    public PShape emblem;
 
     public Team (){}
 

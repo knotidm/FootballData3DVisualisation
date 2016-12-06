@@ -15,7 +15,7 @@ public class Away {
     @NotNull
     public Integer losses;
 
-    Away(JSONObject away) {
+    public Away(JSONObject away) {
         goals = away.getInt("goals");
         goalsAgainst = away.getInt("goalsAgainst");
         wins = away.getInt("wins");

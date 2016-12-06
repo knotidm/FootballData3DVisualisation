@@ -15,7 +15,7 @@ public class Home {
     @NotNull
     public Integer losses;
 
-    Home(JSONObject home) {
+    public Home(JSONObject home) {
         goals = home.getInt("goals");
         goalsAgainst = home.getInt("goalsAgainst");
         wins = home.getInt("wins");

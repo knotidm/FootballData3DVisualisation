@@ -29,7 +29,7 @@ public class Standing {
     @NotNull
     public Away away;
 
-    Standing(JSONObject standing) {
+    public Standing(JSONObject standing) {
         position = standing.getInt("position");
         teamName = standing.getString("teamName");
         playedGames = standing.getInt("playedGames");
