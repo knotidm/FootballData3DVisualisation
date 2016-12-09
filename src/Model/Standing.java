@@ -3,31 +3,43 @@ package Model;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
+import javax.persistence.*;
+
+@Entity
 public class Standing {
+    @Id
+    private Integer standingId;
     @NotNull
-    public Integer position;
+    private Integer position;
     @NotNull
-    public String teamName;
+    private String teamName;
     @NotNull
-    public Integer playedGames;
+    private Integer playedGames;
     @NotNull
-    public Integer points;
+    private Integer points;
     @NotNull
-    public Integer goals;
+    private Integer goals;
     @NotNull
-    public Integer goalsAgainst;
+    private Integer goalsAgainst;
     @NotNull
-    public Integer goalDifference;
+    private Integer goalDifference;
     @NotNull
-    public Integer wins;
+    private Integer wins;
     @NotNull
-    public Integer draws;
+    private Integer draws;
     @NotNull
-    public Integer losses;
+    private Integer losses;
     @NotNull
-    public Home home;
+    @OneToOne
+    private Home home;
     @NotNull
-    public Away away;
+    @OneToOne
+    private Away away;
+    @ManyToOne
+    private Competition competition;
+
+    public Standing() {
+    }
 
     public Standing(JSONObject standing) {
         position = standing.getInt("position");
@@ -42,6 +54,132 @@ public class Standing {
         losses = standing.getInt("losses");
         home = new Home(standing.getJSONObject("home"));
         away = new Away(standing.getJSONObject("away"));
+    }
+
+    @Id
+    public Integer getStandingId() {
+        return standingId;
+    }
+
+    public void setStandingId(Integer standingId) {
+        this.standingId = standingId;
+    }
+
+    @Basic
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    @Basic
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    @Basic
+    public Integer getPlayedGames() {
+        return playedGames;
+    }
+
+    public void setPlayedGames(Integer playedGames) {
+        this.playedGames = playedGames;
+    }
+
+    @Basic
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    @Basic
+    public Integer getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Integer goals) {
+        this.goals = goals;
+    }
+
+    @Basic
+    public Integer getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public void setGoalsAgainst(Integer goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
+    }
+
+    @Basic
+    public Integer getGoalDifference() {
+        return goalDifference;
+    }
+
+    public void setGoalDifference(Integer goalDifference) {
+        this.goalDifference = goalDifference;
+    }
+
+    @Basic
+    public Integer getWins() {
+        return wins;
+    }
+
+    public void setWins(Integer wins) {
+        this.wins = wins;
+    }
+
+    @Basic
+    public Integer getDraws() {
+        return draws;
+    }
+
+    public void setDraws(Integer draws) {
+        this.draws = draws;
+    }
+
+    @Basic
+    public Integer getLosses() {
+        return losses;
+    }
+
+    public void setLosses(Integer losses) {
+        this.losses = losses;
+    }
+
+    @OneToOne
+    public Home getHome() {
+        return home;
+    }
+
+    public void setHome(Home home) {
+        this.home = home;
+    }
+
+    @OneToOne
+    public Away getAway() {
+        return away;
+    }
+
+    public void setAway(Away away) {
+        this.away = away;
+    }
+
+    @ManyToOne
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
 }
 

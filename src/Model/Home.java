@@ -3,17 +3,27 @@ package Model;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Home {
+    @Id
+    private Integer homeId;
     @NotNull
-    public Integer goals;
+    private Integer goals;
     @NotNull
-    public Integer goalsAgainst;
+    private Integer goalsAgainst;
     @NotNull
-    public Integer wins;
+    private Integer wins;
     @NotNull
-    public Integer draws;
+    private Integer draws;
     @NotNull
-    public Integer losses;
+    private Integer losses;
+
+    public Home() {
+    }
 
     public Home(JSONObject home) {
         goals = home.getInt("goals");
@@ -21,5 +31,59 @@ public class Home {
         wins = home.getInt("wins");
         draws = home.getInt("draws");
         losses = home.getInt("losses");
+    }
+
+    @Id
+    public Integer getHomeId() {
+        return homeId;
+    }
+
+    public void setHomeId(Integer homeId) {
+        this.homeId = homeId;
+    }
+
+    @Basic
+    public Integer getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Integer goals) {
+        this.goals = goals;
+    }
+
+    @Basic
+    public Integer getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public void setGoalsAgainst(Integer goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
+    }
+
+    @Basic
+    public Integer getWins() {
+        return wins;
+    }
+
+    public void setWins(Integer wins) {
+        this.wins = wins;
+    }
+
+    @Basic
+    public Integer getDraws() {
+        return draws;
+    }
+
+    public void setDraws(Integer draws) {
+        this.draws = draws;
+    }
+
+    @Basic
+    public Integer getLosses() {
+        return losses;
+    }
+
+    public void setLosses(Integer losses) {
+        this.losses = losses;
     }
 }

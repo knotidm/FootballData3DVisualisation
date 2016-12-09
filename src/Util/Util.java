@@ -1,6 +1,7 @@
 package Util;
 
 import Model.Competition;
+import Model.Standing;
 import Model.Team;
 import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
@@ -13,6 +14,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -27,8 +29,9 @@ public class Util {
     @NotNull
     public static Team getTeamByCompareTeamName(Competition competition, int index) {
         Team resultTeam = new Team();
-        for (Team team : competition.teams) {
-            if (team.name.equals(competition.standings.get(index).teamName))
+        ArrayList<Standing> standings  = new ArrayList(competition.getStandings());
+        for (Team team : competition.getTeams()) {
+            if (team.getName().equals(standings.get(index).getTeamName()))
                 resultTeam = team;
         }
         return resultTeam;

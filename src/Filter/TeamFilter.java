@@ -4,7 +4,7 @@ import Model.Competition;
 import Model.Filter;
 import Model.Standing;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class TeamFilter extends Filter {
     private Competition competition;
@@ -14,75 +14,75 @@ public class TeamFilter extends Filter {
         this.competition = competition;
     }
 
-    public ArrayList<Integer> position() {
-        name = "Position";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.position);
+    public Collection<Integer> position() {
+        setName("Position");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getPosition());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> points() {
-        name = "Points";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.points);
+    public Collection<Integer> points() {
+        setName("Points");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getPoints());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> goals() {
-        name = "Goals";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.goals);
+    public Collection<Integer> goals() {
+        setName("Goals");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getGoals());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> goalsAgainst() {
-        name = "GoalsAgainst";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.goalsAgainst);
+    public Collection<Integer> goalsAgainst() {
+        setName("GoalsAgainst");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getGoalsAgainst());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> goalDifference() {
-        name = "GoalDifference";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.goalDifference);
+    public Collection<Integer> goalDifference() {
+        setName("GoalDifference");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getGoalDifference());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> wins() {
-        name = "Wins";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.wins);
+    public Collection<Integer> wins() {
+        setName("Wins");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getWins());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> draws() {
-        name = "Draws";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.draws);
+    public Collection<Integer> draws() {
+        setName("Draws");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getDraws());
         }
-        return values;
+        return getValues();
     }
 
-    public ArrayList<Integer> losses() {
-        name = "Losses";
-        values.clear();
-        for (Standing standing : competition.standings) {
-            values.add(standing.losses);
+    public Collection<Integer> losses() {
+        setName("Losses");
+        getValues().clear();
+        for (Standing standing : competition.getStandings()) {
+            getValues().add(standing.getLosses());
         }
-        return values;
+        return getValues();
     }
 }

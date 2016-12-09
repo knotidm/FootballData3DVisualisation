@@ -1,26 +1,37 @@
 package Model;
+
 import Util.Util;
 import com.sun.istack.internal.NotNull;
-import processing.core.PShape;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 
+@Entity
 public class Team {
+    @Id
+    private Integer teamId;
     @NotNull
-    public ArrayList<Fixture> fixtures;
+    @OneToMany(mappedBy = "team")
+    private Collection<Fixture> fixtures;
     @NotNull
-    public ArrayList<Player> players;
+    @OneToMany(mappedBy = "team")
+    private Collection<Player> players;
     @NotNull
-    public String name;
+    private String name;
     @NotNull
-    public BigDecimal squadMarketValue;
-    @NotNull
-    public PShape emblem;
+    private BigDecimal squadMarketValue;
+    //    @NotNull
+//    @Basic
+//    public PShape emblem;
+    @ManyToOne
+    private Competition competition;
 
-    public Team (){}
+    public Team() {
+    }
 
     public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
@@ -31,7 +42,52 @@ public class Team {
         //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
     }
 
-    private ArrayList<Fixture> getFixtures(String link) {
+    @Id
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    @OneToMany
+    public Collection<Fixture> getFixtures() {
+        return fixtures;
+    }
+
+    public void setFixtures(Collection<Fixture> fixtures) {
+        this.fixtures = fixtures;
+    }
+
+    @OneToMany
+    public Collection<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Collection<Player> players) {
+        this.players = players;
+    }
+
+    @Basic
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Basic
+    public BigDecimal getSquadMarketValue() {
+        return squadMarketValue;
+    }
+
+    public void setSquadMarketValue(BigDecimal squadMarketValue) {
+        this.squadMarketValue = squadMarketValue;
+    }
+
+    private Collection<Fixture> getFixtures(String link) {
         JSONArray fixturesJSON = Util.getRequestToJSONObject(link).getJSONArray("fixtures");
         fixtures = new ArrayList<>();
 
@@ -41,7 +97,7 @@ public class Team {
         return fixtures;
     }
 
-    private ArrayList<Player> getPlayers(String link) {
+    private Collection<Player> getPlayers(String link) {
         JSONArray playersJSON = Util.getRequestToJSONObject(link).getJSONArray("players");
         players = new ArrayList<>();
 
@@ -49,5 +105,14 @@ public class Team {
             players.add(new Player(playersJSON.getJSONObject(i)));
         }
         return players;
+    }
+
+    @ManyToOne
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
 }

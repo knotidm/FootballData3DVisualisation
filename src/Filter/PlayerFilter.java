@@ -4,7 +4,7 @@ import Model.Filter;
 import Model.Player;
 import Model.Team;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class PlayerFilter extends Filter {
     private Team team;
@@ -14,12 +14,12 @@ public class PlayerFilter extends Filter {
         this.team = team;
     }
 
-    public ArrayList<Integer> jerseyNumber() {
-        name = "Jersey Number";
-        values.clear();
-        for (Player player : team.players) {
-            values.add(player.jerseyNumber);
+    public Collection<Integer> jerseyNumber() {
+        setName("Jersey Number");
+        getValues().clear();
+        for (Player player : team.getPlayers()) {
+            getValues().add(player.getJerseyNumber());
         }
-        return values;
+        return getValues();
     }
 }

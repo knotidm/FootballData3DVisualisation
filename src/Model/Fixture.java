@@ -4,21 +4,28 @@ import Util.Util;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Fixture {
+    @Id
+    private Integer fixtureId;
     @NotNull
-    public Date date;
+    private Date date;
     @NotNull
-    public String status;
+    private String status;
     @NotNull
-    public Integer matchday;
+    private Integer matchday;
     @NotNull
-    public String homeTeamName;
+    private String homeTeamName;
     @NotNull
-    public String awayTeamName;
+    private String awayTeamName;
     @NotNull
-    public Result result;
+    @OneToOne
+    private Result result;
+    @ManyToOne
+    private Team team;
 
     public Fixture() {
     }
@@ -30,6 +37,78 @@ public class Fixture {
         homeTeamName = fixture.getString("homeTeamName");
         awayTeamName = fixture.getString("awayTeamName");
         result = new Result(fixture.getJSONObject("result"));
+    }
+
+    @Id
+    public Integer getFixtureId() {
+        return fixtureId;
+    }
+
+    public void setFixtureId(Integer fixtureId) {
+        this.fixtureId = fixtureId;
+    }
+
+    @Basic
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Basic
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Basic
+    public Integer getMatchday() {
+        return matchday;
+    }
+
+    public void setMatchday(Integer matchday) {
+        this.matchday = matchday;
+    }
+
+    @Basic
+    public String getHomeTeamName() {
+        return homeTeamName;
+    }
+
+    public void setHomeTeamName(String homeTeamName) {
+        this.homeTeamName = homeTeamName;
+    }
+
+    @Basic
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
+    }
+
+    @OneToOne
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
+    @ManyToOne
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
 

@@ -1,27 +1,40 @@
 package Model;
 
+import Util.Util;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
-import Util.Util;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Collection;
 
+@Entity
 public class Competition {
+    @Id
+    private Integer competitionId;
     @NotNull
-    public ArrayList<Team> teams;
+    @OneToMany(mappedBy = "competition")
+    private Collection<Team> teams;
     @NotNull
-    public ArrayList<Standing> standings;
+    @OneToMany(mappedBy = "competition")
+    private Collection<Standing> standings;
     @NotNull
-    public String name;
+    private String name;
     @NotNull
-    public String year;
+    private String year;
     @NotNull
-    public Integer currentMatchday;
+    private Integer currentMatchday;
     @NotNull
-    public Integer numberOfMatchdays;
+    private Integer numberOfMatchdays;
     @NotNull
-    public Integer numberOfGames;
+    private Integer numberOfGames;
+
+    public Competition() {
+    }
 
     public Competition(JSONObject competition) {
         teams = getTeams(competition.getJSONObject("_links").getJSONObject("teams").getString("href"));
@@ -33,7 +46,79 @@ public class Competition {
         numberOfGames = competition.getInt("numberOfGames");
     }
 
-    private ArrayList<Team> getTeams(String link) {
+    @Id
+    public Integer getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Integer competitionId) {
+        this.competitionId = competitionId;
+    }
+
+    @OneToMany
+    public Collection<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Collection<Team> teams) {
+        this.teams = teams;
+    }
+
+    @OneToMany
+    public Collection<Standing> getStandings() {
+        return standings;
+    }
+
+    public void setStandings(Collection<Standing> standings) {
+        this.standings = standings;
+    }
+
+    @Basic
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Basic
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    @Basic
+    public Integer getCurrentMatchday() {
+        return currentMatchday;
+    }
+
+    public void setCurrentMatchday(Integer currentMatchday) {
+        this.currentMatchday = currentMatchday;
+    }
+
+    @Basic
+    public Integer getNumberOfMatchdays() {
+        return numberOfMatchdays;
+    }
+
+    public void setNumberOfMatchdays(Integer numberOfMatchdays) {
+        this.numberOfMatchdays = numberOfMatchdays;
+    }
+
+    @Basic
+    public Integer getNumberOfGames() {
+        return numberOfGames;
+    }
+
+    public void setNumberOfGames(Integer numberOfGames) {
+        this.numberOfGames = numberOfGames;
+    }
+
+    private Collection<Team> getTeams(String link) {
         JSONArray teamsJSON = Util.getRequestToJSONObject(link).getJSONArray("teams");
         teams = new ArrayList<>();
 
@@ -43,7 +128,7 @@ public class Competition {
         return teams;
     }
 
-    private ArrayList<Standing> getStandings(String link) {
+    private Collection<Standing> getStandings(String link) {
         JSONArray standingsJSON = Util.getRequestToJSONObject(link).getJSONArray("standing");
         standings = new ArrayList<>();
 

@@ -45,12 +45,12 @@ public class Object3D<T> extends Particle {
 
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
-            pApplet.text(team.name, 0, -size, 0);
-            pApplet.text(Util.bigDecimalToString(team.squadMarketValue), 0, 4 * -size, 0);
+            pApplet.text(team.getName(), 0, -size, 0);
+            pApplet.text(Util.bigDecimalToString(team.getSquadMarketValue()), 0, 4 * -size, 0);
         } else if (type.getClass() == Player.class) {
             Player player = (Player) type;
-            pApplet.text(player.name, 0, -size, 0);
-            pApplet.text(Util.bigDecimalToString(player.marketValue), 0, 4 * -size, 0);
+            pApplet.text(player.getName(), 0, -size, 0);
+            pApplet.text(Util.bigDecimalToString(player.getMarketValue()), 0, 4 * -size, 0);
         }
 
         pApplet.popMatrix();

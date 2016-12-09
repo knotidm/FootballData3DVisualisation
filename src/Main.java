@@ -9,11 +9,19 @@ import Object3D.Grid;
 import Object3D.Object3D;
 import UI.UserInterface;
 import Util.Util;
+import org.hibernate.HibernateException;
+import org.hibernate.Metamodel;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import toxi.geom.Vec3D;
 
+import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Main extends PApplet {
     private PeasyCam peasyCam;
@@ -54,7 +62,7 @@ public class Main extends PApplet {
         userInterface = new UserInterface(this);
         competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
         randomVectors = new ArrayList<>();
-        competition.standings.forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
+        competition.getStandings().forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
 
         teamObjects3D = new ArrayList<>();
         teamFilter = new TeamFilter(competition);
@@ -77,27 +85,27 @@ public class Main extends PApplet {
         Util.onFrontOfPeasyCam(this, peasyCam);
         if (userInterface.clickedObjects3D == 2) {
             fill(0, 102, 153);
-            text(String.format("Matchday: %s - Status: %s", resultFixture.matchday, resultFixture.status), 0, 0);
+            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 0);
             fill(255, 0, 0);
-            text(String.format("Date: %s", String.valueOf(resultFixture.date)), 0, 40);
+            text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
             fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.homeTeamName, resultFixture.awayTeamName), 0, 80);
+            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 80);
             fill(255, 0, 0);
-            text(String.format("Result: %s - %s", resultFixture.result.goalsHomeTeam, resultFixture.result.goalsAwayTeam), 0, 120);
+            text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
         } else if (userInterface.indexLevel == 2) {
             fill(0, 102, 153);
-            text(resultPlayer.name, 0, 0);
+            text(resultPlayer.getName(), 0, 0);
             fill(255, 0, 0);
-            text(String.format("Date Of Birth: %s", String.valueOf(resultPlayer.dateOfBirth)), 0, 40);
+            text(String.format("Date Of Birth: %s", String.valueOf(resultPlayer.getDateOfBirth())), 0, 40);
             fill(0, 102, 153);
-            text(String.format("Nationality: %s - Position: %s - Jersey Number: %s", resultPlayer.nationality, resultPlayer.position, resultPlayer.jerseyNumber), 0, 80);
+            text(String.format("Nationality: %s - Position: %s - Jersey Number: %s", resultPlayer.getNationality(), resultPlayer.getPosition(), resultPlayer.getJerseyNumber()), 0, 80);
             fill(255, 0, 0);
-            text(String.format("Market Value: %s - Contract Until: %s", Util.bigDecimalToString(resultPlayer.marketValue), String.valueOf(resultPlayer.contractUntil)), 0, 120);
+            text(String.format("Market Value: %s - Contract Until: %s", Util.bigDecimalToString(resultPlayer.getMarketValue()), String.valueOf(resultPlayer.getContractUntil())), 0, 120);
         } else {
             fill(0, 102, 153);
-            text(competition.name, 0, 0);
+            text(competition.getName(), 0, 0);
             fill(255, 0, 0);
-            text(teamFilter.name, 0, 40);
+            text(teamFilter.getName(), 0, 40);
         }
         popMatrix();
 
@@ -151,7 +159,7 @@ public class Main extends PApplet {
                         Object3D<Team> teamObject3D = teamObjects3D.get(Interaction.indexObject3D);
                         teamObject3D.isClicked = true;
                         randomVectors.clear();
-                        teamObject3D.type.players.forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
+                        teamObject3D.type.getPlayers().forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                         playerObjects3D = initialize(teamObject3D.type);
                         userInterface.indexLevel = 1;
                         break;
@@ -208,12 +216,12 @@ public class Main extends PApplet {
         }
     }
 
-    private ArrayList<Object3D<Team>> initialize(Competition competition, ArrayList<Integer> filteredValues) {
+    private ArrayList<Object3D<Team>> initialize(Competition competition, Collection<Integer> filteredValues) {
         teamObjects3D.clear();
-        for (Integer i = 0; i < competition.standings.size(); i++) {
+        for (Integer i = 0; i < competition.getStandings().size(); i++) {
             teamObjects3D.add(new Object3D<Team>(this,
                     new Vec3D(randomVectors.get(i)),
-                    filteredValues.get(i),
+                    (Integer) new ArrayList(filteredValues).get(i),
                     i,
                     Util.getTeamByCompareTeamName(competition, i)
             ));
@@ -224,13 +232,15 @@ public class Main extends PApplet {
     private ArrayList<Object3D<Player>> initialize(Team team) {
         playerFilter = new PlayerFilter(team);
         playerObjects3D.clear();
+        ArrayList<Integer> jerseyNumbers = new ArrayList<>(playerFilter.jerseyNumber());
+        ArrayList<Player> players = new ArrayList<>(team.getPlayers());
 
-        for (Integer i = 0; i < team.players.size(); i++) {
+        for (Integer i = 0; i < team.getPlayers().size(); i++) {
             playerObjects3D.add(new Object3D<Player>(this,
                     new Vec3D(randomVectors.get(i)),
-                    playerFilter.jerseyNumber().get(i),
+                    jerseyNumbers.get(i),
                     i,
-                    team.players.get(i)
+                    players.get(i)
             ));
         }
         return playerObjects3D;
@@ -253,8 +263,8 @@ public class Main extends PApplet {
 
     private Fixture getFixture(Object3D<Team> homeTeamObject3D, Object3D<Team> awayTeamObject3D) {
         Fixture resultFixture = new Fixture();
-        for (Fixture fixture : homeTeamObject3D.type.fixtures) {
-            if (fixture.homeTeamName.equals(homeTeamObject3D.type.name) && fixture.awayTeamName.equals(awayTeamObject3D.type.name)) {
+        for (Fixture fixture : homeTeamObject3D.type.getFixtures()) {
+            if (fixture.getHomeTeamName().equals(homeTeamObject3D.type.getName()) && fixture.getAwayTeamName().equals(awayTeamObject3D.type.getName())) {
                 resultFixture = fixture;
             }
         }
@@ -283,14 +293,14 @@ public class Main extends PApplet {
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
                 teamFilter = new TeamFilter(competition);
                 randomVectors.clear();
-                competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
+                competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                 teamObjects3D = initialize(competition, teamFilter.goals());
                 break;
             case '2':
                 competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/438"));
                 teamFilter = new TeamFilter(competition);
                 randomVectors.clear();
-                competition.standings.forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
+                competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                 teamObjects3D = initialize(competition, teamFilter.goals());
                 break;
         }
@@ -340,8 +350,40 @@ public class Main extends PApplet {
         smooth();
     }
 
+    private static final SessionFactory ourSessionFactory;
+
+    static {
+        try {
+            Configuration configuration = new Configuration();
+            configuration.configure();
+
+            ourSessionFactory = configuration.buildSessionFactory();
+        } catch (Throwable ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+
+    public static Session getSession() throws HibernateException {
+        return ourSessionFactory.openSession();
+    }
+
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
         PApplet.main(concat(appletArgs, passedArgs));
+        final Session session = getSession();
+        try {
+            System.out.println("querying all the managed entities...");
+            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
+            for (EntityType<?> entityType : metamodel.getEntities()) {
+                final String entityName = entityType.getName();
+                final Query query = session.createQuery("from " + entityName);
+                System.out.println("executing: " + query.getQueryString());
+                for (Object o : query.list()) {
+                    System.out.println("  " + o);
+                }
+            }
+        } finally {
+            session.close();
+        }
     }
 }
