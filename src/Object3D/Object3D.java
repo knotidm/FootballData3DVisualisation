@@ -2,7 +2,8 @@ package Object3D;
 
 import Model.Player;
 import Model.Team;
-import Util.Util;
+import Util.Get;
+import Util.Misc;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -41,16 +42,16 @@ public class Object3D<T> extends Particle {
         pApplet.textAlign(PConstants.CENTER);
         pApplet.textSize(20);
         pApplet.fill(255);
-        Util.onFrontOfPeasyCam(pApplet, peasyCam);
+        Misc.onFrontOfPeasyCam(pApplet, peasyCam);
 
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.getName(), 0, -size, 0);
-            pApplet.text(Util.bigDecimalToString(team.getSquadMarketValue()), 0, 4 * -size, 0);
+            pApplet.text(Get.getString(team.getSquadMarketValue()), 0, 4 * -size, 0);
         } else if (type.getClass() == Player.class) {
             Player player = (Player) type;
             pApplet.text(player.getName(), 0, -size, 0);
-            pApplet.text(Util.bigDecimalToString(player.getMarketValue()), 0, 4 * -size, 0);
+            pApplet.text(Get.getString(player.getMarketValue()), 0, 4 * -size, 0);
         }
 
         pApplet.popMatrix();

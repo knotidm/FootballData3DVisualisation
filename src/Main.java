@@ -1,32 +1,39 @@
+import DAO.DAO;
 import Filter.PlayerFilter;
 import Filter.TeamFilter;
 import Interaction.Interaction;
-import Model.Competition;
-import Model.Fixture;
-import Model.Player;
-import Model.Team;
+import Model.*;
 import Object3D.Grid;
 import Object3D.Object3D;
 import UI.UserInterface;
-import Util.Util;
-import org.hibernate.HibernateException;
-import org.hibernate.Metamodel;
+import Util.Get;
+import Util.Hibernate;
+import Util.Misc;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import toxi.geom.Vec3D;
 
-import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Main extends PApplet {
+    private Session session;
+
     private PeasyCam peasyCam;
     private UserInterface userInterface;
+
     private Competition competition;
+    private DAO<Competition> competitionDAO;
+    private DAO<Standing> standingDAO;
+    private DAO<Home> homeDAO;
+    private DAO<Away> awayDAO;
+    private DAO<Team> teamDAO;
+    private DAO<Fixture> fixtureDAO;
+    private DAO<Result> resultDAO;
+    private DAO<Player> playerDAO;
+
+
     private ArrayList<Vec3D> randomVectors;
 
     private ArrayList<Object3D<Team>> teamObjects3D;
@@ -38,6 +45,7 @@ public class Main extends PApplet {
     private Interaction<Player> playerInteraction;
 
     private Grid grid;
+
 
     private Integer grilleSize = 10;
     private Integer gridSize = 1000;
@@ -57,10 +65,41 @@ public class Main extends PApplet {
 
     @Override
     public void setup() {
+        session = Hibernate.getSession();
         peasyCam = new PeasyCam(this, gridSize / 2);
         peasyCam.setResetOnDoubleClick(false);
         userInterface = new UserInterface(this);
-        competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
+        competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
+
+        competitionDAO = new DAO<Competition>(session, competition);
+        for (Standing standing : competition.getStandings()) {
+            standingDAO = new DAO<Standing>(session, standing);
+            Home home = standing.getHome();
+            homeDAO = new DAO<Home>(session, home);
+            homeDAO.delete(home);
+            Away away = standing.getAway();
+            awayDAO = new DAO<Away>(session, away);
+            awayDAO.delete(away);
+            standingDAO.delete(standing);
+        }
+        for (Team team : competition.getTeams()) {
+            teamDAO = new DAO<Team>(session, team);
+            for (Fixture fixture : team.getFixtures()) {
+                fixtureDAO = new DAO<Fixture>(session, fixture);
+                Result result = fixture.getResult();
+                resultDAO = new DAO<Result>(session, result);
+                resultDAO.delete(result);
+                fixtureDAO.delete(fixture);
+            }
+            for (Player player : team.getPlayers()) {
+                playerDAO = new DAO<Player>(session, player);
+                playerDAO.delete(player);
+            }
+            teamDAO.delete(team);
+        }
+        competitionDAO.delete(competition);
+        session.close();
+
         randomVectors = new ArrayList<>();
         competition.getStandings().forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
 
@@ -82,7 +121,7 @@ public class Main extends PApplet {
 
         pushMatrix();
         textSize(40);
-        Util.onFrontOfPeasyCam(this, peasyCam);
+        Misc.onFrontOfPeasyCam(this, peasyCam);
         if (userInterface.clickedObjects3D == 2) {
             fill(0, 102, 153);
             text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 0);
@@ -100,7 +139,7 @@ public class Main extends PApplet {
             fill(0, 102, 153);
             text(String.format("Nationality: %s - Position: %s - Jersey Number: %s", resultPlayer.getNationality(), resultPlayer.getPosition(), resultPlayer.getJerseyNumber()), 0, 80);
             fill(255, 0, 0);
-            text(String.format("Market Value: %s - Contract Until: %s", Util.bigDecimalToString(resultPlayer.getMarketValue()), String.valueOf(resultPlayer.getContractUntil())), 0, 120);
+            text(String.format("Market Value: %s - Contract Until: %s", Get.getString(resultPlayer.getMarketValue()), String.valueOf(resultPlayer.getContractUntil())), 0, 120);
         } else {
             fill(0, 102, 153);
             text(competition.getName(), 0, 0);
@@ -187,7 +226,7 @@ public class Main extends PApplet {
                                 } else {
                                     awayTeamObject3D.isClicked = true;
                                     userInterface.clickedObjects3D++;
-                                    resultFixture = getFixture(homeTeamObject3D, awayTeamObject3D);
+                                    resultFixture = Get.getFixture(homeTeamObject3D, awayTeamObject3D);
                                     userInterface.indexLevel = 1;
                                 }
                                 break;
@@ -223,7 +262,7 @@ public class Main extends PApplet {
                     new Vec3D(randomVectors.get(i)),
                     (Integer) new ArrayList(filteredValues).get(i),
                     i,
-                    Util.getTeamByCompareTeamName(competition, i)
+                    Get.getTeam(competition, i)
             ));
         }
         return teamObjects3D;
@@ -261,16 +300,6 @@ public class Main extends PApplet {
         }
     }
 
-    private Fixture getFixture(Object3D<Team> homeTeamObject3D, Object3D<Team> awayTeamObject3D) {
-        Fixture resultFixture = new Fixture();
-        for (Fixture fixture : homeTeamObject3D.type.getFixtures()) {
-            if (fixture.getHomeTeamName().equals(homeTeamObject3D.type.getName()) && fixture.getAwayTeamName().equals(awayTeamObject3D.type.getName())) {
-                resultFixture = fixture;
-            }
-        }
-        return resultFixture;
-    }
-
     //region SHORTCUTS
     @Override
     public void keyPressed() {
@@ -290,14 +319,14 @@ public class Main extends PApplet {
                 }
                 break;
             case '1':
-                competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/430"));
+                competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
                 teamFilter = new TeamFilter(competition);
                 randomVectors.clear();
                 competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                 teamObjects3D = initialize(competition, teamFilter.goals());
                 break;
             case '2':
-                competition = new Competition(Util.getRequestToJSONObject("http://api.football-data.org/v1/competitions/438"));
+                competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/438"));
                 teamFilter = new TeamFilter(competition);
                 randomVectors.clear();
                 competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
@@ -350,40 +379,8 @@ public class Main extends PApplet {
         smooth();
     }
 
-    private static final SessionFactory ourSessionFactory;
-
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
-    }
-
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
         PApplet.main(concat(appletArgs, passedArgs));
-        final Session session = getSession();
-        try {
-            System.out.println("querying all the managed entities...");
-            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
-            for (EntityType<?> entityType : metamodel.getEntities()) {
-                final String entityName = entityType.getName();
-                final Query query = session.createQuery("from " + entityName);
-                System.out.println("executing: " + query.getQueryString());
-                for (Object o : query.list()) {
-                    System.out.println("  " + o);
-                }
-            }
-        } finally {
-            session.close();
-        }
     }
 }

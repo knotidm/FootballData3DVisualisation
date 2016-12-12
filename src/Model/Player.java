@@ -2,7 +2,7 @@ package Model;
 
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
-import Util.Util;
+import Util.Get;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 public class Player {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer playerId;
     @NotNull
     private String name;
@@ -36,13 +36,13 @@ public class Player {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber", 0);
-        dateOfBirth = Util.getDate(player.getString("dateOfBirth"));
+        dateOfBirth = Get.getDate(player.getString("dateOfBirth"));
         nationality = player.getString("nationality");
-        contractUntil = Util.getDate(player.getString("contractUntil", ""));
-        marketValue = Util.getBigDecimal(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
+        contractUntil = Get.getDate(player.getString("contractUntil", ""));
+        marketValue = Get.getBigDecimal(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPlayerId() {
         return playerId;
     }

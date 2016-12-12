@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Hibernate 5.2.3-5.2.3" type="hibernate">
+  <library name="Hibernate 5" type="hibernate">
     <properties version="5.2.3" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />

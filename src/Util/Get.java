@@ -1,12 +1,12 @@
 package Util;
 
 import Model.Competition;
+import Model.Fixture;
 import Model.Standing;
 import Model.Team;
+import Object3D.Object3D;
 import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
-import peasy.PeasyCam;
-import processing.core.PApplet;
 import processing.data.JSONObject;
 
 import java.math.BigDecimal;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class Util {
-    public static JSONObject getRequestToJSONObject(String link) {
+public class Get {
+    public static JSONObject getJSONObject(String link) {
         GetRequest getRequest = new GetRequest(link);
         getRequest.addHeader("X-Auth-Token", "b95ca7f69f22429d9e82720ea977198e");
         getRequest.send();
@@ -27,7 +27,7 @@ public class Util {
     }
 
     @NotNull
-    public static Team getTeamByCompareTeamName(Competition competition, int index) {
+    public static Team getTeam(Competition competition, int index) {
         Team resultTeam = new Team();
         ArrayList<Standing> standings  = new ArrayList(competition.getStandings());
         for (Team team : competition.getTeams()) {
@@ -56,14 +56,18 @@ public class Util {
         return null;
     }
 
-    public static String bigDecimalToString(BigDecimal bigDecimal) {
+    public static String getString(BigDecimal bigDecimal) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         return numberFormat.format(bigDecimal);
     }
 
-    public static void onFrontOfPeasyCam(PApplet pApplet, PeasyCam peasyCam) {
-        pApplet.rotateX(peasyCam.getRotations()[0]);
-        pApplet.rotateY(peasyCam.getRotations()[1]);
-        pApplet.rotateZ(peasyCam.getRotations()[2]);
+    public static Fixture getFixture(Object3D<Team> homeTeamObject3D, Object3D<Team> awayTeamObject3D) {
+        Fixture resultFixture = new Fixture();
+        for (Fixture fixture : homeTeamObject3D.type.getFixtures()) {
+            if (fixture.getHomeTeamName().equals(homeTeamObject3D.type.getName()) && fixture.getAwayTeamName().equals(awayTeamObject3D.type.getName())) {
+                resultFixture = fixture;
+            }
+        }
+        return resultFixture;
     }
 }

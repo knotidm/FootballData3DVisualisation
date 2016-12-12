@@ -1,6 +1,6 @@
 package Model;
 
-import Util.Util;
+import Util.Get;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 public class Fixture {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer fixtureId;
     @NotNull
     private Date date;
@@ -31,7 +31,7 @@ public class Fixture {
     }
 
     public Fixture(JSONObject fixture) {
-        date = Util.getDate(fixture.getString("date"));
+        date = Get.getDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");
         homeTeamName = fixture.getString("homeTeamName");
@@ -39,7 +39,7 @@ public class Fixture {
         result = new Result(fixture.getJSONObject("result"));
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getFixtureId() {
         return fixtureId;
     }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class Standing {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer standingId;
     @NotNull
     private Integer position;
@@ -56,7 +56,7 @@ public class Standing {
         away = new Away(standing.getJSONObject("away"));
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getStandingId() {
         return standingId;
     }

@@ -2,16 +2,13 @@ package Model;
 
 import com.sun.istack.internal.NotNull;
 
-import javax.persistence.Basic;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 public class Filter {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer filterId;
     @NotNull
     private String name;
@@ -23,7 +20,7 @@ public class Filter {
         values = new ArrayList<>();
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getFilterId() {
         return filterId;
     }

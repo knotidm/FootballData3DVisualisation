@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="com.enigmabridge:hibernate4-sqlite-dialect:0.1.2" type="repository">
+  <library name="sqlite_dialect" type="repository">
     <properties maven-id="com.enigmabridge:hibernate4-sqlite-dialect:0.1.2" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/enigmabridge/hibernate4-sqlite-dialect/0.1.2/hibernate4-sqlite-dialect-0.1.2.jar!/" />

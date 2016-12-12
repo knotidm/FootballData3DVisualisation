@@ -5,9 +5,9 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.dialect">com.enigmabridge.hibernate.dialect.SQLiteDialect</property>
-        <property name="connection.url">jdbc:sqlite:C:/SQLite/footballdata.db</property>
+        <property name="connection.url">jdbc:sqlite:data/sqlite/footballdata.db</property>
         <property name="connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hbm2ddl.auto">create</property>
+        <!--<property name="hbm2ddl.auto">create</property>-->
         <mapping class="Model.Away"/>
         <mapping class="Model.Competition"/>
         <mapping class="Model.Filter"/>

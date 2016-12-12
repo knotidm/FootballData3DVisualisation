@@ -1,20 +1,17 @@
 package Model;
 
-import Util.Util;
+import Util.Get;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 public class Competition {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer competitionId;
     @NotNull
     @OneToMany(mappedBy = "competition")
@@ -46,7 +43,7 @@ public class Competition {
         numberOfGames = competition.getInt("numberOfGames");
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getCompetitionId() {
         return competitionId;
     }
@@ -119,7 +116,7 @@ public class Competition {
     }
 
     private Collection<Team> getTeams(String link) {
-        JSONArray teamsJSON = Util.getRequestToJSONObject(link).getJSONArray("teams");
+        JSONArray teamsJSON = Get.getJSONObject(link).getJSONArray("teams");
         teams = new ArrayList<>();
 
         for (int i = 0; i < teamsJSON.size(); i++) {
@@ -129,7 +126,7 @@ public class Competition {
     }
 
     private Collection<Standing> getStandings(String link) {
-        JSONArray standingsJSON = Util.getRequestToJSONObject(link).getJSONArray("standing");
+        JSONArray standingsJSON = Get.getJSONObject(link).getJSONArray("standing");
         standings = new ArrayList<>();
 
         for (int i = 0; i < standingsJSON.size(); i++) {

@@ -1,6 +1,6 @@
 package Model;
 
-import Util.Util;
+import Util.Get;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Entity
 public class Team {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer teamId;
     @NotNull
     @OneToMany(mappedBy = "team")
@@ -37,12 +37,12 @@ public class Team {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
         name = team.getString("name");
-        squadMarketValue = Util.getBigDecimal(team.getString("squadMarketValue", "").replaceAll("[^\\d]+", ""));
+        squadMarketValue = Get.getBigDecimal(team.getString("squadMarketValue", "").replaceAll("[^\\d]+", ""));
         //emblem = loadShape(teamContent.getString("crestUrl"));
         //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getTeamId() {
         return teamId;
     }
@@ -88,7 +88,7 @@ public class Team {
     }
 
     private Collection<Fixture> getFixtures(String link) {
-        JSONArray fixturesJSON = Util.getRequestToJSONObject(link).getJSONArray("fixtures");
+        JSONArray fixturesJSON = Get.getJSONObject(link).getJSONArray("fixtures");
         fixtures = new ArrayList<>();
 
         for (int i = 0; i < fixturesJSON.size(); i++) {
@@ -98,7 +98,7 @@ public class Team {
     }
 
     private Collection<Player> getPlayers(String link) {
-        JSONArray playersJSON = Util.getRequestToJSONObject(link).getJSONArray("players");
+        JSONArray playersJSON = Get.getJSONObject(link).getJSONArray("players");
         players = new ArrayList<>();
 
         for (int i = 0; i < playersJSON.size(); i++) {
