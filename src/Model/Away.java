@@ -3,13 +3,11 @@ package Model;
 import com.sun.istack.internal.NotNull;
 import processing.data.JSONObject;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Away {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer awayId;
     @NotNull
     private Integer goals;
@@ -33,7 +31,7 @@ public class Away {
         losses = away.getInt("losses");
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getAwayId() {
         return awayId;
     }
