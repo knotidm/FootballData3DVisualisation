@@ -1,7 +1,8 @@
 import DAO.DAO;
 import Filter.PlayerFilter;
 import Filter.TeamFilter;
-import Interaction.Interaction;
+import Interaction.FilterInteraction;
+import Interaction.ModeInteraction;
 import Model.*;
 import Object3D.Grid;
 import Object3D.Object3D;
@@ -36,11 +37,13 @@ public class Main extends PApplet {
 
     private ArrayList<Object3D<Team>> teamObjects3D;
     private TeamFilter teamFilter;
-    private Interaction<Team> teamInteraction;
+    private ModeInteraction<Team> teamModeInteraction;
+    private FilterInteraction<Team> teamFilterInteraction;
 
     private ArrayList<Object3D<Player>> playerObjects3D;
     private PlayerFilter playerFilter;
-    private Interaction<Player> playerInteraction;
+    private ModeInteraction<Player> playerModeInteraction;
+    private FilterInteraction<Player> playerFilterInteraction;
 
     private Grid grid;
 
@@ -105,10 +108,12 @@ public class Main extends PApplet {
         teamObjects3D = new ArrayList<>();
         teamFilter = new TeamFilter(competition);
         teamObjects3D = initialize(competition, teamFilter.points());
-        teamInteraction = new Interaction<Team>();
+        teamModeInteraction = new ModeInteraction<>();
+        teamFilterInteraction = new FilterInteraction<>();
 
         playerObjects3D = new ArrayList<>();
-        playerInteraction = new Interaction<Player>();
+        playerModeInteraction = new ModeInteraction<>();
+        playerFilterInteraction = new FilterInteraction<>();
 
         grid = new Grid(this, gridSize, grilleSize);
     }
@@ -168,8 +173,8 @@ public class Main extends PApplet {
         translate(x, y, 0);
 
         if (userInterface.indexLevel == 0) {
-            teamInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
-            teamObjects3D = teamInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, userInterface.indexFilter);
+            teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+            teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, userInterface.indexFilter);
 
             grid.resetZ();
 
@@ -183,8 +188,8 @@ public class Main extends PApplet {
         }
 
         if (userInterface.indexLevel == 1 && userInterface.clickedObjects3D != 2) {
-            playerInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
-            playerObjects3D = playerInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, userInterface.indexFilter);
+            playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
+            playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, userInterface.indexFilter);
 
             grid.resetZ();
 
@@ -204,10 +209,9 @@ public class Main extends PApplet {
             if (mouseButton == LEFT) {
                 switch (userInterface.indexLevel) {
                     case 0:
-                        teamInteraction.resetAllObjects3DStates(teamObjects3D);
-                        Object3D<Team> teamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                        teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
+                        Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                         resultTeam = teamObject3D.type;
-//                        teamObject3D.isClicked = true;
                         randomVectors.clear();
                         teamObject3D.type.getPlayers().forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                         playerObjects3D = initialize(teamObject3D.type);
@@ -215,8 +219,8 @@ public class Main extends PApplet {
                         userInterface.indexFilter = 1;
                         break;
                     case 1:
-                        playerInteraction.resetAllObjects3DStates(playerObjects3D);
-                        resultPlayer = playerObjects3D.get(Interaction.indexObject3D).type;
+                        playerModeInteraction.resetAllObjects3DStates(playerObjects3D);
+                        resultPlayer = playerObjects3D.get(ModeInteraction.indexObject3D).type;
                         userInterface.indexLevel = 2;
                         userInterface.indexFilter = 1;
                         break;
@@ -227,17 +231,17 @@ public class Main extends PApplet {
                     case 0:
                         switch (userInterface.clickedObjects3D) {
                             case 0:
-                                homeTeamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                                homeTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                                 homeTeamObject3D.isClicked = true;
                                 userInterface.clickedObjects3D++;
                                 break;
                             case 1:
-                                awayTeamObject3D = teamObjects3D.get(Interaction.indexObject3D);
+                                awayTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                                 if (awayTeamObject3D.isClicked) {
                                     awayTeamObject3D.isClicked = false;
                                     userInterface.clickedObjects3D--;
                                 } else {
-                                    teamInteraction.resetAllObjects3DStates(teamObjects3D);
+                                    teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
                                     userInterface.clickedObjects3D++;
                                     resultFixture = Get.getFixture(homeTeamObject3D, awayTeamObject3D);
                                     userInterface.indexLevel = 1;
@@ -246,7 +250,7 @@ public class Main extends PApplet {
                         }
                         break;
                     case 1:
-                        Object3D<Player> playerObject3D = playerObjects3D.get(Interaction.indexObject3D);
+                        Object3D<Player> playerObject3D = playerObjects3D.get(ModeInteraction.indexObject3D);
                         playerObject3D.isClicked = true;
                         break;
                 }
