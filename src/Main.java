@@ -213,7 +213,7 @@ public class Main extends PApplet {
                         teamInteraction.resetAllObjects3DStates(teamObjects3D);
                         Object3D<Team> teamObject3D = teamObjects3D.get(Interaction.indexObject3D);
                         resultTeam = teamObject3D.type;
-                        teamObject3D.isClicked = true;
+//                        teamObject3D.isClicked = true;
                         randomVectors.clear();
                         teamObject3D.type.getPlayers().forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                         playerObjects3D = initialize(teamObject3D.type);
@@ -241,7 +241,7 @@ public class Main extends PApplet {
                                     awayTeamObject3D.isClicked = false;
                                     userInterface.clickedObjects3D--;
                                 } else {
-                                    awayTeamObject3D.isClicked = true;
+                                    teamInteraction.resetAllObjects3DStates(teamObjects3D);
                                     userInterface.clickedObjects3D++;
                                     resultFixture = Get.getFixture(homeTeamObject3D, awayTeamObject3D);
                                     userInterface.indexLevel = 1;
@@ -254,20 +254,6 @@ public class Main extends PApplet {
                         playerObject3D.isClicked = true;
                         break;
                 }
-            }
-        }
-    }
-
-    @Override
-    public void mouseReleased() {
-        if (mouseButton == LEFT) {
-            switch (userInterface.indexLevel) {
-                case 0:
-                    teamInteraction.resetAllObjects3DStates(teamObjects3D);
-                    break;
-                case 1:
-                    playerInteraction.resetAllObjects3DStates(playerObjects3D);
-                    break;
             }
         }
     }

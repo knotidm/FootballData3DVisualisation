@@ -23,7 +23,7 @@ public class Interaction<T> {
         switch (userInterface.indexMode) {
             case 0:
                 peasyCam.setActive(true);
-                resetAllObjects3DStates(objects3D);
+                resetIsSelectedObjects3DState(objects3D);
                 break;
             case 1:
                 peasyCam.setActive(false);
@@ -62,7 +62,7 @@ public class Interaction<T> {
             }
         } else {
             indexObject3D = 0;
-            resetAllObjects3DStates(objects3D);
+            resetIsSelectedObjects3DState(objects3D);
             closestObject3DInRelationToPosition(pApplet, objects3D);
             objects3D.get(indexObject3D).isSelected = true;
         }
