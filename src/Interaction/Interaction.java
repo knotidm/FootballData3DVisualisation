@@ -119,6 +119,8 @@ public class Interaction<T> {
                 return setTeamFilter(competition, objects3D, filter.draws());
             case 8:
                 return setTeamFilter(competition, objects3D, filter.losses());
+            case 9:
+                return setTeamFilter(competition, objects3D, filter.squadMarketValue());
         }
         return null;
     }

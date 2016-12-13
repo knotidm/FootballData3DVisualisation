@@ -212,11 +212,13 @@ public class Main extends PApplet {
                         teamObject3D.type.getPlayers().forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
                         playerObjects3D = initialize(teamObject3D.type);
                         userInterface.indexLevel = 1;
+                        userInterface.indexFilter = 1;
                         break;
                     case 1:
                         playerInteraction.resetAllObjects3DStates(playerObjects3D);
                         resultPlayer = playerObjects3D.get(Interaction.indexObject3D).type;
                         userInterface.indexLevel = 2;
+                        userInterface.indexFilter = 1;
                         break;
                 }
             }
@@ -311,8 +313,10 @@ public class Main extends PApplet {
                 }
                 break;
             case '.':
-                if (userInterface.indexFilter != 8) {
-                    userInterface.indexFilter++;
+                if (userInterface.indexLevel == 0) {
+                    if (userInterface.indexFilter < 9) userInterface.indexFilter++;
+                } else if (userInterface.indexLevel == 1) {
+                    if (userInterface.indexFilter < 2) userInterface.indexFilter++;
                 }
                 break;
             case '1':

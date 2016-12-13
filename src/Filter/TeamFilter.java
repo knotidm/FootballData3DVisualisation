@@ -3,6 +3,7 @@ package Filter;
 import Model.Competition;
 import Model.Filter;
 import Model.Standing;
+import Model.Team;
 
 import java.util.Collection;
 
@@ -82,6 +83,15 @@ public class TeamFilter extends Filter {
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
             getValues().add(standing.getLosses());
+        }
+        return getValues();
+    }
+
+    public Collection<Integer> squadMarketValue() {
+        setName("Squad Market Value");
+        getValues().clear();
+        for (Team team : competition.getTeams()) {
+            getValues().add(team.getSquadMarketValue().intValue());
         }
         return getValues();
     }

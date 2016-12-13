@@ -58,13 +58,18 @@ public class UserInterface {
         });
 
         filterNextButton.onClick(callbackEvent -> {
-            if (indexFilter != 8) indexFilter++;
+            if (indexLevel == 0) {
+                if (indexFilter < 9) indexFilter++;
+            } else if (indexLevel == 1){
+                if (indexFilter < 2) indexFilter++;
+            }
         });
 
         levelBackButton.onClick(callbackEvent -> {
             indexLevel--;
             if (indexLevel == -1) indexLevel = 0;
             clickedObjects3D = 0;
+            indexFilter = 1;
         });
     }
 
