@@ -127,6 +127,8 @@ public class Interaction<T> {
         switch (indexFilter) {
             case 1:
                 return setPlayerFilter(team, objects3D, filter.jerseyNumber());
+            case 2:
+                return setPlayerFilter(team, objects3D, filter.marketValue());
         }
         return null;
     }
@@ -140,7 +142,7 @@ public class Interaction<T> {
 
     private ArrayList<Object3D<T>> setPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, Collection<Integer> filteredValues) {
         for (Integer i = 0; i < team.getPlayers().size(); i++) {
-            objects3D.get(i).filterValue = (Integer) new ArrayList( filteredValues).get(i);
+            objects3D.get(i).filterValue = (Integer) new ArrayList(filteredValues).get(i);
         }
         return objects3D;
     }

@@ -11,7 +11,6 @@ import Util.Misc;
 import org.hibernate.Session;
 import peasy.PeasyCam;
 import processing.core.PApplet;
-import processing.opengl.PShader;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -23,8 +22,6 @@ public class Main extends PApplet {
     private PeasyCam peasyCam;
     private UserInterface userInterface;
 
-    private PShader matCapShader;
-
     private Competition competition;
     private DAO<Competition> competitionDAO;
     private DAO<Standing> standingDAO;
@@ -34,7 +31,6 @@ public class Main extends PApplet {
     private DAO<Fixture> fixtureDAO;
     private DAO<Result> resultDAO;
     private DAO<Player> playerDAO;
-
 
     private ArrayList<Vec3D> randomVectors;
 
@@ -47,7 +43,6 @@ public class Main extends PApplet {
     private Interaction<Player> playerInteraction;
 
     private Grid grid;
-
 
     private Integer grilleSize = 10;
     private Integer gridSize = 1000;
@@ -188,8 +183,8 @@ public class Main extends PApplet {
         }
 
         if (userInterface.indexLevel == 1 && userInterface.clickedObjects3D != 2) {
-
             playerInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
+            playerObjects3D = playerInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, userInterface.indexFilter);
 
             grid.resetZ();
 
@@ -201,7 +196,6 @@ public class Main extends PApplet {
 
             grid.draw();
         }
-
     }
 
     @Override

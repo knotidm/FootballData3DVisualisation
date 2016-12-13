@@ -22,4 +22,13 @@ public class PlayerFilter extends Filter {
         }
         return getValues();
     }
+
+    public Collection<Integer> marketValue() {
+        setName("Market Value");
+        getValues().clear();
+        for (Player player : team.getPlayers()) {
+            getValues().add(player.getMarketValue().intValue());
+        }
+        return getValues();
+    }
 }
