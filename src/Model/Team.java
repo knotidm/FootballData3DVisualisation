@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Entity
 public class Team {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer teamId;
     @NotNull
     @OneToMany(mappedBy = "team")
@@ -42,7 +42,7 @@ public class Team {
         //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getTeamId() {
         return teamId;
     }

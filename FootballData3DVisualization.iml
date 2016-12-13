@@ -27,5 +27,6 @@
     <orderEntry type="library" name="Hibernate 5" level="project" />
     <orderEntry type="library" name="sqlite_dialect" level="project" />
     <orderEntry type="library" name="sqlite_jdbc" level="project" />
+    <orderEntry type="library" name="hemesh" level="application" />
   </component>
 </module>

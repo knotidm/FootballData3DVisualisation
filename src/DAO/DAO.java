@@ -36,10 +36,11 @@ public class DAO<T> {
         }
     }
 
-    public void delete(T typeToDelete) {
+    public void delete(Class<T> clazz, Integer typeID) {
         try {
             session.beginTransaction();
-            session.delete(typeToDelete);
+            T type = session.get(clazz, typeID);
+            session.delete(type);
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();

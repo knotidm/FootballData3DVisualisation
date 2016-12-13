@@ -10,10 +10,7 @@ import http.requests.GetRequest;
 import processing.data.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -47,6 +44,17 @@ public class Get {
 
     public static Date getDate(String dateString) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+        if (!dateString.equals(""))
+            try {
+                return format.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        return null;
+    }
+
+    public static Date getDetailedDate(String dateString) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.UK);
         if (!dateString.equals(""))
             try {
                 return format.parse(dateString);

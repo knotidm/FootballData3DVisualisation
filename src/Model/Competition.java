@@ -11,7 +11,7 @@ import java.util.Collection;
 
 @Entity
 public class Competition {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer competitionId;
     @NotNull
     @OneToMany(mappedBy = "competition")
@@ -43,7 +43,7 @@ public class Competition {
         numberOfGames = competition.getInt("numberOfGames");
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getCompetitionId() {
         return competitionId;
     }

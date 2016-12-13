@@ -1,6 +1,7 @@
 package Model;
 
 import com.sun.istack.internal.NotNull;
+import org.hibernate.annotations.Type;
 import processing.data.JSONObject;
 import Util.Get;
 
@@ -10,7 +11,7 @@ import java.util.Date;
 
 @Entity
 public class Player {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer playerId;
     @NotNull
     private String name;
@@ -19,10 +20,12 @@ public class Player {
     @NotNull
     private Integer jerseyNumber;
     @NotNull
+    @Type(type = "date")
     private Date dateOfBirth;
     @NotNull
     private String nationality;
     @NotNull
+    @Type(type = "date")
     private Date contractUntil;
     @NotNull
     private BigDecimal marketValue;
@@ -42,7 +45,7 @@ public class Player {
         marketValue = Get.getBigDecimal(player.getString("marketValue", "").replaceAll("[^\\d]+", ""));
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getPlayerId() {
         return playerId;
     }
@@ -79,6 +82,7 @@ public class Player {
     }
 
     @Basic
+    @Type(type = "date")
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -97,6 +101,7 @@ public class Player {
     }
 
     @Basic
+    @Type(type = "date")
     public Date getContractUntil() {
         return contractUntil;
     }

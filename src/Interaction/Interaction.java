@@ -133,14 +133,14 @@ public class Interaction<T> {
 
     private ArrayList<Object3D<T>> setTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, Collection<Integer> filteredValues) {
         for (Integer i = 0; i < competition.getStandings().size(); i++) {
-            objects3D.get(i).size = (Integer) new ArrayList(filteredValues).get(i);
+            objects3D.get(i).filterValue = (Integer) new ArrayList(filteredValues).get(i);
         }
         return objects3D;
     }
 
     private ArrayList<Object3D<T>> setPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, Collection<Integer> filteredValues) {
         for (Integer i = 0; i < team.getPlayers().size(); i++) {
-            objects3D.get(i).size = (Integer) new ArrayList( filteredValues).get(i);
+            objects3D.get(i).filterValue = (Integer) new ArrayList( filteredValues).get(i);
         }
         return objects3D;
     }

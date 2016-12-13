@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Entity
 public class Filter {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer filterId;
     @NotNull
     private String name;
@@ -20,7 +20,7 @@ public class Filter {
         values = new ArrayList<>();
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getFilterId() {
         return filterId;
     }

@@ -2,7 +2,6 @@ package Object3D;
 
 import Model.Player;
 import Model.Team;
-import Util.Get;
 import Util.Misc;
 import peasy.PeasyCam;
 import processing.core.PApplet;
@@ -13,14 +12,16 @@ public class Object3D<T> extends Particle {
     private PApplet pApplet;
     public Integer index;
     public T type;
+    public Integer filterValue;
     public Boolean isSelected;
     public Boolean isClicked;
 
-    public Object3D(PApplet pApplet, Vec3D location, Integer size, Integer index, T type) {
-        super(pApplet, location, size);
+    public Object3D(PApplet pApplet, Vec3D location, Integer index, T type, Integer filterValue) {
+        super(pApplet, location);
         this.pApplet = pApplet;
         this.index = index;
         this.type = type;
+        this.filterValue = filterValue;
         this.isSelected = false;
         this.isClicked = false;
     }
@@ -30,8 +31,8 @@ public class Object3D<T> extends Particle {
         pApplet.pushMatrix();
 
         pApplet.noFill();
-
-        pApplet.stroke(255, 0, 0);
+        pApplet.noStroke();
+//        pApplet.fill(50 + filterValue * 10, 50, 0);
         if (isSelected) pApplet.stroke(255, 150, 0);
         if (isClicked) pApplet.stroke(150, 250, 0);
 
@@ -47,11 +48,9 @@ public class Object3D<T> extends Particle {
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.getName(), 0, -size, 0);
-            pApplet.text(Get.getString(team.getSquadMarketValue()), 0, 4 * -size, 0);
         } else if (type.getClass() == Player.class) {
             Player player = (Player) type;
             pApplet.text(player.getName(), 0, -size, 0);
-            pApplet.text(Get.getString(player.getMarketValue()), 0, 4 * -size, 0);
         }
 
         pApplet.popMatrix();

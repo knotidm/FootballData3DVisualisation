@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class Home {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer homeId;
     @NotNull
     private Integer goals;
@@ -31,7 +31,7 @@ public class Home {
         losses = home.getInt("losses");
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getHomeId() {
         return homeId;
     }

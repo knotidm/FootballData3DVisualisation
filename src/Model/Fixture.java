@@ -2,6 +2,7 @@ package Model;
 
 import Util.Get;
 import com.sun.istack.internal.NotNull;
+import org.hibernate.annotations.Type;
 import processing.data.JSONObject;
 
 import javax.persistence.*;
@@ -9,9 +10,11 @@ import java.util.Date;
 
 @Entity
 public class Fixture {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer fixtureId;
     @NotNull
+    @Type(type = "date")
     private Date date;
     @NotNull
     private String status;
@@ -31,7 +34,7 @@ public class Fixture {
     }
 
     public Fixture(JSONObject fixture) {
-        date = Get.getDate(fixture.getString("date"));
+        date = Get.getDetailedDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");
         homeTeamName = fixture.getString("homeTeamName");
@@ -39,7 +42,8 @@ public class Fixture {
         result = new Result(fixture.getJSONObject("result"));
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getFixtureId() {
         return fixtureId;
     }
@@ -49,6 +53,7 @@ public class Fixture {
     }
 
     @Basic
+    @Type(type = "date")
     public Date getDate() {
         return date;
     }
