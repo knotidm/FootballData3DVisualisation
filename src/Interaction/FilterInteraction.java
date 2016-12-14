@@ -58,5 +58,4 @@ public class FilterInteraction<T> {
         }
         return objects3D;
     }
-
 }

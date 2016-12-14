@@ -116,4 +116,3 @@ public class Fixture {
         this.team = team;
     }
 }
-

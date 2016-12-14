@@ -46,7 +46,6 @@ public class Main extends PApplet {
     private ArrayList<Object3D<Fixture>> fixtureObjects3D;
     private ModeInteraction<Fixture> fixtureModeInteraction;
 
-
     private Grid grid;
 
     private Integer grilleSize = 10;
@@ -240,9 +239,7 @@ public class Main extends PApplet {
                 switch (userInterface.indexLevel) {
                     case 0:
                         teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
-                        Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
-                        resultTeam = teamObject3D.type;
-                        teamObject3D.isClicked = true;
+                        resultTeam = teamObjects3D.get(ModeInteraction.indexObject3D).type;
                         playerObjects3D = getPlayerObjects3D(resultTeam);
                         fixtureObjects3D = getFixtureObjects3D(resultTeam);
                         userInterface.teamField.show().setOpen(false);
