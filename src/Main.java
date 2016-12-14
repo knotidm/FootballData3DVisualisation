@@ -33,8 +33,6 @@ public class Main extends PApplet {
     private DAO<Result> resultDAO;
     private DAO<Player> playerDAO;
 
-    private ArrayList<Vec3D> randomVectors;
-
     private ArrayList<Object3D<Team>> teamObjects3D;
     private TeamFilter teamFilter;
     private ModeInteraction<Team> teamModeInteraction;
@@ -44,6 +42,10 @@ public class Main extends PApplet {
     private PlayerFilter playerFilter;
     private ModeInteraction<Player> playerModeInteraction;
     private FilterInteraction<Player> playerFilterInteraction;
+
+    private ArrayList<Object3D<Fixture>> fixtureObjects3D;
+    private ModeInteraction<Fixture> fixtureModeInteraction;
+
 
     private Grid grid;
 
@@ -102,18 +104,18 @@ public class Main extends PApplet {
 //        competitionDAO.delete(Competition.class, competition.getCompetitionId());
 //        session.close();
 
-        randomVectors = new ArrayList<>();
-        competition.getStandings().forEach(standing -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
-
         teamObjects3D = new ArrayList<>();
         teamFilter = new TeamFilter(competition);
-        teamObjects3D = initialize(competition, teamFilter.points());
+        teamObjects3D = getTeamObjects3D(competition, teamFilter.points());
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
 
         playerObjects3D = new ArrayList<>();
         playerModeInteraction = new ModeInteraction<>();
         playerFilterInteraction = new FilterInteraction<>();
+
+        fixtureObjects3D = new ArrayList<>();
+        fixtureModeInteraction = new ModeInteraction<>();
 
         grid = new Grid(this, gridSize, grilleSize);
     }
@@ -128,12 +130,13 @@ public class Main extends PApplet {
         Misc.onFrontOfPeasyCam(this, peasyCam);
 
         if (userInterface.clickedObjects3D == 2) {
+            userInterface.teamField.hide();
             fill(0, 102, 153);
-            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 0);
+            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()) , 0, 0);
             fill(255, 0, 0);
             text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
             fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 80);
+            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
             fill(255, 0, 0);
             text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
         } else if (userInterface.indexLevel == 0) {
@@ -146,7 +149,16 @@ public class Main extends PApplet {
             text(resultTeam.getName(), 0, 0);
             fill(255, 0, 0);
             text(playerFilter.getName(), 0, 40);
-        } else if (userInterface.indexLevel == 2) {
+        } else if (userInterface.indexLevel == 2 && userInterface.teamField.getValue() == 0.0) {
+            fill(0, 102, 153);
+            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()) , 0, 0);
+            fill(255, 0, 0);
+            text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
+            fill(0, 102, 153);
+            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
+            fill(255, 0, 0);
+            text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
+        } else if (userInterface.indexLevel == 2 && userInterface.teamField.getValue() == 1.0) {
             fill(0, 102, 153);
             text(resultPlayer.getName(), 0, 0);
             fill(255, 0, 0);
@@ -187,7 +199,25 @@ public class Main extends PApplet {
             grid.draw();
         }
 
-        if (userInterface.indexLevel == 1 && userInterface.clickedObjects3D != 2) {
+        if (userInterface.indexLevel == 1 && userInterface.teamField.getValue() == 0.0 && userInterface.clickedObjects3D != 2) {
+            userInterface.teamField.hide();
+
+            fixtureModeInteraction.switchMode(this, peasyCam, userInterface, grid, fixtureObjects3D);
+
+            grid.resetZ();
+
+            for (Object3D<Fixture> object3D : fixtureObjects3D) {
+                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                object3D.draw(peasyCam);
+                object3D.lineBetween(new ArrayList<>(fixtureObjects3D), minDistance);
+            }
+
+            grid.draw();
+        }
+
+        if (userInterface.indexLevel == 1 && userInterface.teamField.getValue() == 1.0 && userInterface.clickedObjects3D != 2) {
+            userInterface.teamField.hide();
+
             playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
             playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, userInterface.indexFilter);
 
@@ -212,15 +242,20 @@ public class Main extends PApplet {
                         teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
                         Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                         resultTeam = teamObject3D.type;
-                        randomVectors.clear();
-                        teamObject3D.type.getPlayers().forEach((player) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
-                        playerObjects3D = initialize(teamObject3D.type);
-                        userInterface.indexLevel = 1;
-                        userInterface.indexFilter = 1;
+                        teamObject3D.isClicked = true;
+                        playerObjects3D = getPlayerObjects3D(resultTeam);
+                        fixtureObjects3D = getFixtureObjects3D(resultTeam);
+                        userInterface.teamField.show().setOpen(false);
+                        userInterface.teamField.setLabel(resultTeam.getName());
                         break;
                     case 1:
                         playerModeInteraction.resetAllObjects3DStates(playerObjects3D);
-                        resultPlayer = playerObjects3D.get(ModeInteraction.indexObject3D).type;
+                        if (userInterface.teamField.getValue() == 0.0) {
+                            resultFixture = fixtureObjects3D.get(ModeInteraction.indexObject3D).type;
+                        }
+                        if (userInterface.teamField.getValue() == 1.0) {
+                            resultPlayer = playerObjects3D.get(ModeInteraction.indexObject3D).type;
+                        }
                         userInterface.indexLevel = 2;
                         userInterface.indexFilter = 1;
                         break;
@@ -231,6 +266,7 @@ public class Main extends PApplet {
                     case 0:
                         switch (userInterface.clickedObjects3D) {
                             case 0:
+                                teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
                                 homeTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                                 homeTeamObject3D.isClicked = true;
                                 userInterface.clickedObjects3D++;
@@ -245,6 +281,7 @@ public class Main extends PApplet {
                                     userInterface.clickedObjects3D++;
                                     resultFixture = Get.getFixture(homeTeamObject3D, awayTeamObject3D);
                                     userInterface.indexLevel = 1;
+                                    userInterface.levelBackButton.show();
                                 }
                                 break;
                         }
@@ -258,11 +295,11 @@ public class Main extends PApplet {
         }
     }
 
-    private ArrayList<Object3D<Team>> initialize(Competition competition, Collection<Integer> filteredValues) {
+    private ArrayList<Object3D<Team>> getTeamObjects3D(Competition competition, Collection<Integer> filteredValues) {
         teamObjects3D.clear();
         for (Integer i = 0; i < competition.getStandings().size(); i++) {
             teamObjects3D.add(new Object3D<Team>(this,
-                    new Vec3D(randomVectors.get(i)),
+                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
                     i,
                     Get.getTeam(competition, i),
                     (Integer) new ArrayList(filteredValues).get(i)
@@ -271,21 +308,32 @@ public class Main extends PApplet {
         return teamObjects3D;
     }
 
-    private ArrayList<Object3D<Player>> initialize(Team team) {
+    private ArrayList<Object3D<Player>> getPlayerObjects3D(Team team) {
         playerFilter = new PlayerFilter(team);
         playerObjects3D.clear();
         ArrayList<Integer> jerseyNumbers = new ArrayList<>(playerFilter.jerseyNumber());
         ArrayList<Player> players = new ArrayList<>(team.getPlayers());
-
         for (Integer i = 0; i < team.getPlayers().size(); i++) {
             playerObjects3D.add(new Object3D<Player>(this,
-                    new Vec3D(randomVectors.get(i)),
+                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
                     i,
                     players.get(i),
                     jerseyNumbers.get(i)
             ));
         }
         return playerObjects3D;
+    }
+
+    private ArrayList<Object3D<Fixture>> getFixtureObjects3D(Team team) {
+        fixtureObjects3D.clear();
+        for (Integer i = 0; i < team.getFixtures().size(); i++) {
+            fixtureObjects3D.add(new Object3D<Fixture>(this,
+                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
+                    i,
+                    new ArrayList<>(team.getFixtures()).get(i),
+                    i));
+        }
+        return fixtureObjects3D;
     }
 
     private void move() {
@@ -326,16 +374,12 @@ public class Main extends PApplet {
             case '1':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
                 teamFilter = new TeamFilter(competition);
-                randomVectors.clear();
-                competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
-                teamObjects3D = initialize(competition, teamFilter.goals());
+                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
                 break;
             case '2':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/438"));
                 teamFilter = new TeamFilter(competition);
-                randomVectors.clear();
-                competition.getStandings().forEach((standing) -> randomVectors.add(new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4))));
-                teamObjects3D = initialize(competition, teamFilter.goals());
+                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
                 break;
         }
 

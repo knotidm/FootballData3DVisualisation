@@ -1,5 +1,6 @@
 package Object3D;
 
+import Model.Fixture;
 import Model.Player;
 import Model.Team;
 import Util.Misc;
@@ -48,6 +49,9 @@ public class Object3D<T> extends Particle {
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.getName(), 0, -size, 0);
+        } else if (type.getClass() == Fixture.class) {
+            Fixture fixture = (Fixture) type;
+            pApplet.text(String.format("%s vs %s", fixture.getHomeTeamName(), fixture.getAwayTeamName()), 0, -size, 0);
         } else if (type.getClass() == Player.class) {
             Player player = (Player) type;
             pApplet.text(player.getName(), 0, -size, 0);
