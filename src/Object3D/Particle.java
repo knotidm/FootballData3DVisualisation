@@ -16,7 +16,7 @@ public class Particle {
     public Integer size;
     private TexturedHemesh texturedHemesh;
 
-    public Particle(PApplet pApplet, Vec3D location) {
+    Particle(PApplet pApplet, Vec3D location) {
         this.pApplet = pApplet;
         this.location = location;
         this.size = 10;

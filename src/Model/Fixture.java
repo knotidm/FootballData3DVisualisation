@@ -33,7 +33,7 @@ public class Fixture {
     public Fixture() {
     }
 
-    public Fixture(JSONObject fixture) {
+    Fixture(JSONObject fixture) {
         date = Get.getDetailedDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");

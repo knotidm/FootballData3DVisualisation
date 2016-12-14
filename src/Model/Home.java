@@ -23,7 +23,7 @@ public class Home {
     public Home() {
     }
 
-    public Home(JSONObject home) {
+    Home(JSONObject home) {
         goals = home.getInt("goals");
         goalsAgainst = home.getInt("goalsAgainst");
         wins = home.getInt("wins");

@@ -17,7 +17,7 @@ public class Result {
     public Result() {
     }
 
-    public Result(JSONObject result) {
+    Result(JSONObject result) {
         goalsHomeTeam = result.getInt("goalsHomeTeam", 0);
         goalsAwayTeam = result.getInt("goalsAwayTeam", 0);
     }

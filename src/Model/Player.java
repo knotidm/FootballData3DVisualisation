@@ -35,7 +35,7 @@ public class Player {
     public Player() {
     }
 
-    public Player(JSONObject player) {
+    Player(JSONObject player) {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber", 0);

@@ -41,7 +41,7 @@ public class Standing {
     public Standing() {
     }
 
-    public Standing(JSONObject standing) {
+    Standing(JSONObject standing) {
         position = standing.getInt("position");
         teamName = standing.getString("teamName");
         playedGames = standing.getInt("playedGames");

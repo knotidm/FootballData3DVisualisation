@@ -13,12 +13,12 @@ import wblut.hemesh.HE_Mesh;
 import static processing.core.PConstants.NORMAL;
 import static processing.core.PConstants.TRIANGLES;
 
-public class TexturedHemesh {
+class TexturedHemesh {
     private PApplet pApplet;
-    public PShader matCapShader;
-    public PShape pShape;
+    PShader matCapShader;
+    PShape pShape;
 
-    public TexturedHemesh(PApplet pApplet, Integer size) {
+    TexturedHemesh(PApplet pApplet, Integer size) {
         this.pApplet = pApplet;
 
         matCapShader = pApplet.loadShader("data/glsl/matCap_fragment.glsl", "data/glsl/matCap_vertex.glsl");

@@ -23,7 +23,7 @@ public class Away {
     public Away() {
     }
 
-    public Away(JSONObject away) {
+    Away(JSONObject away) {
         goals = away.getInt("goals");
         goalsAgainst = away.getInt("goalsAgainst");
         wins = away.getInt("wins");
