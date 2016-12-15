@@ -78,7 +78,7 @@ public class UserInterface {
                     indexFilter++;
                 }
             } else if (indexLevel == 1) {
-                if (indexFilter < 3) {
+                if (indexFilter < 4) {
                     indexFilter++;
                 }
             }

@@ -125,7 +125,6 @@ public class Main extends PApplet {
         pushMatrix();
         textSize(40);
         Misc.onFrontOfPeasyCam(this, peasyCam);
-
         if (userInterface.indexLevel == 0) {
             fill(0, 102, 153);
             text(competition.getName(), 0, 0);
@@ -162,30 +161,25 @@ public class Main extends PApplet {
             fill(255, 0, 0);
             text(String.format("Contract Until: %s %s", String.valueOf(resultPlayer.getContractUntil()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 200);
         }
-
         popMatrix();
 
         rotateX(PI / 2);
         translate(-gridSize / 2, -gridSize / 2, 0);
-
         userInterface.onFrontOfPeasyCam(peasyCam);
-
         move();
-
         translate(x, y, 0);
 
         if (userInterface.indexLevel == 0) {
+
             teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
             teamObjects3D = teamFilterInteraction.switchTeamFilter(userInterface, competition, teamObjects3D, teamFilter, userInterface.indexFilter);
 
             grid.resetZ();
-
             for (Object3D<Team> object3D : teamObjects3D) {
                 grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                 object3D.draw(peasyCam);
                 object3D.lineBetween(new ArrayList<>(teamObjects3D), minDistance);
             }
-
             grid.draw();
         }
 
@@ -195,13 +189,11 @@ public class Main extends PApplet {
             fixtureModeInteraction.switchMode(this, peasyCam, userInterface, grid, fixtureObjects3D);
 
             grid.resetZ();
-
             for (Object3D<Fixture> object3D : fixtureObjects3D) {
                 grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                 object3D.draw(peasyCam);
                 object3D.lineBetween(new ArrayList<>(fixtureObjects3D), minDistance);
             }
-
             grid.draw();
         }
 
@@ -212,13 +204,11 @@ public class Main extends PApplet {
             playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, userInterface.indexFilter);
 
             grid.resetZ();
-
             for (Object3D<Player> object3D : playerObjects3D) {
                 grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                 object3D.draw(peasyCam);
                 object3D.lineBetween(new ArrayList<>(playerObjects3D), minDistance);
             }
-
             grid.draw();
         }
     }
@@ -339,7 +329,7 @@ public class Main extends PApplet {
                 if (userInterface.indexLevel == 0) {
                     if (userInterface.indexFilter < 9) userInterface.indexFilter++;
                 } else if (userInterface.indexLevel == 1) {
-                    if (userInterface.indexFilter < 3) userInterface.indexFilter++;
+                    if (userInterface.indexFilter < 4) userInterface.indexFilter++;
                 }
                 break;
             case '1':

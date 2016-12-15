@@ -33,10 +33,10 @@ public class Object3D<T> extends Particle {
 
         pApplet.noFill();
         pApplet.noStroke();
-//        pApplet.fill(50 + filterValue * 10, 50, 0);
         if (isSelected) pApplet.stroke(255, 150, 0);
         if (isClicked) pApplet.stroke(150, 250, 0);
 
+        super.texturedHemesh.matCapShader.set("alpha", filterValue * 0.1f);
         super.draw(peasyCam);
 
         pApplet.rotateX(-PConstants.PI / 2);
@@ -49,6 +49,7 @@ public class Object3D<T> extends Particle {
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.getName(), 0, -size, 0);
+            pApplet.text(filterValue, 0, -size * 3, 0);
         } else if (type.getClass() == Fixture.class) {
             Fixture fixture = (Fixture) type;
             pApplet.text(String.format("%s vs %s", fixture.getHomeTeamName(), fixture.getAwayTeamName()), 0, -size, 0);

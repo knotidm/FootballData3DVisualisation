@@ -26,8 +26,10 @@ public class Get {
     @NotNull
     public static Team getTeam(Competition competition, int index) {
         Team resultTeam = new Team();
+
         ArrayList<Standing> standings  = new ArrayList(competition.getStandings());
         for (Team team : competition.getTeams()) {
+
             if (team.getName().equals(standings.get(index).getTeamName()))
                 resultTeam = team;
         }

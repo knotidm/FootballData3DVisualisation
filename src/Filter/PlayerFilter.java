@@ -41,4 +41,13 @@ public class PlayerFilter extends Filter {
         }
         return getValues();
     }
+
+    public Collection<Integer> yearsToEndContract() {
+        setName("Years To End Contract");
+        getValues().clear();
+        for (Player player : team.getPlayers()) {
+            getValues().add(player.getContractUntil().getYear() - Year.now().getValue());
+        }
+        return getValues();
+    }
 }

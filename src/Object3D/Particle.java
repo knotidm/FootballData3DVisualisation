@@ -14,18 +14,17 @@ public class Particle {
     private Vec3D speed;
     private Vec3D gravity;
     public Integer size;
-    private TexturedHemesh texturedHemesh;
+    TexturedHemesh texturedHemesh;
 
     Particle(PApplet pApplet, Vec3D location) {
         this.pApplet = pApplet;
         this.location = location;
-        this.size = 10;
+        this.size = 20;
         this.texturedHemesh = new TexturedHemesh(pApplet, size);
     }
 
     public void draw(PeasyCam peasyCam) {
         pApplet.translate(location.x, location.y, location.z);
-//        pApplet.sphereDetail(6);
         pApplet.box(size);
 
         pApplet.shader(texturedHemesh.matCapShader);
