@@ -59,8 +59,6 @@ public class Main extends PApplet {
     private Boolean moveLeft = false;
     private Boolean moveRight = false;
 
-    private Object3D<Team> homeTeamObject3D;
-    private Object3D<Team> awayTeamObject3D;
     private Team resultTeam;
     private Fixture resultFixture;
     private Player resultPlayer;
@@ -128,22 +126,15 @@ public class Main extends PApplet {
         textSize(40);
         Misc.onFrontOfPeasyCam(this, peasyCam);
 
-        if (userInterface.clickedObjects3D == 2) {
-            userInterface.teamField.hide();
-            fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
-            fill(255, 0, 0);
-            text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
-            fill(0, 102, 153);
-            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
-            fill(255, 0, 0);
-            text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
-        } else if (userInterface.indexLevel == 0) {
+        if (userInterface.indexLevel == 0) {
             fill(0, 102, 153);
             text(competition.getName(), 0, 0);
             fill(255, 0, 0);
             text(teamFilter.getName(), 0, 40);
-        } else if (userInterface.indexLevel == 1) {
+        } else if (userInterface.indexLevel == 1 && userInterface.teamField.getValue() == 0.0) {
+            fill(0, 102, 153);
+            text(resultTeam.getName(), 0, 0);
+        } else if (userInterface.indexLevel == 1 && userInterface.teamField.getValue() == 1.0) {
             fill(0, 102, 153);
             text(resultTeam.getName(), 0, 0);
             fill(255, 0, 0);
@@ -262,28 +253,9 @@ public class Main extends PApplet {
             if (mouseButton == RIGHT) {
                 switch (userInterface.indexLevel) {
                     case 0:
-                        switch (userInterface.clickedObjects3D) {
-                            case 0:
-                                userInterface.teamField.hide();
-                                teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
-                                homeTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
-                                homeTeamObject3D.isClicked = true;
-                                userInterface.clickedObjects3D++;
-                                break;
-                            case 1:
-                                awayTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
-                                if (awayTeamObject3D.isClicked) {
-                                    awayTeamObject3D.isClicked = false;
-                                    userInterface.clickedObjects3D--;
-                                } else {
-                                    teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
-                                    userInterface.clickedObjects3D++;
-                                    resultFixture = Get.getFixture(homeTeamObject3D, awayTeamObject3D);
-                                    userInterface.indexLevel = 1;
-                                    userInterface.levelBackButton.show();
-                                }
-                                break;
-                        }
+                        userInterface.teamField.hide();
+                        Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
+                        teamObject3D.isClicked = true;
                         break;
                     case 1:
                         Object3D<Player> playerObject3D = playerObjects3D.get(ModeInteraction.indexObject3D);
@@ -367,7 +339,7 @@ public class Main extends PApplet {
                 if (userInterface.indexLevel == 0) {
                     if (userInterface.indexFilter < 9) userInterface.indexFilter++;
                 } else if (userInterface.indexLevel == 1) {
-                    if (userInterface.indexFilter < 2) userInterface.indexFilter++;
+                    if (userInterface.indexFilter < 3) userInterface.indexFilter++;
                 }
                 break;
             case '1':

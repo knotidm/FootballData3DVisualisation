@@ -42,6 +42,8 @@ public class FilterInteraction<T> {
                 return setPlayerFilter(team, objects3D, filter.jerseyNumber());
             case 2:
                 return setPlayerFilter(team, objects3D, filter.marketValue());
+            case 3:
+                return setPlayerFilter(team, objects3D, filter.yearsOld());
         }
         return null;
     }

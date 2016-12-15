@@ -78,7 +78,7 @@ public class UserInterface {
                     indexFilter++;
                 }
             } else if (indexLevel == 1) {
-                if (indexFilter < 2) {
+                if (indexFilter < 3) {
                     indexFilter++;
                 }
             }
@@ -88,7 +88,7 @@ public class UserInterface {
             indexLevel--;
             if (indexLevel == 0) {
                 levelBackButton.hide();
-                teamMode.show();
+                teamMode.show().setOpen(false);
             }
             clickedObjects3D = 0;
             indexFilter = 1;
@@ -124,7 +124,12 @@ public class UserInterface {
                 levelText.setText("TEAM LEVEL");
                 break;
             case 2:
-                levelText.setText("PLAYER LEVEL");
+                if (teamField.getValue() == 0) {
+                    levelText.setText("FIXTURE LEVEL");
+                }
+                if (teamField.getValue() == 1) {
+                    levelText.setText("PLAYER LEVEL");
+                }
                 break;
         }
     }
