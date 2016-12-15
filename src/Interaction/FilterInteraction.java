@@ -5,30 +5,31 @@ import Filter.TeamFilter;
 import Model.Competition;
 import Model.Team;
 import Object3D.Object3D;
+import UI.UserInterface;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class FilterInteraction<T> {
 
-    public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, TeamFilter filter, Integer indexFilter) {
+    public ArrayList<Object3D<T>> switchTeamFilter(UserInterface userInterface, Competition competition, ArrayList<Object3D<T>> objects3D, TeamFilter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
-                return setTeamFilter(competition, objects3D, filter.playedGames());
+                return setTeamFilter(competition, objects3D, filter.playedGames(userInterface));
             case 2:
-                return setTeamFilter(competition, objects3D, filter.points());
+                return setTeamFilter(competition, objects3D, filter.points(userInterface));
             case 3:
-                return setTeamFilter(competition, objects3D, filter.goals());
+                return setTeamFilter(competition, objects3D, filter.goals(userInterface));
             case 4:
-                return setTeamFilter(competition, objects3D, filter.goalsAgainst());
+                return setTeamFilter(competition, objects3D, filter.goalsAgainst(userInterface));
             case 5:
-                return setTeamFilter(competition, objects3D, filter.goalDifference());
+                return setTeamFilter(competition, objects3D, filter.goalDifference(userInterface));
             case 6:
-                return setTeamFilter(competition, objects3D, filter.wins());
+                return setTeamFilter(competition, objects3D, filter.wins(userInterface));
             case 7:
-                return setTeamFilter(competition, objects3D, filter.draws());
+                return setTeamFilter(competition, objects3D, filter.draws(userInterface));
             case 8:
-                return setTeamFilter(competition, objects3D, filter.losses());
+                return setTeamFilter(competition, objects3D, filter.losses(userInterface));
             case 9:
                 return setTeamFilter(competition, objects3D, filter.squadMarketValue());
         }

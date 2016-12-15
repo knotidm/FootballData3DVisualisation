@@ -4,6 +4,7 @@ import Model.Competition;
 import Model.Filter;
 import Model.Standing;
 import Model.Team;
+import UI.UserInterface;
 
 import java.util.Collection;
 
@@ -15,74 +16,142 @@ public class TeamFilter extends Filter {
         this.competition = competition;
     }
 
-    public Collection<Integer> playedGames() {
+    public Collection<Integer> playedGames(UserInterface userInterface) {
         setName("Played Games");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
+                case 1:
+                    getValues().add(standing.getHome().getWins() + standing.getHome().getDraws() + standing.getHome().getLosses());
+                case 2:
+                    getValues().add(standing.getAway().getWins() + standing.getAway().getDraws() + standing.getAway().getLosses());
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> points() {
+    public Collection<Integer> points(UserInterface userInterface) {
         setName("Points");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(3 * standing.getWins() + standing.getDraws());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(3 * standing.getWins() + standing.getDraws());
+                case 1:
+                    getValues().add(3 * standing.getHome().getWins() + standing.getHome().getDraws());
+                case 2:
+                    getValues().add(3 * standing.getAway().getWins() + standing.getAway().getDraws());
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> goals() {
+    public Collection<Integer> goals(UserInterface userInterface) {
         setName("Goals");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getGoals());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getGoals());
+                case 1:
+                    getValues().add(standing.getHome().getGoals());
+
+                case 2:
+                    getValues().add(standing.getAway().getGoals());
+
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> goalsAgainst() {
+    public Collection<Integer> goalsAgainst(UserInterface userInterface) {
         setName("GoalsAgainst");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getGoalsAgainst());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getGoalsAgainst());
+                case 1:
+                    getValues().add(standing.getHome().getGoalsAgainst());
+
+                case 2:
+                    getValues().add(standing.getAway().getGoalsAgainst());
+
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> goalDifference() {
+    public Collection<Integer> goalDifference(UserInterface userInterface) {
         setName("GoalDifference");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getGoals() - standing.getGoalsAgainst());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getGoals() - standing.getGoalsAgainst());
+                case 1:
+                    getValues().add(standing.getHome().getGoals() - standing.getHome().getGoalsAgainst());
+
+                case 2:
+                    getValues().add(standing.getAway().getGoals() - standing.getAway().getGoalsAgainst());
+
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> wins() {
+    public Collection<Integer> wins(UserInterface userInterface) {
         setName("Wins");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getWins());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getWins());
+                case 1:
+                    getValues().add(standing.getHome().getWins());
+
+                case 2:
+                    getValues().add(standing.getAway().getWins());
+
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> draws() {
+    public Collection<Integer> draws(UserInterface userInterface) {
         setName("Draws");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getDraws());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getDraws());
+                case 1:
+                    getValues().add(standing.getHome().getDraws());
+
+                case 2:
+                    getValues().add(standing.getAway().getDraws());
+
+            }
         }
         return getValues();
     }
 
-    public Collection<Integer> losses() {
+    public Collection<Integer> losses(UserInterface userInterface) {
         setName("Losses");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getLosses());
+            switch ((int) userInterface.teamMode.getValue()) {
+                case 0:
+                    getValues().add(standing.getLosses());
+                case 1:
+                    getValues().add(standing.getHome().getLosses());
+
+                case 2:
+                    getValues().add(standing.getAway().getLosses());
+
+            }
         }
         return getValues();
     }

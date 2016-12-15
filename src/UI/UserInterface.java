@@ -26,6 +26,7 @@ public class UserInterface {
     private Textlabel levelText;
     public Integer indexLevel = 0;
 
+    public ScrollableList teamMode;
     public ScrollableList teamField;
 
     public Integer clickedObjects3D = 0;
@@ -43,6 +44,11 @@ public class UserInterface {
 
         levelBackButton = controlP5.addButton("LEVEL BACK").setValue(indexLevel).setPosition(10, 60).hide();
         levelText = controlP5.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
+
+        teamMode = controlP5.addScrollableList("TEAM MODE").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 85)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
 
         teamField = controlP5.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 85)
@@ -82,6 +88,7 @@ public class UserInterface {
             indexLevel--;
             if (indexLevel == 0) {
                 levelBackButton.hide();
+                teamMode.show();
             }
             clickedObjects3D = 0;
             indexFilter = 1;

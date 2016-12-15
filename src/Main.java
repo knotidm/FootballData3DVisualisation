@@ -105,7 +105,7 @@ public class Main extends PApplet {
 
         teamObjects3D = new ArrayList<>();
         teamFilter = new TeamFilter(competition);
-        teamObjects3D = getTeamObjects3D(competition, teamFilter.points());
+        teamObjects3D = getTeamObjects3D(competition, teamFilter.points(userInterface));
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
 
@@ -131,7 +131,7 @@ public class Main extends PApplet {
         if (userInterface.clickedObjects3D == 2) {
             userInterface.teamField.hide();
             fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()) , 0, 0);
+            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
             fill(255, 0, 0);
             text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
             fill(0, 102, 153);
@@ -150,7 +150,7 @@ public class Main extends PApplet {
             text(playerFilter.getName(), 0, 40);
         } else if (userInterface.indexLevel == 2 && userInterface.teamField.getValue() == 0.0) {
             fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()) , 0, 0);
+            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
             fill(255, 0, 0);
             text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
             fill(0, 102, 153);
@@ -185,7 +185,7 @@ public class Main extends PApplet {
 
         if (userInterface.indexLevel == 0) {
             teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
-            teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, userInterface.indexFilter);
+            teamObjects3D = teamFilterInteraction.switchTeamFilter(userInterface, competition, teamObjects3D, teamFilter, userInterface.indexFilter);
 
             grid.resetZ();
 
@@ -242,6 +242,7 @@ public class Main extends PApplet {
                         resultTeam = teamObjects3D.get(ModeInteraction.indexObject3D).type;
                         playerObjects3D = getPlayerObjects3D(resultTeam);
                         fixtureObjects3D = getFixtureObjects3D(resultTeam);
+                        userInterface.teamMode.hide();
                         userInterface.teamField.show().setOpen(false);
                         userInterface.teamField.setLabel(resultTeam.getName());
                         break;
@@ -263,6 +264,7 @@ public class Main extends PApplet {
                     case 0:
                         switch (userInterface.clickedObjects3D) {
                             case 0:
+                                userInterface.teamField.hide();
                                 teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
                                 homeTeamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                                 homeTeamObject3D.isClicked = true;
@@ -371,12 +373,12 @@ public class Main extends PApplet {
             case '1':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
                 teamFilter = new TeamFilter(competition);
-                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
+                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals(userInterface));
                 break;
             case '2':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/438"));
                 teamFilter = new TeamFilter(competition);
-                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
+                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals(userInterface));
                 break;
         }
 
