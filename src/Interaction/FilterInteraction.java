@@ -14,7 +14,7 @@ public class FilterInteraction<T> {
     public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, TeamFilter filter, Integer indexFilter) {
         switch (indexFilter) {
             case 1:
-                return setTeamFilter(competition, objects3D, filter.position());
+                return setTeamFilter(competition, objects3D, filter.playedGames());
             case 2:
                 return setTeamFilter(competition, objects3D, filter.points());
             case 3:

@@ -15,11 +15,11 @@ public class TeamFilter extends Filter {
         this.competition = competition;
     }
 
-    public Collection<Integer> position() {
-        setName("Position");
+    public Collection<Integer> playedGames() {
+        setName("Played Games");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getPosition());
+            getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
         }
         return getValues();
     }
@@ -28,7 +28,7 @@ public class TeamFilter extends Filter {
         setName("Points");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getPoints());
+            getValues().add(3 * standing.getWins() + standing.getDraws());
         }
         return getValues();
     }
@@ -55,7 +55,7 @@ public class TeamFilter extends Filter {
         setName("GoalDifference");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            getValues().add(standing.getGoalDifference());
+            getValues().add(standing.getGoals() - standing.getGoalsAgainst());
         }
         return getValues();
     }

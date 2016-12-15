@@ -10,19 +10,11 @@ public class Standing {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer standingId;
     @NotNull
-    private Integer position;
-    @NotNull
     private String teamName;
-    @NotNull
-    private Integer playedGames;
-    @NotNull
-    private Integer points;
     @NotNull
     private Integer goals;
     @NotNull
     private Integer goalsAgainst;
-    @NotNull
-    private Integer goalDifference;
     @NotNull
     private Integer wins;
     @NotNull
@@ -42,13 +34,9 @@ public class Standing {
     }
 
     Standing(JSONObject standing) {
-        position = standing.getInt("position");
         teamName = standing.getString("teamName");
-        playedGames = standing.getInt("playedGames");
-        points = standing.getInt("points");
         goals = standing.getInt("goals");
         goalsAgainst = standing.getInt("goalsAgainst");
-        goalDifference = standing.getInt("goalDifference");
         wins = standing.getInt("wins");
         draws = standing.getInt("draws");
         losses = standing.getInt("losses");
@@ -66,39 +54,12 @@ public class Standing {
     }
 
     @Basic
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
-    @Basic
     public String getTeamName() {
         return teamName;
     }
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
-    }
-
-    @Basic
-    public Integer getPlayedGames() {
-        return playedGames;
-    }
-
-    public void setPlayedGames(Integer playedGames) {
-        this.playedGames = playedGames;
-    }
-
-    @Basic
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
     }
 
     @Basic
@@ -117,15 +78,6 @@ public class Standing {
 
     public void setGoalsAgainst(Integer goalsAgainst) {
         this.goalsAgainst = goalsAgainst;
-    }
-
-    @Basic
-    public Integer getGoalDifference() {
-        return goalDifference;
-    }
-
-    public void setGoalDifference(Integer goalDifference) {
-        this.goalDifference = goalDifference;
     }
 
     @Basic

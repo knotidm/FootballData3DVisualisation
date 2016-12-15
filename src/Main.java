@@ -38,13 +38,13 @@ public class Main extends PApplet {
     private ModeInteraction<Team> teamModeInteraction;
     private FilterInteraction<Team> teamFilterInteraction;
 
+    private ArrayList<Object3D<Fixture>> fixtureObjects3D;
+    private ModeInteraction<Fixture> fixtureModeInteraction;
+
     private ArrayList<Object3D<Player>> playerObjects3D;
     private PlayerFilter playerFilter;
     private ModeInteraction<Player> playerModeInteraction;
     private FilterInteraction<Player> playerFilterInteraction;
-
-    private ArrayList<Object3D<Fixture>> fixtureObjects3D;
-    private ModeInteraction<Fixture> fixtureModeInteraction;
 
     private Grid grid;
 
