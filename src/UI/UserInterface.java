@@ -62,12 +62,12 @@ public class UserInterface extends PApplet {
         levelText1 = controlP51.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
 
         teamMode1 = controlP51.addScrollableList("TEAM MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).plugTo(teamModeIndex).setPosition(10, 85)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 85)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamField1 = controlP51.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).plugTo(teamFieldIndex).setPosition(10, 85)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 85)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -102,6 +102,10 @@ public class UserInterface extends PApplet {
             }
             clickedObjects3D = 0;
             filterIndex = 1;
+        });
+
+        teamMode1.onChange(callbackEvent -> {
+            teamModeIndex = teamMode1.getValue();
         });
 
         teamField1.onChange(callbackEvent -> {
@@ -199,12 +203,12 @@ public class UserInterface extends PApplet {
         levelText2 = controlP52.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
 
         teamMode2 = controlP52.addScrollableList("TEAM MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).plugTo(teamModeIndex).setPosition(10, 85)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 85)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamField2 = controlP52.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).plugTo(teamFieldIndex).setPosition(10, 85)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 85)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -237,6 +241,10 @@ public class UserInterface extends PApplet {
             }
             clickedObjects3D = 0;
             filterIndex = 1;
+        });
+
+        teamMode2.onChange(callbackEvent -> {
+            teamModeIndex = teamMode2.getValue();
         });
 
         teamField2.onChange(callbackEvent -> {

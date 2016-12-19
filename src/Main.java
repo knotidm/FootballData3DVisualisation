@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Main extends PApplet {
-
     private PeasyCam peasyCam;
     private UserInterface userInterface;
 
@@ -32,31 +31,30 @@ public class Main extends PApplet {
     private TeamFilter teamFilter;
     private ModeInteraction<Team> teamModeInteraction;
     private FilterInteraction<Team> teamFilterInteraction;
+    private Team resultTeam;
 
     private ArrayList<Object3D<Fixture>> fixtureObjects3D;
     private ModeInteraction<Fixture> fixtureModeInteraction;
+    private Fixture resultFixture;
 
     private ArrayList<Object3D<Player>> playerObjects3D;
     private PlayerFilter playerFilter;
     private ModeInteraction<Player> playerModeInteraction;
     private FilterInteraction<Player> playerFilterInteraction;
+    private Player resultPlayer;
+
+    private Integer minDistance = 100;
 
     private Grid grid;
-
     private Integer grilleSize = 10;
     private Integer gridSize = 1000;
 
-    private Integer minDistance = 100;
     private Float x = 0f;
     private Float y = 0f;
     private Boolean moveUp = false;
     private Boolean moveDown = false;
     private Boolean moveLeft = false;
     private Boolean moveRight = false;
-
-    private Team resultTeam;
-    private Fixture resultFixture;
-    private Player resultPlayer;
 
     @Override
     public void setup() {
@@ -136,7 +134,6 @@ public class Main extends PApplet {
         translate(x, y, 0);
 
         if (userInterface.levelIndex == 0) {
-
             teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
             teamObjects3D = teamFilterInteraction.switchTeamFilter(userInterface, competition, teamObjects3D, teamFilter, userInterface.filterIndex);
 
@@ -216,7 +213,6 @@ public class Main extends PApplet {
                     case 0:
                         userInterface.teamField1.hide();
                         userInterface.teamField2.hide();
-
                         Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                         teamObject3D.isClicked = true;
                         break;

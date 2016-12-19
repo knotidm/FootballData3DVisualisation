@@ -17,6 +17,8 @@ public class Object3D<T> extends Particle {
     public Boolean isSelected;
     public Boolean isClicked;
 
+    TexturedHemesh texturedHemesh;
+
     public Object3D(PApplet pApplet, Vec3D location, Integer index, T type, Integer filterValue) {
         super(pApplet, location);
         this.pApplet = pApplet;
@@ -25,6 +27,7 @@ public class Object3D<T> extends Particle {
         this.filterValue = filterValue;
         this.isSelected = false;
         this.isClicked = false;
+        this.texturedHemesh = new TexturedHemesh(pApplet, "data/image/Red.jpg", size);
     }
 
     @Override
@@ -36,8 +39,18 @@ public class Object3D<T> extends Particle {
         if (isSelected) pApplet.stroke(255, 150, 0);
         if (isClicked) pApplet.stroke(150, 250, 0);
 
-        super.texturedHemesh.matCapShader.set("alpha", filterValue * 0.1f);
         super.draw(peasyCam);
+
+        texturedHemesh.matCapShader.set("alpha", filterValue * 0.05f);
+//        texturedHemesh.modify(filterValue * 1f, filterValue * 1f, filterValue* 1f);
+        texturedHemesh.he_Mesh = texturedHemesh.setHemeshType();
+        texturedHemesh.modify(filterValue * 1f, filterValue * 1f, filterValue* 1f);
+        texturedHemesh.renderMesh();
+        texturedHemesh.pShape = texturedHemesh.createPShapeFromHemesh(texturedHemesh.he_Mesh, texturedHemesh.pImage, false);
+
+        pApplet.shader(texturedHemesh.matCapShader);
+        pApplet.shape(texturedHemesh.pShape);
+        pApplet.resetShader();
 
         pApplet.rotateX(-PConstants.PI / 2);
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);

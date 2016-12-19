@@ -20,7 +20,7 @@ public class TeamFilter extends Filter {
         setName("Played Games");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
                     break;
@@ -39,7 +39,7 @@ public class TeamFilter extends Filter {
         setName("Points");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(3 * standing.getWins() + standing.getDraws());
                     break;
@@ -58,7 +58,7 @@ public class TeamFilter extends Filter {
         setName("Goals");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoals());
                     break;
@@ -77,7 +77,7 @@ public class TeamFilter extends Filter {
         setName("GoalsAgainst");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoalsAgainst());
                     break;
@@ -96,7 +96,7 @@ public class TeamFilter extends Filter {
         setName("GoalDifference");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoals() - standing.getGoalsAgainst());
                     break;
@@ -115,7 +115,7 @@ public class TeamFilter extends Filter {
         setName("Wins");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getWins());
                     break;
@@ -134,7 +134,7 @@ public class TeamFilter extends Filter {
         setName("Draws");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getDraws());
                     break;
@@ -153,7 +153,7 @@ public class TeamFilter extends Filter {
         setName("Losses");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) userInterface.teamMode1.getValue()) {
+            switch ((int) userInterface.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getLosses());
                     break;
