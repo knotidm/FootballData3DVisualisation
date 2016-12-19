@@ -9,8 +9,8 @@ public class Event {
     public static Integer filterIndex = 1;
     public static Integer levelIndex = 0;
     public static Integer clickedObjects3D = 0;
-    public static Integer teamModeIndex;
-    public static Integer teamFieldIndex;
+    public static Integer teamModeIndex = 0;
+    public static Integer teamFieldIndex = 0;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {

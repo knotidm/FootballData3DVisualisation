@@ -15,10 +15,8 @@ import Util.Get;
 import Util.Misc;
 import peasy.PeasyCam;
 import processing.core.PApplet;
-import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Main extends PApplet {
     private PeasyCam peasyCam;
@@ -58,6 +56,12 @@ public class Main extends PApplet {
     private Boolean moveRight = false;
 
     @Override
+    public void settings() {
+        size(1280, 720, P3D);
+        smooth();
+    }
+
+    @Override
     public void setup() {
         peasyCam = new PeasyCam(this, gridSize / 2);
         peasyCam.setResetOnDoubleClick(false);
@@ -68,7 +72,7 @@ public class Main extends PApplet {
 
         teamObjects3D = new ArrayList<>();
         teamFilter = new TeamFilter(competition);
-        teamObjects3D = getTeamObjects3D(competition, teamFilter.points());
+        teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.points(), gridSize);
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
 
@@ -187,8 +191,9 @@ public class Main extends PApplet {
                     case 0:
                         teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
                         resultTeam = teamObjects3D.get(ModeInteraction.indexObject3D).type;
-                        playerObjects3D = getPlayerObjects3D(resultTeam);
-                        fixtureObjects3D = getFixtureObjects3D(resultTeam);
+                        playerFilter = new PlayerFilter(resultTeam);
+                        playerObjects3D = Get.getPlayerObjects3D(this, resultTeam, playerFilter.jerseyNumber(), gridSize);
+                        fixtureObjects3D = Get.getFixtureObjects3D(this, resultTeam, gridSize);
                         userInterface.teamModeForeground.hide();
                         userInterface.teamFieldForeground.show().setOpen(false);
                         userInterface.teamFieldForeground.setLabel(resultTeam.getName());
@@ -224,47 +229,6 @@ public class Main extends PApplet {
                 }
             }
         }
-    }
-
-    private ArrayList<Object3D<Team>> getTeamObjects3D(Competition competition, Collection<Integer> filteredValues) {
-        teamObjects3D.clear();
-        for (Integer i = 0; i < competition.getStandings().size(); i++) {
-            teamObjects3D.add(new Object3D<Team>(this,
-                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
-                    i,
-                    Get.getTeam(competition, i),
-                    new ArrayList<>(filteredValues).get(i)
-            ));
-        }
-        return teamObjects3D;
-    }
-
-    private ArrayList<Object3D<Player>> getPlayerObjects3D(Team team) {
-        playerFilter = new PlayerFilter(team);
-        playerObjects3D.clear();
-        ArrayList<Integer> jerseyNumbers = new ArrayList<>(playerFilter.jerseyNumber());
-        ArrayList<Player> players = new ArrayList<>(team.getPlayers());
-        for (Integer i = 0; i < team.getPlayers().size(); i++) {
-            playerObjects3D.add(new Object3D<Player>(this,
-                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
-                    i,
-                    players.get(i),
-                    jerseyNumbers.get(i)
-            ));
-        }
-        return playerObjects3D;
-    }
-
-    private ArrayList<Object3D<Fixture>> getFixtureObjects3D(Team team) {
-        fixtureObjects3D.clear();
-        for (Integer i = 0; i < team.getFixtures().size(); i++) {
-            fixtureObjects3D.add(new Object3D<Fixture>(this,
-                    new Vec3D(random(gridSize), random(gridSize), random(gridSize / 4)),
-                    i,
-                    new ArrayList<>(team.getFixtures()).get(i),
-                    i));
-        }
-        return fixtureObjects3D;
     }
 
     private void move() {
@@ -309,12 +273,12 @@ public class Main extends PApplet {
             case '1':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
                 teamFilter = new TeamFilter(competition);
-                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
+                teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
                 break;
             case '2':
                 competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/438"));
                 teamFilter = new TeamFilter(competition);
-                teamObjects3D = getTeamObjects3D(competition, teamFilter.goals());
+                teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
                 break;
         }
 
@@ -356,12 +320,6 @@ public class Main extends PApplet {
         }
     }
     //endregion
-
-    @Override
-    public void settings() {
-        size(1280, 720, P3D);
-        smooth();
-    }
 
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
