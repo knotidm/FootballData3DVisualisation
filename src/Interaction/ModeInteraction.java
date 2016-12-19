@@ -2,6 +2,7 @@ package Interaction;
 
 import Object3D.Grid;
 import Object3D.Object3D;
+import UI.Event;
 import UI.UserInterface;
 import peasy.PeasyCam;
 import processing.core.PApplet;
@@ -15,7 +16,7 @@ public class ModeInteraction<T> {
     public static Integer indexObject3D = 0;
 
     public void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
-        switch (userInterface.modeIndex) {
+        switch (Event.modeIndex) {
             case 0:
                 peasyCam.setActive(true);
                 resetIsSelectedObjects3DState(objects3D);
@@ -47,7 +48,7 @@ public class ModeInteraction<T> {
     private void dragObject3D(PApplet pApplet, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
         positionInRelationToGrid(pApplet, grid);
 
-        if (pApplet.mousePressed && !userInterface.controlP51.isMouseOver()) {
+        if (pApplet.mousePressed && !userInterface.controlP5Foreground.isMouseOver()) {
             if (pApplet.mouseButton == PConstants.LEFT) {
                 objects3D.get(indexObject3D).location.x += (grid.x[indexGrid] - objects3D.get(indexObject3D).location.x) / 6;
                 objects3D.get(indexObject3D).location.y += (grid.y[indexGrid] - objects3D.get(indexObject3D).location.y) / 6;
