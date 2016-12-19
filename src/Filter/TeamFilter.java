@@ -5,7 +5,6 @@ import Model.Filter;
 import Model.Standing;
 import Model.Team;
 import UI.Event;
-import UI.UserInterface;
 
 import java.util.Collection;
 
@@ -17,11 +16,11 @@ public class TeamFilter extends Filter {
         this.competition = competition;
     }
 
-    public Collection<Integer> playedGames(UserInterface userInterface) {
+    public Collection<Integer> playedGames() {
         setName("Played Games");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
                     break;
@@ -36,11 +35,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> points(UserInterface userInterface) {
+    public Collection<Integer> points() {
         setName("Points");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(3 * standing.getWins() + standing.getDraws());
                     break;
@@ -55,11 +54,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> goals(UserInterface userInterface) {
+    public Collection<Integer> goals() {
         setName("Goals");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoals());
                     break;
@@ -74,11 +73,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> goalsAgainst(UserInterface userInterface) {
+    public Collection<Integer> goalsAgainst() {
         setName("GoalsAgainst");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoalsAgainst());
                     break;
@@ -93,11 +92,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> goalDifference(UserInterface userInterface) {
+    public Collection<Integer> goalDifference() {
         setName("GoalDifference");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getGoals() - standing.getGoalsAgainst());
                     break;
@@ -112,11 +111,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> wins(UserInterface userInterface) {
+    public Collection<Integer> wins() {
         setName("Wins");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getWins());
                     break;
@@ -131,11 +130,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> draws(UserInterface userInterface) {
+    public Collection<Integer> draws() {
         setName("Draws");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getDraws());
                     break;
@@ -150,11 +149,11 @@ public class TeamFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> losses(UserInterface userInterface) {
+    public Collection<Integer> losses() {
         setName("Losses");
         getValues().clear();
         for (Standing standing : competition.getStandings()) {
-            switch ((int) Event.teamModeIndex) {
+            switch (Event.teamModeIndex) {
                 case 0:
                     getValues().add(standing.getLosses());
                     break;

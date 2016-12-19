@@ -7,7 +7,7 @@ public class DAO<T> {
     private Session session;
     private T type;
 
-    public DAO(Session session, T type) {
+    DAO(Session session, T type) {
         this.session = session;
         this.type = type;
     }
@@ -36,7 +36,7 @@ public class DAO<T> {
         }
     }
 
-    public void delete(Class<T> clazz, Integer typeID) {
+    void delete(Class<T> clazz, Integer typeID) {
         try {
             session.beginTransaction();
             T type = session.get(clazz, typeID);

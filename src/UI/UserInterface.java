@@ -14,7 +14,7 @@ public class UserInterface extends PApplet {
     private PApplet pApplet;
 
     public ControlP5 controlP5Foreground;
-    public ControlP5 controlP5Window;
+    private ControlP5 controlP5Window;
 
     private Button modeButtonForeground;
     private Textlabel modeTextForeground;
@@ -26,9 +26,9 @@ public class UserInterface extends PApplet {
     private Button filterBackButtonWindow;
     private Button filterNextButtonWindow;
 
-    public Button levelBackButtonForeground;
+    private Button levelBackButtonForeground;
     private Textlabel levelTextForeground;
-    public Button levelBackButtonWindow;
+    private Button levelBackButtonWindow;
     private Textlabel levelTextWindow;
 
     public ScrollableList teamModeForeground;

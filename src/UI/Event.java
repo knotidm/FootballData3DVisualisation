@@ -9,8 +9,8 @@ public class Event {
     public static Integer filterIndex = 1;
     public static Integer levelIndex = 0;
     public static Integer clickedObjects3D = 0;
-    public static float teamModeIndex;
-    public static float teamFieldIndex;
+    public static Integer teamModeIndex;
+    public static Integer teamFieldIndex;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -52,7 +52,7 @@ public class Event {
     }
 
     static void teamModeChange(ScrollableList teamMode) {
-        teamMode.onChange(callbackEvent -> teamModeIndex = teamMode.getValue());
+        teamMode.onChange(callbackEvent -> teamModeIndex = (int) teamMode.getValue());
     }
 
     static void teamFieldChange(ScrollableList teamField, Button levelBackButton) {
@@ -60,7 +60,7 @@ public class Event {
             if (teamField.isMouseOver()) {
                 levelIndex = 1;
                 filterIndex = 1;
-                teamFieldIndex = teamField.getValue();
+                teamFieldIndex = (int) teamField.getValue();
                 levelBackButton.show();
             }
         });
@@ -87,7 +87,7 @@ public class Event {
                 break;
             case 1:
                 textlabel.setText("TEAM LEVEL");
-               break;
+                break;
             case 2:
                 if (teamFieldIndex == 0) {
                     textlabel.setText("FIXTURE LEVEL");

@@ -1,16 +1,17 @@
 package Util;
 
 import Model.Competition;
-import Model.Fixture;
 import Model.Standing;
 import Model.Team;
-import Object3D.Object3D;
 import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
 import processing.data.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -70,15 +71,5 @@ public class Get {
     public static String getString(BigDecimal bigDecimal) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         return numberFormat.format(bigDecimal);
-    }
-
-    public static Fixture getFixture(Object3D<Team> homeTeamObject3D, Object3D<Team> awayTeamObject3D) {
-        Fixture resultFixture = new Fixture();
-        for (Fixture fixture : homeTeamObject3D.type.getFixtures()) {
-            if (fixture.getHomeTeamName().equals(homeTeamObject3D.type.getName()) && fixture.getAwayTeamName().equals(awayTeamObject3D.type.getName())) {
-                resultFixture = fixture;
-            }
-        }
-        return resultFixture;
     }
 }

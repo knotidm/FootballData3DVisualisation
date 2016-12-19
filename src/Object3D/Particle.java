@@ -18,7 +18,7 @@ public class Particle {
     Particle(PApplet pApplet, Vec3D location) {
         this.pApplet = pApplet;
         this.location = location;
-        this.size = 40;
+        this.size = 20;
     }
 
     public void draw(PeasyCam peasyCam) {

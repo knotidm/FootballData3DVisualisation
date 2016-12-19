@@ -42,7 +42,6 @@ public class Object3D<T> extends Particle {
         super.draw(peasyCam);
 
         texturedHemesh.matCapShader.set("alpha", filterValue * 0.05f);
-//        texturedHemesh.modify(filterValue * 1f, filterValue * 1f, filterValue* 1f);
         texturedHemesh.he_Mesh = texturedHemesh.setHemeshType();
         texturedHemesh.modify(filterValue * 1f, filterValue * 1f, filterValue* 1f);
         texturedHemesh.renderMesh();
