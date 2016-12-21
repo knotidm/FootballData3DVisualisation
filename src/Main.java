@@ -152,9 +152,6 @@ public class Main extends PApplet {
         }
 
         if (Event.levelIndex == 1 && Event.teamFieldIndex == 0 && Event.clickedObjects3D != 2) {
-            userInterface.teamFieldForeground.hide();
-            userInterface.teamFieldWindow.hide();
-
             fixtureModeInteraction.switchMode(this, peasyCam, userInterface, grid, fixtureObjects3D);
 
             grid.resetZ();
@@ -167,9 +164,6 @@ public class Main extends PApplet {
         }
 
         if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.clickedObjects3D != 2) {
-            userInterface.teamFieldForeground.hide();
-            userInterface.teamFieldWindow.hide();
-
             playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
             playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
 
@@ -194,10 +188,8 @@ public class Main extends PApplet {
                         playerFilter = new PlayerFilter(resultTeam);
                         playerObjects3D = Get.getPlayerObjects3D(this, resultTeam, playerFilter.jerseyNumber(), gridSize);
                         fixtureObjects3D = Get.getFixtureObjects3D(this, resultTeam, gridSize);
-                        userInterface.teamModeForeground.hide();
                         userInterface.teamFieldForeground.show().setOpen(false);
                         userInterface.teamFieldForeground.setLabel(resultTeam.getName());
-                        userInterface.teamModeWindow.hide();
                         userInterface.teamFieldWindow.show().setOpen(false);
                         userInterface.teamFieldWindow.setLabel(resultTeam.getName());
                         break;
@@ -210,15 +202,13 @@ public class Main extends PApplet {
                             resultPlayer = playerObjects3D.get(ModeInteraction.indexObject3D).type;
                         }
                         Event.levelIndex = 2;
-                        Event.filterIndex = 1;
+                        Event.filterIndex = 0;
                         break;
                 }
             }
             if (mouseButton == RIGHT) {
                 switch (Event.levelIndex) {
                     case 0:
-                        userInterface.teamFieldForeground.hide();
-                        userInterface.teamFieldWindow.hide();
                         Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
                         teamObject3D.isClicked = true;
                         break;

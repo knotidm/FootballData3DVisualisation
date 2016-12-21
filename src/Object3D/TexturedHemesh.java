@@ -6,9 +6,8 @@ import processing.core.PShape;
 import processing.core.PVector;
 import processing.opengl.PShader;
 import wblut.geom.WB_Coord;
-import wblut.geom.WB_Line;
 import wblut.hemesh.*;
-import wblut.processing.WB_Render;
+import wblut.processing.WB_Render3D;
 
 import static processing.core.PConstants.NORMAL;
 import static processing.core.PConstants.TRIANGLES;
@@ -19,21 +18,20 @@ class TexturedHemesh {
     PImage pImage;
     PShape pShape;
 
-    WB_Line wb_Line;
     HE_Mesh he_Mesh;
-    WB_Render wb_Render;
+    WB_Render3D wb_render3D;
 
     Integer view, he_MeshType, archimedesType, size;
 
-    private final float wireFrameRadius = 200;
-
-    TexturedHemesh(PApplet pApplet, String imagePath, Integer size) {
+    TexturedHemesh(PApplet pApplet, Integer size) {
         this.pApplet = pApplet;
-        this.matCapShader = pApplet.loadShader("data/glsl/matCap_fragment.glsl", "data/glsl/matCap_vertex.glsl");
-        this.pImage = pApplet.loadImage(imagePath);
-        this.view = this.he_MeshType = this.archimedesType = 1;
+        wb_render3D = new WB_Render3D(pApplet);
+        matCapShader = pApplet.loadShader("data/glsl/matCap_fragment.glsl", "data/glsl/matCap_vertex.glsl");
+        pImage = pApplet.loadImage("data/image/Red.jpg");
+        view = 2;
+        he_MeshType = 1;
+        archimedesType = 2;
         this.size = size;
-        wb_Render = new WB_Render(pApplet);
     }
 
     HE_Mesh setHemeshType() {
@@ -109,7 +107,7 @@ class TexturedHemesh {
         HEM_ChamferCorners hem_ChamferCorners = new HEM_ChamferCorners()
                 .setDistance(chamferCornersDistance);
         he_Mesh.modify(hem_ChamferCorners);
-//
+
 //        HEM_ChamferEdges hem_ChamferEdges = new HEM_ChamferEdges()
 //                .setDistance(chamferEdgesDistance);
 //        he_Mesh.modify(hem_ChamferEdges);
@@ -152,53 +150,6 @@ class TexturedHemesh {
         //                .setCenter(0.5 * (mouseX - width/2), 0, 0)
         //                .setFactor(mouseY / 800.0);
         //        he_Mesh.modify(hem_Spherify);
-    }
-
-    public void createDividers() {
-        //        he_Mesh.simplify(new HES_TriDec().setGoal(160));
-        //
-        //        HES_CatmullClark hes_CatmullClark = new HES_CatmullClark()
-        //                .setKeepBoundary(true)
-        //                .setKeepEdges(true);
-        //
-        //        he_Mesh.subdivide(hes_CatmullClark, 1);
-
-        //        HES_DooSabin hes_DooSabin = new HES_DooSabin();
-        //        hes_DooSabin.setFactors(1, 1);
-        //        hes_DooSabin.setAbsolute(false);
-        //        hes_DooSabin.setDistance(50);
-        //        he_Mesh.subdivide(hes_DooSabin, 1);
-    }
-
-    void renderMesh() {
-        switch (view) {
-            case 1:
-                wb_Render.drawFaces(he_Mesh, pImage);
-                break;
-            case 2:
-                pApplet.noStroke();
-                wb_Render.drawFacesSmooth(he_Mesh, pImage);
-                break;
-            case 3:
-                pApplet.stroke(255, 0, 0);
-                pApplet.strokeWeight(0.5f);
-                wb_Render.drawEdges(he_Mesh);
-                break;
-            case 4:
-                pApplet.stroke(0, 255, 0);
-                wb_Render.drawFaces(he_Mesh, pImage);
-                wb_Render.drawFaceNormals(20, he_Mesh);
-                break;
-            case 5:
-                pApplet.stroke(0, 255, 0);
-                wb_Render.drawHalfedges(20, he_Mesh);
-                break;
-            case 6:
-                pApplet.stroke(0, 255, 0);
-                pApplet.fill(255, 0, 0);
-                wb_Render.drawFaces(he_Mesh, pImage);
-                wb_Render.drawVertexNormals(30, he_Mesh);
-        }
     }
 
     PShape createPShapeFromHemesh(HE_Mesh he_Mesh, PImage pImage, boolean perVertexNormals) {

@@ -21,18 +21,19 @@ public class UserInterface extends PApplet {
     private Button modeButtonWindow;
     private Textlabel modeTextWindow;
 
-    private Button filterBackButtonForeground;
-    private Button filterNextButtonForeground;
-    private Button filterBackButtonWindow;
-    private Button filterNextButtonWindow;
-
     private Button levelBackButtonForeground;
     private Textlabel levelTextForeground;
     private Button levelBackButtonWindow;
     private Textlabel levelTextWindow;
 
-    public ScrollableList teamModeForeground;
-    public ScrollableList teamModeWindow;
+    private ScrollableList teamFilterModeForeground;
+    private ScrollableList teamFilterModeWindow;
+
+    private ScrollableList teamFilterForeground;
+    private ScrollableList teamFilterWindow;
+
+    private ScrollableList playerFilterForeground;
+    private ScrollableList playerFilterWindow;
 
     public ScrollableList teamFieldForeground;
     public ScrollableList teamFieldWindow;
@@ -50,74 +51,88 @@ public class UserInterface extends PApplet {
         modeButtonForeground = controlP5Foreground.addButton("SWITCH MODE").setPosition(10, 10);
         modeTextForeground = controlP5Foreground.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(85, 15);
 
-        filterBackButtonForeground = controlP5Foreground.addButton("BACK FILTER").setPosition(10, 35);
-        filterNextButtonForeground = controlP5Foreground.addButton("NEXT FILTER").setPosition(85, 35);
+        levelBackButtonForeground = controlP5Foreground.addButton("LEVEL BACK").setPosition(10, 40).hide();
+        levelTextForeground = controlP5Foreground.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 45);
 
-        levelBackButtonForeground = controlP5Foreground.addButton("LEVEL BACK").setPosition(10, 60).hide();
-        levelTextForeground = controlP5Foreground.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
+        teamFilterModeForeground = controlP5Foreground.addScrollableList("TEAM FILTER MODE").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 75)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
 
-        teamModeForeground = controlP5Foreground.addScrollableList("TEAM MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 85)
+        teamFilterForeground = controlP5Foreground.addScrollableList("TEAM FILTER").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE")).setPosition(10, 165)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        playerFilterForeground = controlP5Foreground.addScrollableList("PLAYER FILTER").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 75)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamFieldForeground = controlP5Foreground.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 85)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 275)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
         setMode();
 
         Event.modeButtonClick(modeButtonForeground);
-        Event.filterBackButtonClick(filterBackButtonForeground);
-        Event.filterNextButtonClick(filterNextButtonForeground);
-        Event.levelBackButtonClick(levelBackButtonForeground, teamModeForeground);
-        Event.teamModeChange(teamModeForeground);
-        Event.teamFieldChange(teamFieldForeground, levelBackButtonForeground);
+        Event.levelBackButtonClick(levelBackButtonForeground);
+        Event.teamFilterModeChange(teamFilterModeForeground);
+        Event.filterChange(teamFilterForeground);
+        Event.filterChange(playerFilterForeground);
+        Event.teamFieldChange(teamFieldForeground, playerFilterForeground);
     }
 
     @Override
     public void settings() {
-        size(400, 400);
+        size(200, 400);
     }
 
     @Override
     public void setup() {
-        surface.setLocation(10, 10);
+        surface.setLocation(10, 100);
         controlP5Window = new ControlP5(this);
 
         modeButtonWindow = controlP5Window.addButton("SWITCH MODE").setPosition(10, 10);
         modeTextWindow = controlP5Window.addTextlabel("modeText").setText("ROTATE").setColor(255).setPosition(85, 15);
 
-        filterBackButtonWindow = controlP5Window.addButton("BACK FILTER").setPosition(10, 35);
-        filterNextButtonWindow = controlP5Window.addButton("NEXT FILTER").setPosition(85, 35);
+        levelBackButtonWindow = controlP5Window.addButton("LEVEL BACK").setPosition(10, 40).hide();
+        levelTextWindow = controlP5Window.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 45);
 
-        levelBackButtonWindow = controlP5Window.addButton("LEVEL BACK").setPosition(10, 60).hide();
-        levelTextWindow = controlP5Window.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 65);
+        teamFilterModeWindow = controlP5Window.addScrollableList("TEAM FILTER MODE").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 75)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
 
-        teamModeWindow = controlP5Window.addScrollableList("TEAM MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 85)
+        teamFilterWindow = controlP5Window.addScrollableList("TEAM FILTER").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE")).setPosition(10, 165)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        playerFilterWindow = controlP5Window.addScrollableList("PLAYER FILTER").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 75)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamFieldWindow = controlP5Window.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 85)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 275)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
         Event.modeButtonClick(modeButtonWindow);
-        Event.filterBackButtonClick(filterBackButtonWindow);
-        Event.filterNextButtonClick(filterNextButtonWindow);
-        Event.levelBackButtonClick(levelBackButtonWindow, teamModeWindow);
-        Event.teamModeChange(teamModeWindow);
-        Event.teamFieldChange(teamFieldWindow, levelBackButtonWindow);
+        Event.levelBackButtonClick(levelBackButtonWindow);
+        Event.teamFilterModeChange(teamFilterModeWindow);
+        Event.filterChange(teamFilterWindow);
+        Event.filterChange(playerFilterWindow);
+        Event.teamFieldChange(teamFieldWindow, playerFilterWindow);
     }
 
     @Override
     public void draw() {
         background(0);
         Event.switchModeText(modeTextWindow);
-        Event.switchLevelText(levelTextWindow);
+        Event.switchLevel(levelTextWindow, levelBackButtonWindow, teamFilterModeWindow, teamFilterWindow, teamFieldWindow, playerFilterWindow);
     }
 
     public void setMode() {
@@ -134,7 +149,7 @@ public class UserInterface extends PApplet {
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         peasyCam.beginHUD();
         Event.switchModeText(modeTextForeground);
-        Event.switchLevelText(levelTextForeground);
+        Event.switchLevel(levelTextForeground, levelBackButtonForeground, teamFilterModeForeground, teamFilterForeground, teamFieldForeground, playerFilterForeground);
         controlP5Foreground.draw();
         peasyCam.endHUD();
         pApplet.hint(PConstants.ENABLE_DEPTH_TEST);

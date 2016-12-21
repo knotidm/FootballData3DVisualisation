@@ -27,7 +27,8 @@ public class Object3D<T> extends Particle {
         this.filterValue = filterValue;
         this.isSelected = false;
         this.isClicked = false;
-        this.texturedHemesh = new TexturedHemesh(pApplet, "data/image/Red.jpg", size);
+        this.texturedHemesh = new TexturedHemesh(pApplet, size);
+        texturedHemesh.he_Mesh = texturedHemesh.setHemeshType();
     }
 
     @Override
@@ -41,15 +42,11 @@ public class Object3D<T> extends Particle {
 
         super.draw(peasyCam);
 
-        texturedHemesh.matCapShader.set("alpha", filterValue * 0.05f);
-        texturedHemesh.he_Mesh = texturedHemesh.setHemeshType();
-        texturedHemesh.modify(filterValue * 1f, filterValue * 1f, filterValue* 1f);
-        texturedHemesh.renderMesh();
-        texturedHemesh.pShape = texturedHemesh.createPShapeFromHemesh(texturedHemesh.he_Mesh, texturedHemesh.pImage, false);
+        pApplet.fill((filterValue * 10), 255 - (filterValue * 10), 0);
 
-        pApplet.shader(texturedHemesh.matCapShader);
-        pApplet.shape(texturedHemesh.pShape);
-        pApplet.resetShader();
+//        texturedHemesh.modify(filterValue.floatValue(), filterValue.floatValue(), filterValue.floatValue());
+        texturedHemesh.wb_render3D.drawFaces(texturedHemesh.he_Mesh);
+//        pApplet.sphere(size);
 
         pApplet.rotateX(-PConstants.PI / 2);
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
@@ -60,8 +57,10 @@ public class Object3D<T> extends Particle {
 
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
+//            PShape emblem = pApplet.loadShape(team.getEmblem());
             pApplet.text(team.getName(), 0, -size, 0);
-            pApplet.text(filterValue, 0, -size * 3, 0);
+            pApplet.text(filterValue, 0, -size * 2, 0);
+//            pApplet.shape(emblem, 100, 100);
         } else if (type.getClass() == Fixture.class) {
             Fixture fixture = (Fixture) type;
             pApplet.text(String.format("%s vs %s", fixture.getHomeTeamName(), fixture.getAwayTeamName()), 0, -size, 0);

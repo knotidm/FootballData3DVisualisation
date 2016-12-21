@@ -12,7 +12,8 @@ import java.util.Collection;
 
 @Entity
 public class Team {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer teamId;
     @NotNull
     @OneToMany(mappedBy = "team")
@@ -24,9 +25,8 @@ public class Team {
     private String name;
     @NotNull
     private BigDecimal squadMarketValue;
-    //    @NotNull
-//    @Basic
-//    public PShape emblem;
+    @NotNull
+    private String emblem;
     @ManyToOne
     private Competition competition;
 
@@ -38,11 +38,31 @@ public class Team {
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
         name = team.getString("name");
         squadMarketValue = Get.getBigDecimal(team.getString("squadMarketValue", "").replaceAll("[^\\d]+", ""));
-        //emblem = loadShape(teamContent.getString("crestUrl"));
-        //emblem = loadShape("https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg");
+        emblem = team.getString("crestUrl");
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Collection<Fixture> getFixtures(String link) {
+        JSONArray fixturesJSON = Get.getJSONObject(link).getJSONArray("fixtures");
+        fixtures = new ArrayList<>();
+
+        for (int i = 0; i < fixturesJSON.size(); i++) {
+            fixtures.add(new Fixture(fixturesJSON.getJSONObject(i)));
+        }
+        return fixtures;
+    }
+
+    private Collection<Player> getPlayers(String link) {
+        JSONArray playersJSON = Get.getJSONObject(link).getJSONArray("players");
+        players = new ArrayList<>();
+
+        for (int i = 0; i < playersJSON.size(); i++) {
+            players.add(new Player(playersJSON.getJSONObject(i)));
+        }
+        return players;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getTeamId() {
         return teamId;
     }
@@ -87,24 +107,13 @@ public class Team {
         this.squadMarketValue = squadMarketValue;
     }
 
-    private Collection<Fixture> getFixtures(String link) {
-        JSONArray fixturesJSON = Get.getJSONObject(link).getJSONArray("fixtures");
-        fixtures = new ArrayList<>();
-
-        for (int i = 0; i < fixturesJSON.size(); i++) {
-            fixtures.add(new Fixture(fixturesJSON.getJSONObject(i)));
-        }
-        return fixtures;
+    @Basic
+    public String getEmblem() {
+        return emblem;
     }
 
-    private Collection<Player> getPlayers(String link) {
-        JSONArray playersJSON = Get.getJSONObject(link).getJSONArray("players");
-        players = new ArrayList<>();
-
-        for (int i = 0; i < playersJSON.size(); i++) {
-            players.add(new Player(playersJSON.getJSONObject(i)));
-        }
-        return players;
+    public void setEmblem(String emblem) {
+        this.emblem = emblem;
     }
 
     @ManyToOne

@@ -6,10 +6,10 @@ import controlP5.Textlabel;
 
 public class Event {
     public static Integer modeIndex = 0;
-    public static Integer filterIndex = 1;
+    public static Integer filterIndex = 0;
     public static Integer levelIndex = 0;
     public static Integer clickedObjects3D = 0;
-    public static Integer teamModeIndex = 0;
+    public static Integer teamFilterModeIndex = 0;
     public static Integer teamFieldIndex = 0;
 
     static void modeButtonClick(Button modeButton) {
@@ -19,49 +19,28 @@ public class Event {
         });
     }
 
-    static void filterBackButtonClick(Button filterBackButton) {
-        filterBackButton.onClick(callbackEvent -> {
-            if (filterIndex != 1) filterIndex--;
-        });
-    }
-
-    static void filterNextButtonClick(Button filterNextButton) {
-        filterNextButton.onClick(callbackEvent -> {
-            if (levelIndex == 0) {
-                if (filterIndex < 9) {
-                    filterIndex++;
-                }
-            } else if (levelIndex == 1) {
-                if (filterIndex < 4) {
-                    filterIndex++;
-                }
-            }
-        });
-    }
-
-    static void levelBackButtonClick(Button levelBackButton, ScrollableList teamMode) {
+    static void levelBackButtonClick(Button levelBackButton) {
         levelBackButton.onClick(callbackEvent -> {
             levelIndex--;
-            if (levelIndex == 0) {
-                levelBackButton.hide();
-                teamMode.show().setOpen(false);
-            }
             clickedObjects3D = 0;
-            filterIndex = 1;
+            filterIndex = 0;
         });
     }
 
-    static void teamModeChange(ScrollableList teamMode) {
-        teamMode.onChange(callbackEvent -> teamModeIndex = (int) teamMode.getValue());
+    static void teamFilterModeChange(ScrollableList teamFilterMode) {
+        teamFilterMode.onChange(callbackEvent -> teamFilterModeIndex = (int) teamFilterMode.getValue());
     }
 
-    static void teamFieldChange(ScrollableList teamField, Button levelBackButton) {
+    static void filterChange(ScrollableList filter) {
+        filter.onChange(callbackEvent -> filterIndex = (int) filter.getValue());
+    }
+
+    static void teamFieldChange(ScrollableList teamField, ScrollableList playerFilter) {
         teamField.onChange(callbackEvent -> {
             if (teamField.isMouseOver()) {
                 levelIndex = 1;
-                filterIndex = 1;
                 teamFieldIndex = (int) teamField.getValue();
-                levelBackButton.show();
+                filterIndex = (int) playerFilter.getValue();
             }
         });
     }
@@ -80,13 +59,24 @@ public class Event {
         }
     }
 
-    static void switchLevelText(Textlabel textlabel) {
+    static void switchLevel(Textlabel textlabel, Button levelBackButton, ScrollableList teamFilterMode, ScrollableList teamFilter, ScrollableList teamField, ScrollableList playerFilter) {
         switch (levelIndex) {
             case 0:
                 textlabel.setText("COMPETITION LEVEL");
+                levelBackButton.hide();
+                teamFilterMode.show();
+                teamFilter.show();
+                playerFilter.hide();
                 break;
             case 1:
                 textlabel.setText("TEAM LEVEL");
+                levelBackButton.show();
+                teamFilterMode.hide();
+                teamFilter.hide();
+                teamField.hide();
+                if (teamFieldIndex == 1) {
+                    playerFilter.show();
+                }
                 break;
             case 2:
                 if (teamFieldIndex == 0) {
@@ -94,6 +84,7 @@ public class Event {
                 }
                 if (teamFieldIndex == 1) {
                     textlabel.setText("PLAYER LEVEL");
+                    playerFilter.hide();
                 }
                 break;
         }

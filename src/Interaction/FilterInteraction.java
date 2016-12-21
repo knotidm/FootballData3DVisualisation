@@ -13,23 +13,23 @@ public class FilterInteraction<T> {
 
     public ArrayList<Object3D<T>> switchTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, TeamFilter filter, Integer indexFilter) {
         switch (indexFilter) {
-            case 1:
+            case 0:
                 return setTeamFilter(competition, objects3D, filter.playedGames());
-            case 2:
+            case 1:
                 return setTeamFilter(competition, objects3D, filter.points());
-            case 3:
+            case 2:
                 return setTeamFilter(competition, objects3D, filter.goals());
-            case 4:
+            case 3:
                 return setTeamFilter(competition, objects3D, filter.goalsAgainst());
-            case 5:
+            case 4:
                 return setTeamFilter(competition, objects3D, filter.goalDifference());
-            case 6:
+            case 5:
                 return setTeamFilter(competition, objects3D, filter.wins());
-            case 7:
+            case 6:
                 return setTeamFilter(competition, objects3D, filter.draws());
-            case 8:
+            case 7:
                 return setTeamFilter(competition, objects3D, filter.losses());
-            case 9:
+            case 8:
                 return setTeamFilter(competition, objects3D, filter.squadMarketValue());
         }
         return null;
@@ -37,13 +37,13 @@ public class FilterInteraction<T> {
 
     public ArrayList<Object3D<T>> switchPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, PlayerFilter filter, Integer indexFilter) {
         switch (indexFilter) {
-            case 1:
+            case 0:
                 return setPlayerFilter(team, objects3D, filter.jerseyNumber());
-            case 2:
+            case 1:
                 return setPlayerFilter(team, objects3D, filter.marketValue());
+            case 2:
+                return setPlayerFilter(team, objects3D, filter.age());
             case 3:
-                return setPlayerFilter(team, objects3D, filter.yearsOld());
-            case 4:
                 return setPlayerFilter(team, objects3D, filter.yearsToEndContract());
         }
         return null;

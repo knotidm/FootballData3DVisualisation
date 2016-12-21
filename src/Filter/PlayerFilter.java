@@ -6,6 +6,7 @@ import Model.Team;
 
 import java.time.Year;
 import java.util.Collection;
+import java.util.Date;
 
 public class PlayerFilter extends Filter {
     private Team team;
@@ -33,8 +34,8 @@ public class PlayerFilter extends Filter {
         return getValues();
     }
 
-    public Collection<Integer> yearsOld() {
-        setName("Years Old");
+    public Collection<Integer> age() {
+        setName("Age");
         getValues().clear();
         for (Player player : team.getPlayers()) {
             getValues().add(Year.now().getValue() - player.getDateOfBirth().getYear());
@@ -46,7 +47,10 @@ public class PlayerFilter extends Filter {
         setName("Years To End Contract");
         getValues().clear();
         for (Player player : team.getPlayers()) {
-            getValues().add(player.getContractUntil().getYear() - Year.now().getValue());
+            Date endContractDate = player.getContractUntil();
+            Integer endContractYear = endContractDate.getYear();
+            Integer yearNow = Year.now().getValue();
+            getValues().add(endContractYear - yearNow);
         }
         return getValues();
     }
