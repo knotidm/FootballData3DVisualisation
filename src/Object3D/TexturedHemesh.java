@@ -27,7 +27,7 @@ class TexturedHemesh {
         this.pApplet = pApplet;
         wb_render3D = new WB_Render3D(pApplet);
         matCapShader = pApplet.loadShader("data/glsl/matCap_fragment.glsl", "data/glsl/matCap_vertex.glsl");
-        pImage = pApplet.loadImage("data/image/Red.jpg");
+        pImage = pApplet.loadImage("data/image/matCap/Red.jpg");
         view = 2;
         he_MeshType = 1;
         archimedesType = 2;

@@ -5,8 +5,9 @@ import Model.Player;
 import Model.Team;
 
 import java.time.Year;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class PlayerFilter extends Filter {
     private Team team;
@@ -38,7 +39,9 @@ public class PlayerFilter extends Filter {
         setName("Age");
         getValues().clear();
         for (Player player : team.getPlayers()) {
-            getValues().add(Year.now().getValue() - player.getDateOfBirth().getYear());
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(player.getDateOfBirth());
+            getValues().add(Year.now().getValue() - calendar.get(Calendar.YEAR));
         }
         return getValues();
     }
@@ -47,10 +50,9 @@ public class PlayerFilter extends Filter {
         setName("Years To End Contract");
         getValues().clear();
         for (Player player : team.getPlayers()) {
-            Date endContractDate = player.getContractUntil();
-            Integer endContractYear = endContractDate.getYear();
-            Integer yearNow = Year.now().getValue();
-            getValues().add(endContractYear - yearNow);
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(player.getContractUntil());
+            getValues().add(calendar.get(Calendar.YEAR) - Year.now().getValue());
         }
         return getValues();
     }
