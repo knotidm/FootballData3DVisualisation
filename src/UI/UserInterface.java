@@ -11,34 +11,28 @@ import processing.core.PConstants;
 import java.util.Arrays;
 
 public class UserInterface extends PApplet {
-    private PApplet pApplet;
-
     public ControlP5 controlP5Foreground;
+    public ScrollableList teamFieldForeground;
+    public ScrollableList teamFieldWindow;
+    public boolean newWindow;
+    private PApplet pApplet;
     private ControlP5 controlP5Window;
-
     private Button modeButtonForeground;
     private Textlabel modeTextForeground;
     private Button modeButtonWindow;
     private Textlabel modeTextWindow;
-
     private Button levelBackButtonForeground;
     private Textlabel levelTextForeground;
     private Button levelBackButtonWindow;
     private Textlabel levelTextWindow;
-
     private ScrollableList teamFilterModeForeground;
     private ScrollableList teamFilterModeWindow;
-
     private ScrollableList teamFilterForeground;
     private ScrollableList teamFilterWindow;
-
     private ScrollableList playerFilterForeground;
     private ScrollableList playerFilterWindow;
-
-    public ScrollableList teamFieldForeground;
-    public ScrollableList teamFieldWindow;
-
-    public boolean newWindow;
+    private Button chartViewButtonForeground;
+    private Button chartViewButtonWindow;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
@@ -69,8 +63,10 @@ public class UserInterface extends PApplet {
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
+        chartViewButtonForeground = controlP5Foreground.addButton("VIEW CHART").setPosition(10, 275);
+
         teamFieldForeground = controlP5Foreground.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 275)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 305)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -81,6 +77,7 @@ public class UserInterface extends PApplet {
         Event.teamFilterModeChange(teamFilterModeForeground);
         Event.filterChange(teamFilterForeground);
         Event.filterChange(playerFilterForeground);
+        Event.chartViewButtonClick(chartViewButtonForeground, modeButtonForeground, modeTextForeground);
         Event.teamFieldChange(teamFieldForeground, playerFilterForeground);
     }
 
@@ -115,8 +112,10 @@ public class UserInterface extends PApplet {
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
+        chartViewButtonWindow = controlP5Window.addButton("VIEW CHART").setPosition(10, 275);
+
         teamFieldWindow = controlP5Window.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 275)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 305)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -125,6 +124,7 @@ public class UserInterface extends PApplet {
         Event.teamFilterModeChange(teamFilterModeWindow);
         Event.filterChange(teamFilterWindow);
         Event.filterChange(playerFilterWindow);
+        Event.chartViewButtonClick(chartViewButtonWindow, modeButtonWindow, modeTextWindow);
         Event.teamFieldChange(teamFieldWindow, playerFilterWindow);
     }
 
@@ -132,7 +132,7 @@ public class UserInterface extends PApplet {
     public void draw() {
         background(0);
         Event.switchModeText(modeTextWindow);
-        Event.switchLevel(levelTextWindow, levelBackButtonWindow, teamFilterModeWindow, teamFilterWindow, teamFieldWindow, playerFilterWindow);
+        Event.switchLevel(modeButtonWindow, modeTextWindow,  levelBackButtonWindow,levelTextWindow, teamFilterModeWindow, teamFilterWindow, playerFilterWindow, chartViewButtonWindow, teamFieldWindow);
     }
 
     public void setMode() {
@@ -149,7 +149,7 @@ public class UserInterface extends PApplet {
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         peasyCam.beginHUD();
         Event.switchModeText(modeTextForeground);
-        Event.switchLevel(levelTextForeground, levelBackButtonForeground, teamFilterModeForeground, teamFilterForeground, teamFieldForeground, playerFilterForeground);
+        Event.switchLevel(modeButtonForeground, modeTextForeground,  levelBackButtonForeground,levelTextForeground, teamFilterModeForeground, teamFilterForeground, playerFilterForeground, chartViewButtonForeground, teamFieldForeground);
         controlP5Foreground.draw();
         peasyCam.endHUD();
         pApplet.hint(PConstants.ENABLE_DEPTH_TEST);

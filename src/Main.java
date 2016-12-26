@@ -13,17 +13,16 @@ import UI.Event;
 import UI.UserInterface;
 import Util.Get;
 import Util.Misc;
+import Visualisation.Chart2D;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 
 import java.util.ArrayList;
 
 public class Main extends PApplet {
+    public Competition competition;
     private PeasyCam peasyCam;
     private UserInterface userInterface;
-
-    public Competition competition;
-
     private Service service;
 
     private ArrayList<Object3D<Team>> teamObjects3D;
@@ -42,6 +41,8 @@ public class Main extends PApplet {
     private FilterInteraction<Player> playerFilterInteraction;
     private Player resultPlayer;
 
+    private Chart2D teamChart2D;
+
     private Integer minDistance = 100;
 
     private Grid grid;
@@ -54,6 +55,27 @@ public class Main extends PApplet {
     private Boolean moveDown = false;
     private Boolean moveLeft = false;
     private Boolean moveRight = false;
+
+    static public void main(String[] passedArgs) {
+        String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
+        PApplet.main(concat(appletArgs, passedArgs));
+
+//        final Session session = getSession();
+//        try {
+//            System.out.println("querying all the managed entities...");
+//            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
+//            for (EntityType<?> entityType : metamodel.getEntities()) {
+//                final String entityName = entityType.getName();
+//                final Query query = session.createQuery("from " + entityName);
+//                System.out.println("executing: " + query.getQueryString());
+//                for (Object o : query.list()) {
+//                    System.out.println("  " + o);
+//                }
+//            }
+//        } finally {
+//            session.close();
+//        }
+    }
 
     @Override
     public void settings() {
@@ -83,6 +105,7 @@ public class Main extends PApplet {
         fixtureObjects3D = new ArrayList<>();
         fixtureModeInteraction = new ModeInteraction<>();
 
+        teamChart2D = Get.getChart2D(this, teamObjects3D, teamFilter);
         grid = new Grid(this, gridSize, grilleSize);
     }
 
@@ -91,95 +114,114 @@ public class Main extends PApplet {
         background(0);
         lights();
 
-        pushMatrix();
-        textSize(40);
-        Misc.onFrontOfPeasyCam(this, peasyCam);
-        if (Event.levelIndex == 0) {
-            fill(0, 102, 153);
-            text(competition.getName(), 0, 0);
-            fill(255, 0, 0);
-            text(teamFilter.getName(), 0, 40);
-        } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 0) {
-            fill(0, 102, 153);
-            text(resultTeam.getName(), 0, 0);
-        } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-            fill(0, 102, 153);
-            text(resultTeam.getName(), 0, 0);
-            fill(255, 0, 0);
-            text(playerFilter.getName(), 0, 40);
-        } else if (Event.levelIndex == 2 && Event.teamFieldIndex == 0) {
-            fill(0, 102, 153);
-            text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
-            fill(255, 0, 0);
-            text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
-            fill(0, 102, 153);
-            text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
-            fill(255, 0, 0);
-            text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
-        } else if (Event.levelIndex == 2 && Event.teamFieldIndex == 1) {
-            fill(0, 102, 153);
-            text(resultPlayer.getName(), 0, 0);
-            fill(255, 0, 0);
-            text(String.format("Date Of Birth: %s %s", String.valueOf(resultPlayer.getDateOfBirth()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 40);
-            fill(0, 102, 153);
-            text(String.format("Nationality: %s", resultPlayer.getNationality()), 0, 80);
-            fill(255, 0, 0);
-            text(String.format("Position: %s - Jersey Number: %s", resultPlayer.getPosition(), resultPlayer.getJerseyNumber()), 0, 120);
-            fill(0, 102, 153);
-            text(String.format("Market Value: %s", Get.getString(resultPlayer.getMarketValue())), 0, 160);
-            fill(255, 0, 0);
-            text(String.format("Contract Until: %s %s", String.valueOf(resultPlayer.getContractUntil()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 200);
-        }
-        popMatrix();
-
-        rotateX(PI / 2);
-        translate(-gridSize / 2, -gridSize / 2, 0);
-        userInterface.onFrontOfPeasyCam(peasyCam);
-        move();
-        translate(x, y, 0);
-
-        if (Event.levelIndex == 0) {
-            teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+        if (Event.chartView) {
+            peasyCam.setActive(false);
             teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
+            teamChart2D = Get.getChart2D(this, teamObjects3D, teamFilter);
 
-            grid.resetZ();
-            for (Object3D<Team> object3D : teamObjects3D) {
-                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                object3D.draw(peasyCam);
-                object3D.lineBetween(new ArrayList<>(teamObjects3D), minDistance);
-            }
-            grid.draw();
+            peasyCam.beginHUD();
+            teamChart2D.draw(width, height);
+            peasyCam.endHUD();
+            userInterface.onFrontOfPeasyCam(peasyCam);
         }
 
-        if (Event.levelIndex == 1 && Event.teamFieldIndex == 0 && Event.clickedObjects3D != 2) {
-            fixtureModeInteraction.switchMode(this, peasyCam, userInterface, grid, fixtureObjects3D);
+        if (!Event.chartView) {
+            textSize(40);
 
-            grid.resetZ();
-            for (Object3D<Fixture> object3D : fixtureObjects3D) {
-                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                object3D.draw(peasyCam);
-                object3D.lineBetween(new ArrayList<>(fixtureObjects3D), minDistance);
+            pushMatrix();
+            Misc.onFrontOfPeasyCam(this, peasyCam);
+            if (Event.levelIndex == 0) {
+                fill(0, 102, 153);
+                text(competition.getName(), 0, 0);
+                fill(255, 0, 0);
+                text(teamFilter.getName(), 0, 40);
+            } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 0) {
+                fill(0, 102, 153);
+                text(resultTeam.getName(), 0, 0);
+            } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
+                fill(0, 102, 153);
+                text(resultTeam.getName(), 0, 0);
+                fill(255, 0, 0);
+                text(playerFilter.getName(), 0, 40);
             }
-            grid.draw();
-        }
+            popMatrix();
 
-        if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.clickedObjects3D != 2) {
-            playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
-            playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
-
-            grid.resetZ();
-            for (Object3D<Player> object3D : playerObjects3D) {
-                grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                object3D.draw(peasyCam);
-                object3D.lineBetween(new ArrayList<>(playerObjects3D), minDistance);
+            peasyCam.beginHUD();
+            translate(width / 2, height / 2);
+            if (Event.levelIndex == 2 && Event.teamFieldIndex == 0) {
+                fill(0, 102, 153);
+                text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
+                fill(255, 0, 0);
+                text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
+                fill(0, 102, 153);
+                text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
+                fill(255, 0, 0);
+                text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
+            } else if (Event.levelIndex == 2 && Event.teamFieldIndex == 1) {
+                fill(0, 102, 153);
+                text(resultPlayer.getName(), 0, 0);
+                fill(255, 0, 0);
+                text(String.format("Date Of Birth: %s %s", String.valueOf(resultPlayer.getDateOfBirth()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 40);
+                fill(0, 102, 153);
+                text(String.format("Nationality: %s", resultPlayer.getNationality()), 0, 80);
+                fill(255, 0, 0);
+                text(String.format("Position: %s - Jersey Number: %s", resultPlayer.getPosition(), resultPlayer.getJerseyNumber()), 0, 120);
+                fill(0, 102, 153);
+                text(String.format("Market Value: %s", Get.getString(resultPlayer.getMarketValue())), 0, 160);
+                fill(255, 0, 0);
+                text(String.format("Contract Until: %s %s", String.valueOf(resultPlayer.getContractUntil()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 200);
             }
-            grid.draw();
+            peasyCam.endHUD();
+
+            rotateX(PI / 2);
+            translate(-gridSize / 2, -gridSize / 2, 0);
+            userInterface.onFrontOfPeasyCam(peasyCam);
+            move();
+            translate(x, y, 0);
+
+            if (Event.levelIndex == 0) {
+                teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
+                teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
+
+                grid.resetZ();
+                for (Object3D<Team> object3D : teamObjects3D) {
+                    grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                    object3D.draw(peasyCam);
+                    object3D.lineBetween(new ArrayList<>(teamObjects3D), minDistance);
+                }
+                grid.draw();
+            }
+
+            if (Event.levelIndex == 1 && Event.teamFieldIndex == 0 && Event.clickedObjects3D != 2) {
+                fixtureModeInteraction.switchMode(this, peasyCam, userInterface, grid, fixtureObjects3D);
+
+                grid.resetZ();
+                for (Object3D<Fixture> object3D : fixtureObjects3D) {
+                    grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                    object3D.draw(peasyCam);
+                    object3D.lineBetween(new ArrayList<>(fixtureObjects3D), minDistance);
+                }
+                grid.draw();
+            }
+
+            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.clickedObjects3D != 2) {
+                playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
+                playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
+
+                grid.resetZ();
+                for (Object3D<Player> object3D : playerObjects3D) {
+                    grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+                    object3D.draw(peasyCam);
+                    object3D.lineBetween(new ArrayList<>(playerObjects3D), minDistance);
+                }
+                grid.draw();
+            }
         }
     }
 
     @Override
     public void mousePressed() {
-        if (Event.modeIndex == 2 && !userInterface.controlP5Foreground.isMouseOver() && Event.clickedObjects3D != 2) {
+        if (Event.modeIndex == 2 && !userInterface.controlP5Foreground.isMouseOver() && Event.clickedObjects3D != 2 && !Event.chartView) {
             if (mouseButton == LEFT) {
                 switch (Event.levelIndex) {
                     case 0:
@@ -289,6 +331,7 @@ public class Main extends PApplet {
             }
         }
     }
+    //endregion
 
     @Override
     public void keyReleased() {
@@ -308,27 +351,5 @@ public class Main extends PApplet {
                     break;
             }
         }
-    }
-    //endregion
-
-    static public void main(String[] passedArgs) {
-        String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
-        PApplet.main(concat(appletArgs, passedArgs));
-
-//        final Session session = getSession();
-//        try {
-//            System.out.println("querying all the managed entities...");
-//            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
-//            for (EntityType<?> entityType : metamodel.getEntities()) {
-//                final String entityName = entityType.getName();
-//                final Query query = session.createQuery("from " + entityName);
-//                System.out.println("executing: " + query.getQueryString());
-//                for (Object o : query.list()) {
-//                    System.out.println("  " + o);
-//                }
-//            }
-//        } finally {
-//            session.close();
-//        }
     }
 }

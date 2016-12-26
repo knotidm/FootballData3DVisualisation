@@ -13,15 +13,13 @@ import static processing.core.PConstants.NORMAL;
 import static processing.core.PConstants.TRIANGLES;
 
 class TexturedHemesh {
-    private PApplet pApplet;
     PShader matCapShader;
     PImage pImage;
     PShape pShape;
-
     HE_Mesh he_Mesh;
     WB_Render3D wb_render3D;
-
     Integer view, he_MeshType, archimedesType, size;
+    private PApplet pApplet;
 
     TexturedHemesh(PApplet pApplet, Integer size) {
         this.pApplet = pApplet;

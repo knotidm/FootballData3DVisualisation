@@ -10,14 +10,13 @@ import processing.core.PConstants;
 import toxi.geom.Vec3D;
 
 public class Object3D<T> extends Particle {
-    private PApplet pApplet;
     public Integer index;
     public T type;
     public Integer filterValue;
     public Boolean isSelected;
     public Boolean isClicked;
-
     TexturedHemesh texturedHemesh;
+    private PApplet pApplet;
 
     public Object3D(PApplet pApplet, Vec3D location, Integer index, T type, Integer filterValue) {
         super(pApplet, location);

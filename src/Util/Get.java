@@ -2,7 +2,11 @@ package Util;
 
 import Model.*;
 import Object3D.Object3D;
+import Visualisation.Chart2D;
 import com.sun.istack.internal.NotNull;
+import hivis.common.HV;
+import hivis.data.DataSeries;
+import hivis.data.DataTable;
 import http.requests.GetRequest;
 import processing.core.PApplet;
 import processing.data.JSONObject;
@@ -111,5 +115,19 @@ public class Get {
                     i));
         }
         return fixtureObjects3D;
+    }
+
+    public static Chart2D getChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D, Filter teamFilter){
+        DataSeries<String> teamNameDataSeries = HV.newSeries();
+        DataSeries<Integer> teamFilterDataSeries = HV.newIntegerSeries();
+
+        for (Object3D<Team> teamObject3D : teamObjects3D) {
+            teamNameDataSeries.append(teamObject3D.type.getName());
+            teamFilterDataSeries.append(teamObject3D.filterValue);
+        }
+        DataTable teamDataTable = HV.newTable()
+                .addSeries("team name", teamNameDataSeries)
+                .addSeries(teamFilter.getName(), teamFilterDataSeries);
+        return new Chart2D(pApplet, teamDataTable, 1);
     }
 }

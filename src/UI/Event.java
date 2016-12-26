@@ -11,6 +11,7 @@ public class Event {
     public static Integer clickedObjects3D = 0;
     public static Integer teamFilterModeIndex = 0;
     public static Integer teamFieldIndex = 0;
+    public static Boolean chartView = false;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -45,48 +46,70 @@ public class Event {
         });
     }
 
-    static void switchModeText(Textlabel textlabel) {
+    static void switchModeText(Textlabel modeText) {
         switch (modeIndex) {
             case 0:
-                textlabel.setText("ROTATE");
+                modeText.setText("ROTATE");
                 break;
             case 1:
-                textlabel.setText("DRAG");
+                modeText.setText("DRAG");
                 break;
             case 2:
-                textlabel.setText("CLICK");
+                modeText.setText("CLICK");
                 break;
         }
     }
 
-    static void switchLevel(Textlabel textlabel, Button levelBackButton, ScrollableList teamFilterMode, ScrollableList teamFilter, ScrollableList teamField, ScrollableList playerFilter) {
+    static void switchLevel(Button modeButton, Textlabel modeText, Button levelBackButton, Textlabel levelText, ScrollableList teamFilterMode, ScrollableList teamFilter, ScrollableList playerFilter, Button chartViewButton, ScrollableList teamField) {
         switch (levelIndex) {
             case 0:
-                textlabel.setText("COMPETITION LEVEL");
                 levelBackButton.hide();
+                levelText.setText("COMPETITION LEVEL");
                 teamFilterMode.show();
                 teamFilter.show();
                 playerFilter.hide();
                 break;
             case 1:
-                textlabel.setText("TEAM LEVEL");
+                modeButton.show();
+                modeText.show();
                 levelBackButton.show();
+                levelText.setText("TEAM LEVEL");
                 teamFilterMode.hide();
                 teamFilter.hide();
-                teamField.hide();
                 if (teamFieldIndex == 1) {
                     playerFilter.show();
                 }
+                chartViewButton.show();
+                teamField.hide();
                 break;
             case 2:
+                modeButton.hide();
+                modeText.hide();
                 if (teamFieldIndex == 0) {
-                    textlabel.setText("FIXTURE LEVEL");
+                    levelText.setText("FIXTURE LEVEL");
                 }
                 if (teamFieldIndex == 1) {
-                    textlabel.setText("PLAYER LEVEL");
+                    levelText.setText("PLAYER LEVEL");
                     playerFilter.hide();
                 }
+                chartViewButton.hide();
                 break;
         }
+    }
+
+    static void chartViewButtonClick(Button chartViewButton, Button modeButton, Textlabel modeText) {
+        chartViewButton.onClick(callbackEvent -> {
+            if (!chartView) {
+                chartViewButton.setLabel("VIEW SCENE");
+                modeButton.hide();
+                modeText.hide();
+                chartView = true;
+            } else {
+                chartViewButton.setLabel("VIEW CHART");
+                modeButton.show();
+                modeText.show();
+                chartView = false;
+            }
+        });
     }
 }

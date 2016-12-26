@@ -3,10 +3,10 @@ package Object3D;
 import processing.core.PApplet;
 
 public class Grid {
-    private PApplet pApplet;
     public Float[] x;
     public Float[] y;
     public Float[] z;
+    private PApplet pApplet;
     private Integer grillesOnAxis;
 
     public Grid(PApplet pApplet, Integer gridSize, Integer grilleSize) {
