@@ -31,6 +31,9 @@ public class FilterInteraction<T> {
                 return setTeamFilter(competition, objects3D, filter.losses());
             case 8:
                 return setTeamFilter(competition, objects3D, filter.squadMarketValue());
+            case 9:
+                return setTeamFilter(competition, objects3D, filter.averageAge());
+
         }
         return null;
     }

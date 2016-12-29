@@ -12,6 +12,7 @@ import Object3D.Object3D;
 import UI.Event;
 import UI.UserInterface;
 import Util.Get;
+import Util.Initial;
 import Util.Misc;
 import Visualisation.Chart2D;
 import peasy.PeasyCam;
@@ -24,12 +25,14 @@ public class Main extends PApplet {
     private PeasyCam peasyCam;
     private UserInterface userInterface;
     private Service service;
+    private Initial initial;
 
     private ArrayList<Object3D<Team>> teamObjects3D;
     private TeamFilter teamFilter;
     private ModeInteraction<Team> teamModeInteraction;
     private FilterInteraction<Team> teamFilterInteraction;
     private Team resultTeam;
+    private Chart2D teamChart2D;
 
     private ArrayList<Object3D<Fixture>> fixtureObjects3D;
     private ModeInteraction<Fixture> fixtureModeInteraction;
@@ -40,8 +43,7 @@ public class Main extends PApplet {
     private ModeInteraction<Player> playerModeInteraction;
     private FilterInteraction<Player> playerFilterInteraction;
     private Player resultPlayer;
-
-    private Chart2D teamChart2D;
+    private Chart2D playerChart2D;
 
     private Integer minDistance = 100;
 
@@ -88,8 +90,16 @@ public class Main extends PApplet {
         peasyCam = new PeasyCam(this, gridSize / 2);
         peasyCam.setResetOnDoubleClick(false);
         userInterface = new UserInterface(this);
+        initial = new Initial();
+        initial.start();
 
-        competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        competition = initial.competitions.get(Event.competitionIndex);
 //        service = new Service(competition);
 
         teamObjects3D = new ArrayList<>();
@@ -97,6 +107,7 @@ public class Main extends PApplet {
         teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.points(), gridSize);
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
+        teamChart2D = Get.getTeamChart2D(this, teamObjects3D, teamFilter);
 
         playerObjects3D = new ArrayList<>();
         playerModeInteraction = new ModeInteraction<>();
@@ -105,7 +116,6 @@ public class Main extends PApplet {
         fixtureObjects3D = new ArrayList<>();
         fixtureModeInteraction = new ModeInteraction<>();
 
-        teamChart2D = Get.getChart2D(this, teamObjects3D, teamFilter);
         grid = new Grid(this, gridSize, grilleSize);
     }
 
@@ -116,11 +126,18 @@ public class Main extends PApplet {
 
         if (Event.chartView) {
             peasyCam.setActive(false);
-            teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
-            teamChart2D = Get.getChart2D(this, teamObjects3D, teamFilter);
-
             peasyCam.beginHUD();
-            teamChart2D.draw(width, height);
+
+            if (Event.levelIndex == 0) {
+                teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
+                teamChart2D = Get.getTeamChart2D(this, teamObjects3D, teamFilter);
+                teamChart2D.draw(width, height);
+            }
+            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
+                playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
+                playerChart2D = Get.getPlayerChart2D(this, playerObjects3D, playerFilter);
+                playerChart2D.draw(width, height);
+            }
             peasyCam.endHUD();
             userInterface.onFrontOfPeasyCam(peasyCam);
         }
@@ -234,6 +251,7 @@ public class Main extends PApplet {
                         userInterface.teamFieldForeground.setLabel(resultTeam.getName());
                         userInterface.teamFieldWindow.show().setOpen(false);
                         userInterface.teamFieldWindow.setLabel(resultTeam.getName());
+                        playerChart2D = Get.getPlayerChart2D(this, playerObjects3D, playerFilter);
                         break;
                     case 1:
                         playerModeInteraction.resetAllObjects3DStates(playerObjects3D);
@@ -260,6 +278,12 @@ public class Main extends PApplet {
                         break;
                 }
             }
+        }
+
+        if (!competition.equals(initial.competitions.get(Event.competitionIndex))) {
+            competition = initial.competitions.get(Event.competitionIndex);
+            teamFilter = new TeamFilter(competition);
+            teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
         }
     }
 

@@ -117,7 +117,7 @@ public class Get {
         return fixtureObjects3D;
     }
 
-    public static Chart2D getChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D, Filter teamFilter){
+    public static Chart2D getTeamChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D, Filter teamFilter){
         DataSeries<String> teamNameDataSeries = HV.newSeries();
         DataSeries<Integer> teamFilterDataSeries = HV.newIntegerSeries();
 
@@ -129,5 +129,19 @@ public class Get {
                 .addSeries("team name", teamNameDataSeries)
                 .addSeries(teamFilter.getName(), teamFilterDataSeries);
         return new Chart2D(pApplet, teamDataTable, 1);
+    }
+
+    public static Chart2D getPlayerChart2D(PApplet pApplet, ArrayList<Object3D<Player>> playerObjects3D, Filter playerFilter){
+        DataSeries<String> playerNameDataSeries = HV.newSeries();
+        DataSeries<Integer> playerFilterDataSeries = HV.newIntegerSeries();
+
+        for (Object3D<Player> playerObject3D : playerObjects3D) {
+            playerNameDataSeries.append(playerObject3D.type.getName());
+            playerFilterDataSeries.append(playerObject3D.filterValue);
+        }
+        DataTable playerDataTable = HV.newTable()
+                .addSeries("team name", playerNameDataSeries)
+                .addSeries(playerFilter.getName(), playerFilterDataSeries);
+        return new Chart2D(pApplet, playerDataTable, 1);
     }
 }

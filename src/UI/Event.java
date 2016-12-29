@@ -12,6 +12,7 @@ public class Event {
     public static Integer teamFilterModeIndex = 0;
     public static Integer teamFieldIndex = 0;
     public static Boolean chartView = false;
+    public static Integer competitionIndex = 0;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -26,6 +27,10 @@ public class Event {
             clickedObjects3D = 0;
             filterIndex = 0;
         });
+    }
+
+    static void competitionChange(ScrollableList competition) {
+        competition.onChange(callbackEvent -> competitionIndex = (int) competition.getValue());
     }
 
     static void teamFilterModeChange(ScrollableList teamFilterMode) {

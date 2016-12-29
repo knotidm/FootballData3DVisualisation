@@ -1,12 +1,12 @@
 package Filter;
 
-import Model.Competition;
-import Model.Filter;
-import Model.Standing;
-import Model.Team;
+import Model.*;
 import UI.Event;
 
+import java.time.Year;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 
 public class TeamFilter extends Filter {
     private Competition competition;
@@ -173,6 +173,21 @@ public class TeamFilter extends Filter {
         getValues().clear();
         for (Team team : competition.getTeams()) {
             getValues().add(team.getSquadMarketValue().intValue());
+        }
+        return getValues();
+    }
+
+    public Collection<Integer> averageAge() {
+        setName("Average Age");
+        getValues().clear();
+        for (Team team : competition.getTeams()) {
+            Integer combinedAge = 0;
+            for (Player player : team.getPlayers()) {
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(player.getDateOfBirth());
+                combinedAge += (Year.now().getValue() - calendar.get(Calendar.YEAR));
+            }
+            getValues().add(combinedAge / team.getPlayers().size());
         }
         return getValues();
     }
