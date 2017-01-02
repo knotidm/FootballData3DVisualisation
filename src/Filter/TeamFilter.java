@@ -17,178 +17,178 @@ public class TeamFilter extends Filter {
     }
 
     public Collection<Integer> playedGames() {
-        setName("Played Games");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Played Games";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getWins() + standing.getDraws() + standing.getLosses());
+                    values.add(standing.wins + standing.draws + standing.losses);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getWins() + standing.getHome().getDraws() + standing.getHome().getLosses());
+                    values.add(standing.home.wins + standing.home.draws + standing.home.losses);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getWins() + standing.getAway().getDraws() + standing.getAway().getLosses());
+                    values.add(standing.away.wins + standing.away.draws + standing.away.losses);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> points() {
-        setName("Points");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Points";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(3 * standing.getWins() + standing.getDraws());
+                    values.add(3 * standing.wins + standing.draws);
                     break;
                 case 1:
-                    getValues().add(3 * standing.getHome().getWins() + standing.getHome().getDraws());
+                    values.add(3 * standing.home.wins + standing.home.draws);
                     break;
                 case 2:
-                    getValues().add(3 * standing.getAway().getWins() + standing.getAway().getDraws());
+                    values.add(3 * standing.away.wins + standing.away.draws);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> goals() {
-        setName("Goals");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Goals";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getGoals());
+                    values.add(standing.goals);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getGoals());
+                    values.add(standing.home.goals);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getGoals());
+                    values.add(standing.away.goals);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> goalsAgainst() {
-        setName("GoalsAgainst");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "GoalsAgainst";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getGoalsAgainst());
+                    values.add(standing.goalsAgainst);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getGoalsAgainst());
+                    values.add(standing.home.goalsAgainst);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getGoalsAgainst());
+                    values.add(standing.away.goalsAgainst);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> goalDifference() {
-        setName("GoalDifference");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "GoalDifference";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getGoals() - standing.getGoalsAgainst());
+                    values.add(standing.goals - standing.goalsAgainst);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getGoals() - standing.getHome().getGoalsAgainst());
+                    values.add(standing.home.goals - standing.home.goalsAgainst);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getGoals() - standing.getAway().getGoalsAgainst());
+                    values.add(standing.away.goals - standing.away.goalsAgainst);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> wins() {
-        setName("Wins");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Wins";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getWins());
+                    values.add(standing.wins);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getWins());
+                    values.add(standing.home.wins);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getWins());
+                    values.add(standing.away.wins);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> draws() {
-        setName("Draws");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Draws";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getDraws());
+                    values.add(standing.draws);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getDraws());
+                    values.add(standing.home.draws);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getDraws());
+                    values.add(standing.away.draws);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> losses() {
-        setName("Losses");
-        getValues().clear();
-        for (Standing standing : competition.getStandings()) {
+        name = "Losses";
+        values.clear();
+        for (Standing standing : competition.standings) {
             switch (Event.teamFilterModeIndex) {
                 case 0:
-                    getValues().add(standing.getLosses());
+                    values.add(standing.losses);
                     break;
                 case 1:
-                    getValues().add(standing.getHome().getLosses());
+                    values.add(standing.home.losses);
                     break;
                 case 2:
-                    getValues().add(standing.getAway().getLosses());
+                    values.add(standing.away.losses);
                     break;
             }
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> squadMarketValue() {
-        setName("Squad Market Value");
-        getValues().clear();
-        for (Team team : competition.getTeams()) {
-            getValues().add(team.getSquadMarketValue().intValue());
+        name = "Squad Market Value";
+        values.clear();
+        for (Team team : competition.teams) {
+            values.add(team.squadMarketValue.intValue());
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> averageAge() {
-        setName("Average Age");
-        getValues().clear();
-        for (Team team : competition.getTeams()) {
+        name = "Average Age";
+        values.clear();
+        for (Team team : competition.teams) {
             Integer combinedAge = 0;
-            for (Player player : team.getPlayers()) {
+            for (Player player : team.players) {
                 Calendar calendar = new GregorianCalendar();
-                calendar.setTime(player.getDateOfBirth());
+                calendar.setTime(player.dateOfBirth);
                 combinedAge += (Year.now().getValue() - calendar.get(Calendar.YEAR));
             }
-            getValues().add(combinedAge / team.getPlayers().size());
+            values.add(combinedAge / team.players.size());
         }
-        return getValues();
+        return values;
     }
 }

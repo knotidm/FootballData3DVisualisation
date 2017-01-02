@@ -35,10 +35,10 @@ public class Get {
     public static Team getTeam(Competition competition, int index) {
         Team resultTeam = new Team();
 
-        ArrayList<Standing> standings = new ArrayList(competition.getStandings());
-        for (Team team : competition.getTeams()) {
+        ArrayList<Standing> standings = new ArrayList<>(competition.standings);
+        for (Team team : competition.teams) {
 
-            if (team.getName().equals(standings.get(index).getTeamName()))
+            if (team.name.equals(standings.get(index).teamName))
                 resultTeam = team;
         }
         return resultTeam;
@@ -81,7 +81,7 @@ public class Get {
 
     public static ArrayList<Object3D<Team>> getTeamObjects3D(PApplet pApplet, Competition competition, Collection<Integer> filteredValues, Integer gridSize) {
         ArrayList<Object3D<Team>> teamObjects3D = new ArrayList<>();
-        for (Integer i = 0; i < competition.getStandings().size(); i++) {
+        for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new Object3D<Team>(pApplet,
                     new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
@@ -94,11 +94,11 @@ public class Get {
 
     public static ArrayList<Object3D<Player>> getPlayerObjects3D(PApplet pApplet, Team team, Collection<Integer> filteredValues, Integer gridSize) {
         ArrayList<Object3D<Player>> playerObjects3D = new ArrayList<>();
-        for (Integer i = 0; i < team.getPlayers().size(); i++) {
+        for (Integer i = 0; i < team.players.size(); i++) {
             playerObjects3D.add(new Object3D<Player>(pApplet,
                     new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
-                    new ArrayList<>(team.getPlayers()).get(i),
+                    new ArrayList<>(team.players).get(i),
                     new ArrayList<>(filteredValues).get(i)
             ));
         }
@@ -107,41 +107,89 @@ public class Get {
 
     public static ArrayList<Object3D<Fixture>> getFixtureObjects3D(PApplet pApplet, Team team, Integer gridSize) {
         ArrayList<Object3D<Fixture>> fixtureObjects3D = new ArrayList<>();
-        for (Integer i = 0; i < team.getFixtures().size(); i++) {
+        for (Integer i = 0; i < team.fixtures.size(); i++) {
             fixtureObjects3D.add(new Object3D<Fixture>(pApplet,
                     new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
-                    new ArrayList<>(team.getFixtures()).get(i),
+                    new ArrayList<>(team.fixtures).get(i),
                     i));
         }
         return fixtureObjects3D;
     }
 
-    public static Chart2D getTeamChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D, Filter teamFilter){
-        DataSeries<String> teamNameDataSeries = HV.newSeries();
-        DataSeries<Integer> teamFilterDataSeries = HV.newIntegerSeries();
+    public static Chart2D getTeamChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D1, ArrayList<Object3D<Team>> teamObjects3D2, Filter teamFilter1, Filter teamFilter2, Integer chart2DType) {
+        switch (chart2DType) {
 
-        for (Object3D<Team> teamObject3D : teamObjects3D) {
-            teamNameDataSeries.append(teamObject3D.type.getName());
-            teamFilterDataSeries.append(teamObject3D.filterValue);
+            case 0:
+                DataSeries<String> teamNameDataSeries = HV.newSeries();
+                DataSeries<Integer> teamFilterDataSeries = HV.newIntegerSeries();
+
+                for (Object3D<Team> teamObject3D : teamObjects3D1) {
+                    teamNameDataSeries.append(teamObject3D.type.name);
+                    teamFilterDataSeries.append(teamObject3D.filterValue);
+                }
+                DataTable teamDataTable1 = HV.newTable()
+                        .addSeries("team name", teamNameDataSeries)
+                        .addSeries(teamFilter1.name, teamFilterDataSeries);
+
+                return new Chart2D(pApplet, teamDataTable1, chart2DType);
+
+            case 1:
+                DataSeries<Integer> teamFilterDataSeries1 = HV.newIntegerSeries();
+                DataSeries<Integer> teamFilterDataSeries2 = HV.newIntegerSeries();
+
+                for (Object3D<Team> teamObject3D : teamObjects3D1) {
+                    teamFilterDataSeries1.append(teamObject3D.filterValue);
+                }
+                for (Object3D<Team> teamObject3D : teamObjects3D2) {
+                    teamFilterDataSeries2.append(teamObject3D.filterValue);
+                }
+
+                DataTable teamDataTable2 = HV.newTable()
+                        .addSeries(teamFilter1.name, teamFilterDataSeries1)
+                        .addSeries(teamFilter2.name, teamFilterDataSeries2);
+
+                return new Chart2D(pApplet, teamDataTable2, chart2DType);
+
+            default:
+                return null;
         }
-        DataTable teamDataTable = HV.newTable()
-                .addSeries("team name", teamNameDataSeries)
-                .addSeries(teamFilter.getName(), teamFilterDataSeries);
-        return new Chart2D(pApplet, teamDataTable, 1);
     }
 
-    public static Chart2D getPlayerChart2D(PApplet pApplet, ArrayList<Object3D<Player>> playerObjects3D, Filter playerFilter){
-        DataSeries<String> playerNameDataSeries = HV.newSeries();
-        DataSeries<Integer> playerFilterDataSeries = HV.newIntegerSeries();
+    public static Chart2D getPlayerChart2D(PApplet pApplet, ArrayList<Object3D<Player>> playerObjects3D1, ArrayList<Object3D<Player>> playerObjects3D2, Filter playerFilter1, Filter playerFilter2, Integer chart2DType) {
+        switch (chart2DType) {
 
-        for (Object3D<Player> playerObject3D : playerObjects3D) {
-            playerNameDataSeries.append(playerObject3D.type.getName());
-            playerFilterDataSeries.append(playerObject3D.filterValue);
+            case 0:
+                DataSeries<String> playerNameDataSeries = HV.newSeries();
+                DataSeries<Integer> playerFilterDataSeries = HV.newIntegerSeries();
+
+                for (Object3D<Player> playerObject3D : playerObjects3D1) {
+                    playerNameDataSeries.append(playerObject3D.type.name);
+                    playerFilterDataSeries.append(playerObject3D.filterValue);
+                }
+                DataTable playerDataTable1 = HV.newTable()
+                        .addSeries("team name", playerNameDataSeries)
+                        .addSeries(playerFilter1.name, playerFilterDataSeries);
+                return new Chart2D(pApplet, playerDataTable1, chart2DType);
+
+            case 1:
+                DataSeries<Integer> playerFilterDataSeries1 = HV.newIntegerSeries();
+                DataSeries<Integer> playerFilterDataSeries2 = HV.newIntegerSeries();
+
+                for (Object3D<Player> playerObject3D : playerObjects3D1) {
+                    playerFilterDataSeries1.append(playerObject3D.filterValue);
+                }
+                for (Object3D<Player> playerObject3D : playerObjects3D2) {
+                    playerFilterDataSeries2.append(playerObject3D.filterValue);
+                }
+
+                DataTable playerDataTable2 = HV.newTable()
+                        .addSeries(playerFilter1.name, playerFilterDataSeries1)
+                        .addSeries(playerFilter2.name, playerFilterDataSeries2);
+                return new Chart2D(pApplet, playerDataTable2, chart2DType);
+
+            default:
+                return null;
         }
-        DataTable playerDataTable = HV.newTable()
-                .addSeries("team name", playerNameDataSeries)
-                .addSeries(playerFilter.getName(), playerFilterDataSeries);
-        return new Chart2D(pApplet, playerDataTable, 1);
     }
 }

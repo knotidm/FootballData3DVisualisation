@@ -1,4 +1,3 @@
-import Database.Service;
 import Filter.PlayerFilter;
 import Filter.TeamFilter;
 import Interaction.FilterInteraction;
@@ -13,7 +12,6 @@ import UI.Event;
 import UI.UserInterface;
 import Util.Get;
 import Util.Initial;
-import Util.Misc;
 import Visualisation.Chart2D;
 import peasy.PeasyCam;
 import processing.core.PApplet;
@@ -24,11 +22,12 @@ public class Main extends PApplet {
     public Competition competition;
     private PeasyCam peasyCam;
     private UserInterface userInterface;
-    private Service service;
     private Initial initial;
 
-    private ArrayList<Object3D<Team>> teamObjects3D;
-    private TeamFilter teamFilter;
+    private ArrayList<Object3D<Team>> teamObjects3D1;
+    private ArrayList<Object3D<Team>> teamObjects3D2;
+    private TeamFilter teamFilter1;
+    private TeamFilter teamFilter2;
     private ModeInteraction<Team> teamModeInteraction;
     private FilterInteraction<Team> teamFilterInteraction;
     private Team resultTeam;
@@ -38,14 +37,14 @@ public class Main extends PApplet {
     private ModeInteraction<Fixture> fixtureModeInteraction;
     private Fixture resultFixture;
 
-    private ArrayList<Object3D<Player>> playerObjects3D;
-    private PlayerFilter playerFilter;
+    private ArrayList<Object3D<Player>> playerObjects3D1;
+    private ArrayList<Object3D<Player>> playerObjects3D2;
+    private PlayerFilter playerFilter1;
+    private PlayerFilter playerFilter2;
     private ModeInteraction<Player> playerModeInteraction;
     private FilterInteraction<Player> playerFilterInteraction;
     private Player resultPlayer;
     private Chart2D playerChart2D;
-
-    private Integer minDistance = 100;
 
     private Grid grid;
     private Integer grilleSize = 10;
@@ -61,22 +60,6 @@ public class Main extends PApplet {
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
         PApplet.main(concat(appletArgs, passedArgs));
-
-//        final Session session = getSession();
-//        try {
-//            System.out.println("querying all the managed entities...");
-//            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
-//            for (EntityType<?> entityType : metamodel.getEntities()) {
-//                final String entityName = entityType.getName();
-//                final Query query = session.createQuery("from " + entityName);
-//                System.out.println("executing: " + query.getQueryString());
-//                for (Object o : query.list()) {
-//                    System.out.println("  " + o);
-//                }
-//            }
-//        } finally {
-//            session.close();
-//        }
     }
 
     @Override
@@ -94,22 +77,24 @@ public class Main extends PApplet {
         initial.start();
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         competition = initial.competitions.get(Event.competitionIndex);
-//        service = new Service(competition);
-
-        teamObjects3D = new ArrayList<>();
-        teamFilter = new TeamFilter(competition);
-        teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.points(), gridSize);
+        teamObjects3D1 = new ArrayList<>();
+        teamObjects3D2 = new ArrayList<>();
+        teamFilter1 = new TeamFilter(competition);
+        teamFilter2 = new TeamFilter(competition);
+        teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamFilter1.points(), gridSize);
+        teamObjects3D2 = Get.getTeamObjects3D(this, competition, teamFilter2.points(), gridSize);
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
-        teamChart2D = Get.getTeamChart2D(this, teamObjects3D, teamFilter);
+        teamChart2D = Get.getTeamChart2D(this, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
 
-        playerObjects3D = new ArrayList<>();
+        playerObjects3D1 = new ArrayList<>();
+        playerObjects3D2 = new ArrayList<>();
         playerModeInteraction = new ModeInteraction<>();
         playerFilterInteraction = new FilterInteraction<>();
 
@@ -124,69 +109,51 @@ public class Main extends PApplet {
         background(0);
         lights();
 
-        if (Event.chartView) {
-            peasyCam.setActive(false);
-            peasyCam.beginHUD();
+        textSize(20);
 
-            if (Event.levelIndex == 0) {
-                teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
-                teamChart2D = Get.getTeamChart2D(this, teamObjects3D, teamFilter);
-                teamChart2D.draw(width, height);
-            }
-            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-                playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
-                playerChart2D = Get.getPlayerChart2D(this, playerObjects3D, playerFilter);
-                playerChart2D.draw(width, height);
-            }
-            peasyCam.endHUD();
-            userInterface.onFrontOfPeasyCam(peasyCam);
+        peasyCam.beginHUD();
+        translate(width / 2, 20);
+        if (Event.levelIndex == 0) {
+            fill(0, 102, 153);
+            text(competition.name, 0, 0);
+            fill(255, 0, 0);
+            text(teamFilter1.name, 0, 25);
+        } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 0) {
+            fill(0, 102, 153);
+            text(resultTeam.name, 0, 0);
+        } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
+            fill(0, 102, 153);
+            text(resultTeam.name, 0, 0);
+            fill(255, 0, 0);
+            text(playerFilter1.name, 0, 25);
         }
+        peasyCam.endHUD();
 
         if (!Event.chartView) {
-            textSize(40);
-
-            pushMatrix();
-            Misc.onFrontOfPeasyCam(this, peasyCam);
-            if (Event.levelIndex == 0) {
-                fill(0, 102, 153);
-                text(competition.getName(), 0, 0);
-                fill(255, 0, 0);
-                text(teamFilter.getName(), 0, 40);
-            } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 0) {
-                fill(0, 102, 153);
-                text(resultTeam.getName(), 0, 0);
-            } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-                fill(0, 102, 153);
-                text(resultTeam.getName(), 0, 0);
-                fill(255, 0, 0);
-                text(playerFilter.getName(), 0, 40);
-            }
-            popMatrix();
-
             peasyCam.beginHUD();
             translate(width / 2, height / 2);
             if (Event.levelIndex == 2 && Event.teamFieldIndex == 0) {
                 fill(0, 102, 153);
-                text(String.format("%s vs %s", resultFixture.getHomeTeamName(), resultFixture.getAwayTeamName()), 0, 0);
+                text(String.format("%s vs %s", resultFixture.homeTeamName, resultFixture.awayTeamName), 0, 0);
                 fill(255, 0, 0);
-                text(String.format("Date: %s", String.valueOf(resultFixture.getDate())), 0, 40);
+                text(String.format("Date: %s", String.valueOf(resultFixture.date)), 0, 40);
                 fill(0, 102, 153);
-                text(String.format("Matchday: %s - Status: %s", resultFixture.getMatchday(), resultFixture.getStatus()), 0, 80);
+                text(String.format("Matchday: %s - Status: %s", resultFixture.matchday, resultFixture.status), 0, 80);
                 fill(255, 0, 0);
-                text(String.format("Result: %s - %s", resultFixture.getResult().getGoalsHomeTeam(), resultFixture.getResult().getGoalsAwayTeam()), 0, 120);
+                text(String.format("Result: %s - %s", resultFixture.result.goalsHomeTeam, resultFixture.result.goalsAwayTeam), 0, 120);
             } else if (Event.levelIndex == 2 && Event.teamFieldIndex == 1) {
                 fill(0, 102, 153);
-                text(resultPlayer.getName(), 0, 0);
+                text(resultPlayer.name, 0, 0);
                 fill(255, 0, 0);
-                text(String.format("Date Of Birth: %s %s", String.valueOf(resultPlayer.getDateOfBirth()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 40);
+                text(String.format("Date Of Birth: %s %s", String.valueOf(resultPlayer.dateOfBirth).substring(0, 10), String.valueOf(resultPlayer.dateOfBirth).substring(24)), 0, 40);
                 fill(0, 102, 153);
-                text(String.format("Nationality: %s", resultPlayer.getNationality()), 0, 80);
+                text(String.format("Nationality: %s", resultPlayer.nationality), 0, 80);
                 fill(255, 0, 0);
-                text(String.format("Position: %s - Jersey Number: %s", resultPlayer.getPosition(), resultPlayer.getJerseyNumber()), 0, 120);
+                text(String.format("Position: %s - Jersey Number: %s", resultPlayer.position, resultPlayer.jerseyNumber), 0, 120);
                 fill(0, 102, 153);
-                text(String.format("Market Value: %s", Get.getString(resultPlayer.getMarketValue())), 0, 160);
+                text(String.format("Market Value: %s", Get.getString(resultPlayer.marketValue)), 0, 160);
                 fill(255, 0, 0);
-                text(String.format("Contract Until: %s %s", String.valueOf(resultPlayer.getContractUntil()).substring(0, 10), String.valueOf(resultPlayer.getDateOfBirth()).substring(24)), 0, 200);
+                text(String.format("Contract Until: %s %s", String.valueOf(resultPlayer.contractUntil).substring(0, 10), String.valueOf(resultPlayer.dateOfBirth).substring(24)), 0, 200);
             }
             peasyCam.endHUD();
 
@@ -197,14 +164,14 @@ public class Main extends PApplet {
             translate(x, y, 0);
 
             if (Event.levelIndex == 0) {
-                teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D);
-                teamObjects3D = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D, teamFilter, Event.filterIndex);
+                teamModeInteraction.switchMode(this, peasyCam, userInterface, grid, teamObjects3D1);
+                teamObjects3D1 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D1, teamFilter1, Event.filterIndex1);
+                teamObjects3D2 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D2, teamFilter2, Event.filterIndex2);
 
                 grid.resetZ();
-                for (Object3D<Team> object3D : teamObjects3D) {
+                for (Object3D<Team> object3D : teamObjects3D1) {
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                     object3D.draw(peasyCam);
-                    object3D.lineBetween(new ArrayList<>(teamObjects3D), minDistance);
                 }
                 grid.draw();
             }
@@ -216,23 +183,42 @@ public class Main extends PApplet {
                 for (Object3D<Fixture> object3D : fixtureObjects3D) {
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                     object3D.draw(peasyCam);
-                    object3D.lineBetween(new ArrayList<>(fixtureObjects3D), minDistance);
                 }
                 grid.draw();
             }
 
             if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.clickedObjects3D != 2) {
-                playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D);
-                playerObjects3D = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D, playerFilter, Event.filterIndex);
+                playerModeInteraction.switchMode(this, peasyCam, userInterface, grid, playerObjects3D1);
+                playerObjects3D1 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D1, playerFilter1, Event.filterIndex1);
+                playerObjects3D2 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D2, playerFilter2, Event.filterIndex2);
 
                 grid.resetZ();
-                for (Object3D<Player> object3D : playerObjects3D) {
+                for (Object3D<Player> object3D : playerObjects3D1) {
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
                     object3D.draw(peasyCam);
-                    object3D.lineBetween(new ArrayList<>(playerObjects3D), minDistance);
                 }
                 grid.draw();
             }
+        }
+
+        if (Event.chartView) {
+            peasyCam.setActive(false);
+            peasyCam.beginHUD();
+
+            if (Event.levelIndex == 0) {
+                teamObjects3D1 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D1, teamFilter1, Event.filterIndex1);
+                teamObjects3D2 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D2, teamFilter2, Event.filterIndex2);
+                teamChart2D = Get.getTeamChart2D(this, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
+                teamChart2D.draw(width, height);
+            }
+            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
+                playerObjects3D1 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D1, playerFilter1, Event.filterIndex1);
+                playerObjects3D2 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D2, playerFilter2, Event.filterIndex2);
+                playerChart2D = Get.getPlayerChart2D(this, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chart2DTypeIndex);
+                playerChart2D.draw(width, height);
+            }
+            peasyCam.endHUD();
+            userInterface.onFrontOfPeasyCam(peasyCam);
         }
     }
 
@@ -242,38 +228,39 @@ public class Main extends PApplet {
             if (mouseButton == LEFT) {
                 switch (Event.levelIndex) {
                     case 0:
-                        teamModeInteraction.resetAllObjects3DStates(teamObjects3D);
-                        resultTeam = teamObjects3D.get(ModeInteraction.indexObject3D).type;
-                        playerFilter = new PlayerFilter(resultTeam);
-                        playerObjects3D = Get.getPlayerObjects3D(this, resultTeam, playerFilter.jerseyNumber(), gridSize);
+                        teamModeInteraction.resetAllObjects3DStates(teamObjects3D1);
+                        resultTeam = teamObjects3D1.get(ModeInteraction.indexObject3D).type;
+                        playerFilter1 = new PlayerFilter(resultTeam);
+                        playerObjects3D1 = Get.getPlayerObjects3D(this, resultTeam, playerFilter1.jerseyNumber(), gridSize);
+                        playerObjects3D2 = Get.getPlayerObjects3D(this, resultTeam, playerFilter2.jerseyNumber(), gridSize);
                         fixtureObjects3D = Get.getFixtureObjects3D(this, resultTeam, gridSize);
                         userInterface.teamFieldForeground.show().setOpen(false);
-                        userInterface.teamFieldForeground.setLabel(resultTeam.getName());
+                        userInterface.teamFieldForeground.setLabel(resultTeam.name);
                         userInterface.teamFieldWindow.show().setOpen(false);
-                        userInterface.teamFieldWindow.setLabel(resultTeam.getName());
-                        playerChart2D = Get.getPlayerChart2D(this, playerObjects3D, playerFilter);
+                        userInterface.teamFieldWindow.setLabel(resultTeam.name);
+                        playerChart2D = Get.getPlayerChart2D(this, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chart2DTypeIndex);
                         break;
                     case 1:
-                        playerModeInteraction.resetAllObjects3DStates(playerObjects3D);
+                        playerModeInteraction.resetAllObjects3DStates(playerObjects3D1);
                         if (Event.teamFieldIndex == 0) {
                             resultFixture = fixtureObjects3D.get(ModeInteraction.indexObject3D).type;
                         }
                         if (Event.teamFieldIndex == 1) {
-                            resultPlayer = playerObjects3D.get(ModeInteraction.indexObject3D).type;
+                            resultPlayer = playerObjects3D1.get(ModeInteraction.indexObject3D).type;
                         }
                         Event.levelIndex = 2;
-                        Event.filterIndex = 0;
+                        Event.filterIndex1 = 0;
                         break;
                 }
             }
             if (mouseButton == RIGHT) {
                 switch (Event.levelIndex) {
                     case 0:
-                        Object3D<Team> teamObject3D = teamObjects3D.get(ModeInteraction.indexObject3D);
+                        Object3D<Team> teamObject3D = teamObjects3D1.get(ModeInteraction.indexObject3D);
                         teamObject3D.isClicked = true;
                         break;
                     case 1:
-                        Object3D<Player> playerObject3D = playerObjects3D.get(ModeInteraction.indexObject3D);
+                        Object3D<Player> playerObject3D = playerObjects3D2.get(ModeInteraction.indexObject3D);
                         playerObject3D.isClicked = true;
                         break;
                 }
@@ -282,11 +269,12 @@ public class Main extends PApplet {
 
         if (!competition.equals(initial.competitions.get(Event.competitionIndex))) {
             competition = initial.competitions.get(Event.competitionIndex);
-            teamFilter = new TeamFilter(competition);
-            teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
+            teamFilter1 = new TeamFilter(competition);
+            teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamFilter1.goals(), gridSize);
         }
     }
 
+    //region MOVEMENT
     private void move() {
         if (moveUp) {
             y++;
@@ -302,42 +290,8 @@ public class Main extends PApplet {
         }
     }
 
-    //region SHORTCUTS
     @Override
     public void keyPressed() {
-        switch (key) {
-            case 'm':
-                Event.modeIndex++;
-                if (Event.modeIndex == 3) Event.modeIndex = 0;
-                break;
-            case 'n':
-                userInterface.newWindow = !userInterface.newWindow;
-                userInterface.setMode();
-                break;
-            case ',':
-                if (Event.filterIndex != 1) {
-                    Event.filterIndex--;
-                }
-                break;
-            case '.':
-                if (Event.levelIndex == 0) {
-                    if (Event.filterIndex < 9) Event.filterIndex++;
-                } else if (Event.levelIndex == 1) {
-                    if (Event.filterIndex < 4) Event.filterIndex++;
-                }
-                break;
-            case '1':
-                competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
-                teamFilter = new TeamFilter(competition);
-                teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
-                break;
-            case '2':
-                competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/438"));
-                teamFilter = new TeamFilter(competition);
-                teamObjects3D = Get.getTeamObjects3D(this, competition, teamFilter.goals(), gridSize);
-                break;
-        }
-
         if (key == CODED) {
             switch (keyCode) {
                 case UP:
@@ -355,7 +309,6 @@ public class Main extends PApplet {
             }
         }
     }
-    //endregion
 
     @Override
     public void keyReleased() {
@@ -376,4 +329,5 @@ public class Main extends PApplet {
             }
         }
     }
+    //endregion
 }

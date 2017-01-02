@@ -1,44 +1,28 @@
 package Model;
 
 import Util.Get;
-import com.sun.istack.internal.NotNull;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 public class Team {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer teamId;
-    @NotNull
-    @OneToMany(mappedBy = "team")
-    private Collection<Fixture> fixtures;
-    @NotNull
-    @OneToMany(mappedBy = "team")
-    private Collection<Player> players;
-    @NotNull
-    private String name;
-    @NotNull
-    private BigDecimal squadMarketValue;
-    @NotNull
-    private String emblem;
-    @ManyToOne
-    private Competition competition;
-
-    public Team() {
-    }
+    public Collection<Fixture> fixtures;
+    public Collection<Player> players;
+    public String name;
+    public BigDecimal squadMarketValue;
 
     public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
         name = team.getString("name");
         squadMarketValue = Get.getBigDecimal(team.getString("squadMarketValue", "").replaceAll("[^\\d]+", ""));
-        emblem = team.getString("crestUrl");
+    }
+
+    public Team() {
+
     }
 
     private Collection<Fixture> getFixtures(String link) {
@@ -59,69 +43,5 @@ public class Team {
             players.add(new Player(playersJSON.getJSONObject(i)));
         }
         return players;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
-    }
-
-    @OneToMany
-    public Collection<Fixture> getFixtures() {
-        return fixtures;
-    }
-
-    public void setFixtures(Collection<Fixture> fixtures) {
-        this.fixtures = fixtures;
-    }
-
-    @OneToMany
-    public Collection<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(Collection<Player> players) {
-        this.players = players;
-    }
-
-    @Basic
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Basic
-    public BigDecimal getSquadMarketValue() {
-        return squadMarketValue;
-    }
-
-    public void setSquadMarketValue(BigDecimal squadMarketValue) {
-        this.squadMarketValue = squadMarketValue;
-    }
-
-    @Basic
-    public String getEmblem() {
-        return emblem;
-    }
-
-    public void setEmblem(String emblem) {
-        this.emblem = emblem;
-    }
-
-    @ManyToOne
-    public Competition getCompetition() {
-        return competition;
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
     }
 }

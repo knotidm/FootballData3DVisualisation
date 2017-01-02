@@ -29,12 +29,16 @@ public class UserInterface extends PApplet {
     private ScrollableList competitionWindow;
     private ScrollableList teamFilterModeForeground;
     private ScrollableList teamFilterModeWindow;
-    private ScrollableList teamFilterForeground;
-    private ScrollableList teamFilterWindow;
+    private ScrollableList teamFilterForeground1;
+    private ScrollableList teamFilterWindow1;
+    private ScrollableList teamFilterForeground2;
+    private ScrollableList teamFilterWindow2;
     private ScrollableList playerFilterForeground;
     private ScrollableList playerFilterWindow;
     private Button chartViewButtonForeground;
     private Button chartViewButtonWindow;
+    private ScrollableList chart2DTypeForeground;
+    private ScrollableList chart2DTypeWindow;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
@@ -50,30 +54,40 @@ public class UserInterface extends PApplet {
         levelBackButtonForeground = controlP5Foreground.addButton("LEVEL BACK").setPosition(10, 40).hide();
         levelTextForeground = controlP5Foreground.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 45);
 
-        competitionForeground = controlP5Foreground.addScrollableList("SELECT COMPETITION").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("BUNDESLIGA", "SERIE A", "LIGUE 1")).setPosition(10, 75)
+        competitionForeground = controlP5Foreground.addScrollableList("COMPETITION").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("BUNDESLIGA", "SERIE A", "LIGUE 1", "PREMIERSHIP", "LA LIGA")).setPosition(10, 75)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamFilterModeForeground = controlP5Foreground.addScrollableList("TEAM FILTER MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 275)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 190)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
-        teamFilterForeground = controlP5Foreground.addScrollableList("TEAM FILTER").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 365)
+        teamFilterForeground1 = controlP5Foreground.addScrollableList("TEAM FILTER 1").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         playerFilterForeground = controlP5Foreground.addScrollableList("PLAYER FILTER").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 275)
+                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
-        chartViewButtonForeground = controlP5Foreground.addButton("VIEW CHART").setPosition(10, 475);
+        teamFilterForeground2 = controlP5Foreground.addScrollableList("TEAM FILTER 2").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 400)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        chart2DTypeForeground = controlP5Foreground.addScrollableList("CHART 2D TYPE").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("BAR CHART", "XY CHART", "CIRCLE")).setPosition(10, 515)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        chartViewButtonForeground = controlP5Foreground.addButton("VIEW CHART").setPosition(10, 630);
 
         teamFieldForeground = controlP5Foreground.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 505)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 660)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -83,8 +97,10 @@ public class UserInterface extends PApplet {
         Event.levelBackButtonClick(levelBackButtonForeground);
         Event.competitionChange(competitionForeground);
         Event.teamFilterModeChange(teamFilterModeForeground);
-        Event.filterChange(teamFilterForeground);
-        Event.filterChange(playerFilterForeground);
+        Event.filterChange1(teamFilterForeground1);
+        Event.filterChange2(teamFilterForeground2);
+        Event.filterChange1(playerFilterForeground);
+        Event.chartTypeChange(chart2DTypeForeground);
         Event.chartViewButtonClick(chartViewButtonForeground, modeButtonForeground, modeTextForeground);
         Event.teamFieldChange(teamFieldForeground, playerFilterForeground);
     }
@@ -105,30 +121,40 @@ public class UserInterface extends PApplet {
         levelBackButtonWindow = controlP5Window.addButton("LEVEL BACK").setPosition(10, 40).hide();
         levelTextWindow = controlP5Window.addTextlabel("levelText").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 45);
 
-        competitionWindow = controlP5Window.addScrollableList("SELECT COMPETITION").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("BUNDESLIGA", "SERIE A", "LIGUE 1")).setPosition(10, 75)
+        competitionWindow = controlP5Window.addScrollableList("COMPETITION").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("BUNDESLIGA", "SERIE A", "LIGUE 1", "PREMIERSHIP", "LA LIGA")).setPosition(10, 75)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         teamFilterModeWindow = controlP5Window.addScrollableList("TEAM FILTER MODE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 275)
+                .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 190)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
-        teamFilterWindow = controlP5Window.addScrollableList("TEAM FILTER").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 365)
+        teamFilterWindow1 = controlP5Window.addScrollableList("TEAM FILTER 1").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
         playerFilterWindow = controlP5Window.addScrollableList("PLAYER FILTER").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 275)
+                .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false);
 
-        chartViewButtonWindow = controlP5Window.addButton("VIEW CHART").setPosition(10, 475);
+        teamFilterWindow2 = controlP5Window.addScrollableList("TEAM FILTER 2").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 400)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        chart2DTypeWindow = controlP5Window.addScrollableList("CHART 2D TYPE").setType(ScrollableList.LIST)
+                .addItems(Arrays.asList("BAR CHART", "XY CHART", "CIRCLE")).setPosition(10, 515)
+                .setSize(140, 100).setBarHeight(20).setItemHeight(20)
+                .setOpen(false);
+
+        chartViewButtonWindow = controlP5Window.addButton("VIEW CHART").setPosition(10, 630);
 
         teamFieldWindow = controlP5Window.addScrollableList("TEAM FIELD").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 505)
+                .addItems(Arrays.asList("FIXTURES", "PLAYERS")).setPosition(10, 660)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
@@ -136,8 +162,10 @@ public class UserInterface extends PApplet {
         Event.levelBackButtonClick(levelBackButtonWindow);
         Event.competitionChange(competitionWindow);
         Event.teamFilterModeChange(teamFilterModeWindow);
-        Event.filterChange(teamFilterWindow);
-        Event.filterChange(playerFilterWindow);
+        Event.filterChange1(teamFilterWindow1);
+        Event.filterChange2(teamFilterWindow2);
+        Event.filterChange1(playerFilterWindow);
+        Event.chartTypeChange(chart2DTypeWindow);
         Event.chartViewButtonClick(chartViewButtonWindow, modeButtonWindow, modeTextWindow);
         Event.teamFieldChange(teamFieldWindow, playerFilterWindow);
     }
@@ -146,7 +174,7 @@ public class UserInterface extends PApplet {
     public void draw() {
         background(0);
         Event.switchModeText(modeTextWindow);
-        Event.switchLevel(modeButtonWindow, modeTextWindow, levelBackButtonWindow, levelTextWindow, teamFilterModeWindow, teamFilterWindow, playerFilterWindow, chartViewButtonWindow, teamFieldWindow);
+        Event.switchLevel(modeButtonWindow, modeTextWindow, levelBackButtonWindow, levelTextWindow, teamFilterModeWindow, teamFilterWindow1, teamFilterWindow2, playerFilterWindow, chartViewButtonWindow, teamFieldWindow);
     }
 
     public void setMode() {
@@ -163,7 +191,7 @@ public class UserInterface extends PApplet {
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
         peasyCam.beginHUD();
         Event.switchModeText(modeTextForeground);
-        Event.switchLevel(modeButtonForeground, modeTextForeground, levelBackButtonForeground, levelTextForeground, teamFilterModeForeground, teamFilterForeground, playerFilterForeground, chartViewButtonForeground, teamFieldForeground);
+        Event.switchLevel(modeButtonForeground, modeTextForeground, levelBackButtonForeground, levelTextForeground, teamFilterModeForeground, teamFilterForeground1, teamFilterForeground2, playerFilterForeground, chartViewButtonForeground, teamFieldForeground);
         controlP5Foreground.draw();
         peasyCam.endHUD();
         pApplet.hint(PConstants.ENABLE_DEPTH_TEST);

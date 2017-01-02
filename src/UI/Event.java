@@ -6,13 +6,15 @@ import controlP5.Textlabel;
 
 public class Event {
     public static Integer modeIndex = 0;
-    public static Integer filterIndex = 0;
+    public static Integer filterIndex1 = 0;
+    public static Integer filterIndex2 = 0;
     public static Integer levelIndex = 0;
     public static Integer clickedObjects3D = 0;
     public static Integer teamFilterModeIndex = 0;
     public static Integer teamFieldIndex = 0;
     public static Boolean chartView = false;
     public static Integer competitionIndex = 0;
+    public static Integer chart2DTypeIndex = 0;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -25,7 +27,8 @@ public class Event {
         levelBackButton.onClick(callbackEvent -> {
             levelIndex--;
             clickedObjects3D = 0;
-            filterIndex = 0;
+            filterIndex1 = 0;
+            filterIndex2 = 0;
         });
     }
 
@@ -37,8 +40,34 @@ public class Event {
         teamFilterMode.onChange(callbackEvent -> teamFilterModeIndex = (int) teamFilterMode.getValue());
     }
 
-    static void filterChange(ScrollableList filter) {
-        filter.onChange(callbackEvent -> filterIndex = (int) filter.getValue());
+    static void filterChange1(ScrollableList filter) {
+        filter.onChange(callbackEvent -> filterIndex1 = (int) filter.getValue());
+    }
+
+    static void filterChange2(ScrollableList filter) {
+        filter.onChange(callbackEvent -> filterIndex2 = (int) filter.getValue());
+    }
+
+    static void chartTypeChange(ScrollableList chart2DType) {
+        chart2DType.onChange(callbackEvent -> {
+            chart2DTypeIndex = (int) chart2DType.getValue();
+        });
+    }
+
+    static void chartViewButtonClick(Button chartViewButton, Button modeButton, Textlabel modeText) {
+        chartViewButton.onClick(callbackEvent -> {
+            if (!chartView) {
+                chartViewButton.setLabel("VIEW SCENE");
+                modeButton.hide();
+                modeText.hide();
+                chartView = true;
+            } else {
+                chartViewButton.setLabel("VIEW CHART");
+                modeButton.show();
+                modeText.show();
+                chartView = false;
+            }
+        });
     }
 
     static void teamFieldChange(ScrollableList teamField, ScrollableList playerFilter) {
@@ -46,7 +75,8 @@ public class Event {
             if (teamField.isMouseOver()) {
                 levelIndex = 1;
                 teamFieldIndex = (int) teamField.getValue();
-                filterIndex = (int) playerFilter.getValue();
+                filterIndex1 = (int) playerFilter.getValue();
+                filterIndex2 = (int) playerFilter.getValue();
             }
         });
     }
@@ -65,13 +95,14 @@ public class Event {
         }
     }
 
-    static void switchLevel(Button modeButton, Textlabel modeText, Button levelBackButton, Textlabel levelText, ScrollableList teamFilterMode, ScrollableList teamFilter, ScrollableList playerFilter, Button chartViewButton, ScrollableList teamField) {
+    static void switchLevel(Button modeButton, Textlabel modeText, Button levelBackButton, Textlabel levelText, ScrollableList teamFilterMode, ScrollableList teamFilter1, ScrollableList teamFilter2, ScrollableList playerFilter, Button chartViewButton, ScrollableList teamField) {
         switch (levelIndex) {
             case 0:
                 levelBackButton.hide();
                 levelText.setText("COMPETITION LEVEL");
                 teamFilterMode.show();
-                teamFilter.show();
+                teamFilter1.show();
+                teamFilter2.show();
                 playerFilter.hide();
                 break;
             case 1:
@@ -80,7 +111,8 @@ public class Event {
                 levelBackButton.show();
                 levelText.setText("TEAM LEVEL");
                 teamFilterMode.hide();
-                teamFilter.hide();
+                teamFilter1.hide();
+                teamFilter2.hide();
                 if (teamFieldIndex == 1) {
                     playerFilter.show();
                 }
@@ -100,21 +132,5 @@ public class Event {
                 chartViewButton.hide();
                 break;
         }
-    }
-
-    static void chartViewButtonClick(Button chartViewButton, Button modeButton, Textlabel modeText) {
-        chartViewButton.onClick(callbackEvent -> {
-            if (!chartView) {
-                chartViewButton.setLabel("VIEW SCENE");
-                modeButton.hide();
-                modeText.hide();
-                chartView = true;
-            } else {
-                chartViewButton.setLabel("VIEW CHART");
-                modeButton.show();
-                modeText.show();
-                chartView = false;
-            }
-        });
     }
 }

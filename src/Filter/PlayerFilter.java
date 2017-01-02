@@ -18,42 +18,42 @@ public class PlayerFilter extends Filter {
     }
 
     public Collection<Integer> jerseyNumber() {
-        setName("Jersey Number");
-        getValues().clear();
-        for (Player player : team.getPlayers()) {
-            getValues().add(player.getJerseyNumber());
+        name = "Jersey Number";
+        values.clear();
+        for (Player player : team.players) {
+            values.add(player.jerseyNumber);
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> marketValue() {
-        setName("Market Value");
-        getValues().clear();
-        for (Player player : team.getPlayers()) {
-            getValues().add(player.getMarketValue().intValue());
+        name = "Market Value";
+        values.clear();
+        for (Player player : team.players) {
+            values.add(player.marketValue.intValue());
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> age() {
-        setName("Age");
-        getValues().clear();
-        for (Player player : team.getPlayers()) {
+        name = "Age";
+        values.clear();
+        for (Player player : team.players) {
             Calendar calendar = new GregorianCalendar();
-            calendar.setTime(player.getDateOfBirth());
-            getValues().add(Year.now().getValue() - calendar.get(Calendar.YEAR));
+            calendar.setTime(player.dateOfBirth);
+            values.add(Year.now().getValue() - calendar.get(Calendar.YEAR));
         }
-        return getValues();
+        return values;
     }
 
     public Collection<Integer> yearsToEndContract() {
-        setName("Years To End Contract");
-        getValues().clear();
-        for (Player player : team.getPlayers()) {
+        name = "Years To End Contract";
+        values.clear();
+        for (Player player : team.players) {
             Calendar calendar = new GregorianCalendar();
-            calendar.setTime(player.getContractUntil());
-            getValues().add(calendar.get(Calendar.YEAR) - Year.now().getValue());
+            calendar.setTime(player.contractUntil);
+            values.add(calendar.get(Calendar.YEAR) - Year.now().getValue());
         }
-        return getValues();
+        return values;
     }
 }

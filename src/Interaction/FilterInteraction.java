@@ -53,14 +53,14 @@ public class FilterInteraction<T> {
     }
 
     private ArrayList<Object3D<T>> setTeamFilter(Competition competition, ArrayList<Object3D<T>> objects3D, Collection<Integer> filteredValues) {
-        for (Integer i = 0; i < competition.getStandings().size(); i++) {
+        for (Integer i = 0; i < competition.standings.size(); i++) {
             objects3D.get(i).filterValue = new ArrayList<>(filteredValues).get(i);
         }
         return objects3D;
     }
 
     private ArrayList<Object3D<T>> setPlayerFilter(Team team, ArrayList<Object3D<T>> objects3D, Collection<Integer> filteredValues) {
-        for (Integer i = 0; i < team.getPlayers().size(); i++) {
+        for (Integer i = 0; i < team.players.size(); i++) {
             objects3D.get(i).filterValue = new ArrayList<>(filteredValues).get(i);
         }
         return objects3D;

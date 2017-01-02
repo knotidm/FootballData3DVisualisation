@@ -42,7 +42,7 @@ public class Chart2D implements DataListener {
 
     private void updateData() {
         switch (type) {
-            case 0:
+            case 1:
                 int size = dataTable.length();
                 if (xValues == null || xValues.length != size) {
                     xValues = new float[size];
@@ -54,7 +54,7 @@ public class Chart2D implements DataListener {
                 xychart.setYAxisLabel(dataTable.getSeriesLabel(1));
                 xychart.setData(xValues, yValues);
                 break;
-            case 1:
+            case 0:
                 barChart.setData(dataTable.getSeries(1).asFloatArray());
                 barChart.setBarLabels(dataTable.getSeries(0).asStringArray());
                 break;
@@ -64,11 +64,11 @@ public class Chart2D implements DataListener {
     public void draw(float width, float height) {
         synchronized (dataTable) {
             switch (type) {
-                case 0:
-                    xychart.draw(200, 20, width - 220, height - 40);
-                    break;
                 case 1:
-                    barChart.draw(200, 20, width - 220, height - 40);
+                    xychart.draw(200, 40, width - 220, height - 40);
+                    break;
+                case 0:
+                    barChart.draw(200, 40, width - 220, height - 40);
                     break;
             }
         }
