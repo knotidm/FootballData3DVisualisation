@@ -14,15 +14,13 @@ public class Team {
     public String name;
     public BigDecimal squadMarketValue;
 
+    public Team() {}
+
     public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));
         players = getPlayers(team.getJSONObject("_links").getJSONObject("players").getString("href"));
         name = team.getString("name");
         squadMarketValue = Get.getBigDecimal(team.getString("squadMarketValue", "").replaceAll("[^\\d]+", ""));
-    }
-
-    public Team() {
-
     }
 
     private Collection<Fixture> getFixtures(String link) {

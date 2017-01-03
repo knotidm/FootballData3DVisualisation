@@ -24,9 +24,6 @@
     <orderEntry type="library" name="peasycam" level="application" />
     <orderEntry type="library" name="processing core" level="application" />
     <orderEntry type="library" name="toxiclibs" level="application" />
-    <orderEntry type="library" name="Hibernate 5" level="project" />
-    <orderEntry type="library" name="sqlite_dialect" level="project" />
-    <orderEntry type="library" name="sqlite_jdbc" level="project" />
     <orderEntry type="library" name="hemesh" level="application" />
     <orderEntry type="library" name="HiVis" level="application" />
   </component>

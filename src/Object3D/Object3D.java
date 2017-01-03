@@ -25,12 +25,12 @@ public class Object3D<T> {
         this.index = index;
         this.type = type;
         this.filterValue = filterValue;
-        this.size = 10;
+        this.size = 20;
         this.isSelected = false;
         this.isClicked = false;
     }
 
-    public void draw(PeasyCam peasyCam) {
+    public void draw(PeasyCam peasyCam, int colour) {
         pApplet.pushMatrix();
 
         pApplet.noFill();
@@ -42,7 +42,7 @@ public class Object3D<T> {
         pApplet.box(size);
 
         pApplet.noStroke();
-        pApplet.fill((filterValue * 10), 255 - (filterValue * 10), 0);
+        pApplet.fill(colour);
         pApplet.sphereDetail(1);
         pApplet.sphere(size);
 
@@ -67,4 +67,6 @@ public class Object3D<T> {
 
         pApplet.popMatrix();
     }
+
+
 }

@@ -3,18 +3,22 @@ package Visualisation;
 import hivis.data.DataEvent;
 import hivis.data.DataListener;
 import hivis.data.DataTable;
+import org.gicentre.utils.colour.ColourTable;
 import org.gicentre.utils.stat.BarChart;
 import org.gicentre.utils.stat.XYChart;
 import processing.core.PApplet;
 
 public class Chart2D implements DataListener {
-    final XYChart xychart;
-    final BarChart barChart;
+    PApplet pApplet;
+    public final XYChart xychart;
+    public final BarChart barChart;
     private final DataTable dataTable;
     Integer type;
     private float[] xValues, yValues;
+    public ColourTable colourTable;
 
     public Chart2D(PApplet pApplet, DataTable dataTable, Integer type) {
+        this.pApplet = pApplet;
         this.dataTable = dataTable;
         dataTable.addChangeListener(this);
         this.type = type;
@@ -22,12 +26,13 @@ public class Chart2D implements DataListener {
         xychart = new XYChart(pApplet);
         xychart.showXAxis(true);
         xychart.showYAxis(true);
+        xychart.setXFormat("#");
+        xychart.setYFormat("#");
 
         barChart = new BarChart(pApplet);
         barChart.showValueAxis(true);
         barChart.setValueFormat("#");
         barChart.showCategoryAxis(true);
-        barChart.setBarColour(pApplet.color(200, 80, 80, 150));
         barChart.setBarGap(2);
 
         barChart.transposeAxes(true);
@@ -53,9 +58,13 @@ public class Chart2D implements DataListener {
                 xychart.setXAxisLabel(dataTable.getSeriesLabel(0));
                 xychart.setYAxisLabel(dataTable.getSeriesLabel(1));
                 xychart.setData(xValues, yValues);
+                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, xychart.getMinX(), xychart.getMaxX());
+                xychart.setPointColour(xValues, colourTable);
                 break;
             case 0:
                 barChart.setData(dataTable.getSeries(1).asFloatArray());
+                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, barChart.getMinValue(), barChart.getMaxValue());
+                barChart.setBarColour(dataTable.getSeries(1).asFloatArray(), colourTable);
                 barChart.setBarLabels(dataTable.getSeries(0).asStringArray());
                 break;
         }
@@ -65,10 +74,10 @@ public class Chart2D implements DataListener {
         synchronized (dataTable) {
             switch (type) {
                 case 1:
-                    xychart.draw(200, 40, width - 220, height - 40);
+                    xychart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 0:
-                    barChart.draw(200, 40, width - 220, height - 40);
+                    barChart.draw(120, 60, width - 220, height - 100);
                     break;
             }
         }

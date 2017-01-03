@@ -145,6 +145,10 @@ public class Get {
                     teamFilterDataSeries2.append(teamObject3D.filterValue);
                 }
 
+                if (teamFilter1.name.equals(teamFilter2.name)) {
+                    teamFilter2.name = teamFilter2.name + '.';
+                }
+
                 DataTable teamDataTable2 = HV.newTable()
                         .addSeries(teamFilter1.name, teamFilterDataSeries1)
                         .addSeries(teamFilter2.name, teamFilterDataSeries2);
@@ -168,7 +172,7 @@ public class Get {
                     playerFilterDataSeries.append(playerObject3D.filterValue);
                 }
                 DataTable playerDataTable1 = HV.newTable()
-                        .addSeries("team name", playerNameDataSeries)
+                        .addSeries("player name", playerNameDataSeries)
                         .addSeries(playerFilter1.name, playerFilterDataSeries);
                 return new Chart2D(pApplet, playerDataTable1, chart2DType);
 
@@ -181,6 +185,10 @@ public class Get {
                 }
                 for (Object3D<Player> playerObject3D : playerObjects3D2) {
                     playerFilterDataSeries2.append(playerObject3D.filterValue);
+                }
+
+                if (playerFilter1.name.equals(playerFilter2.name)) {
+                    playerFilter2.name = playerFilter2.name + '.';
                 }
 
                 DataTable playerDataTable2 = HV.newTable()

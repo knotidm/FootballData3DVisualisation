@@ -48,7 +48,7 @@ public class ModeInteraction<T> {
     private void dragObject3D(PApplet pApplet, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
         positionInRelationToGrid(pApplet, grid);
 
-        if (pApplet.mousePressed && !userInterface.controlP5Foreground.isMouseOver()) {
+        if (pApplet.mousePressed) {
             if (pApplet.mouseButton == PConstants.LEFT) {
                 objects3D.get(indexObject3D).location.x += (grid.x[indexGrid] - objects3D.get(indexObject3D).location.x) / 6;
                 objects3D.get(indexObject3D).location.y += (grid.y[indexGrid] - objects3D.get(indexObject3D).location.y) / 6;

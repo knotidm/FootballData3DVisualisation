@@ -10,5 +10,4 @@ public class Filter {
     public Filter() {
         values = new ArrayList<>();
     }
-
 }
