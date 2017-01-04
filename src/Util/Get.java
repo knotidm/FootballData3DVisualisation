@@ -5,8 +5,8 @@ import Object3D.Object3D;
 import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
 import processing.core.PApplet;
+import processing.core.PVector;
 import processing.data.JSONObject;
-import toxi.geom.Vec3D;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -79,7 +79,7 @@ public class Get {
         ArrayList<Object3D<Team>> teamObjects3D = new ArrayList<>();
         for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new Object3D<Team>(pApplet,
-                    new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
                     Get.getTeam(competition, i),
                     new ArrayList<>(filteredValues).get(i)
@@ -92,7 +92,7 @@ public class Get {
         ArrayList<Object3D<Player>> playerObjects3D = new ArrayList<>();
         for (Integer i = 0; i < team.players.size(); i++) {
             playerObjects3D.add(new Object3D<Player>(pApplet,
-                    new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
                     new ArrayList<>(team.players).get(i),
                     new ArrayList<>(filteredValues).get(i)
@@ -105,7 +105,7 @@ public class Get {
         ArrayList<Object3D<Fixture>> fixtureObjects3D = new ArrayList<>();
         for (Integer i = 0; i < team.fixtures.size(); i++) {
             fixtureObjects3D.add(new Object3D<Fixture>(pApplet,
-                    new Vec3D(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
                     new ArrayList<>(team.fixtures).get(i),
                     i));

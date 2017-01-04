@@ -7,11 +7,11 @@ import Util.Misc;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
-import toxi.geom.Vec3D;
+import processing.core.PVector;
 
 public class Object3D<T> {
     private PApplet pApplet;
-    public Vec3D location;
+    public PVector location;
     public Integer index;
     public T type;
     public Integer filterValue;
@@ -19,7 +19,7 @@ public class Object3D<T> {
     public Boolean isSelected;
     public Boolean isClicked;
 
-    public Object3D(PApplet pApplet, Vec3D location, Integer index, T type, Integer filterValue) {
+    public Object3D(PApplet pApplet, PVector location, Integer index, T type, Integer filterValue) {
         this.pApplet = pApplet;
         this.location = location;
         this.index = index;
