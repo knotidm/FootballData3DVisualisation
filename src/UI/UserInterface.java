@@ -1,15 +1,15 @@
 package UI;
 
-import controlP5.Button;
-import controlP5.ControlP5;
-import controlP5.ScrollableList;
-import controlP5.Textlabel;
+import controlP5.*;
+import peasy.PeasyCam;
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 import java.util.Arrays;
 
 public class UserInterface extends PApplet {
     private PApplet pApplet;
+    public ControlP5 controlP5Foreground;
     private ControlP5 controlP5;
 
     private Button modeButton;
@@ -26,10 +26,29 @@ public class UserInterface extends PApplet {
     private ScrollableList teamFilter2;
     private ScrollableList playerFilter2;
 
+    public Slider sliderX;
+    public Slider sliderY;
+
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
         PApplet.runSketch(new String[]{this.getClass().getName()}, this);
         surface.setVisible(true);
+
+        controlP5Foreground = new ControlP5(pApplet);
+        controlP5Foreground.setAutoDraw(false);
+
+        sliderX = controlP5Foreground.addSlider("sliderX")
+                .setPosition(140, height - 25)
+                .setSize(pApplet.width - 200, 10)
+                .setLabelVisible(false);
+
+        sliderY = controlP5Foreground.addSlider("sliderY")
+                .setPosition(80, 70)
+                .setSize(10, pApplet.height - 140)
+                .setLabelVisible(false);
+
+        Event.sliderXChange(sliderX);
+        Event.sliderYChange(sliderY);
     }
 
     @Override
@@ -108,5 +127,13 @@ public class UserInterface extends PApplet {
         background(0);
         Event.switchModeText(modeText);
         Event.switchLevel(modeButton, modeText, levelBackButton, levelText, teamFilterMode, teamFilter1, teamFilter2, playerFilter1, playerFilter2, chartViewButton, teamField);
+    }
+
+    public void onFrontOfPeasyCam(PeasyCam peasyCam) {
+        pApplet.hint(PConstants.DISABLE_DEPTH_TEST);
+        peasyCam.beginHUD();
+        controlP5Foreground.draw();
+        peasyCam.endHUD();
+        pApplet.hint(PConstants.ENABLE_DEPTH_TEST);
     }
 }

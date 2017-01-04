@@ -23,19 +23,18 @@ public class Chart2D implements DataListener {
         dataTable.addChangeListener(this);
         this.type = type;
 
-        xychart = new XYChart(pApplet);
-        xychart.showXAxis(true);
-        xychart.showYAxis(true);
-        xychart.setXFormat("#");
-        xychart.setYFormat("#");
-
         barChart = new BarChart(pApplet);
         barChart.showValueAxis(true);
         barChart.setValueFormat("#");
         barChart.showCategoryAxis(true);
         barChart.setBarGap(2);
-
         barChart.transposeAxes(true);
+
+        xychart = new XYChart(pApplet);
+        xychart.showXAxis(true);
+        xychart.showYAxis(true);
+        xychart.setXFormat("#");
+        xychart.setYFormat("#");
 
         updateData();
     }
@@ -47,6 +46,12 @@ public class Chart2D implements DataListener {
 
     private void updateData() {
         switch (type) {
+            case 0:
+                barChart.setData(dataTable.getSeries(1).asFloatArray());
+                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, barChart.getMinValue(), barChart.getMaxValue());
+                barChart.setBarColour(dataTable.getSeries(1).asFloatArray(), colourTable);
+                barChart.setBarLabels(dataTable.getSeries(0).asStringArray());
+                break;
             case 1:
                 int size = dataTable.length();
                 if (xValues == null || xValues.length != size) {
@@ -61,23 +66,17 @@ public class Chart2D implements DataListener {
                 colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, xychart.getMinX(), xychart.getMaxX());
                 xychart.setPointColour(xValues, colourTable);
                 break;
-            case 0:
-                barChart.setData(dataTable.getSeries(1).asFloatArray());
-                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, barChart.getMinValue(), barChart.getMaxValue());
-                barChart.setBarColour(dataTable.getSeries(1).asFloatArray(), colourTable);
-                barChart.setBarLabels(dataTable.getSeries(0).asStringArray());
-                break;
         }
     }
 
     public void draw(float width, float height) {
         synchronized (dataTable) {
             switch (type) {
-                case 1:
-                    xychart.draw(120, 60, width - 220, height - 100);
-                    break;
                 case 0:
                     barChart.draw(120, 60, width - 220, height - 100);
+                    break;
+                case 1:
+                    xychart.draw(120, 60, width - 220, height - 100);
                     break;
             }
         }

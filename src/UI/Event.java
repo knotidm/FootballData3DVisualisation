@@ -1,7 +1,9 @@
 package UI;
 
+import Interaction.ChartInteraction;
 import controlP5.Button;
 import controlP5.ScrollableList;
+import controlP5.Slider;
 import controlP5.Textlabel;
 
 public class Event {
@@ -81,6 +83,20 @@ public class Event {
         });
     }
 
+    static void sliderXChange(Slider sliderX) {
+        sliderX.onPress(callbackEvent -> {
+            ChartInteraction.tableView.updateView(null);
+            setSliderX(sliderX);
+        });
+    }
+
+    static void sliderYChange(Slider sliderY) {
+        sliderY.onPress(callbackEvent -> {
+            ChartInteraction.tableView.updateView(null);
+            setSliderY(sliderY);
+        });
+    }
+
     static void switchModeText(Textlabel modeText) {
         switch (modeIndex) {
             case 0:
@@ -138,6 +154,24 @@ public class Event {
                 }
                 chartViewButton.hide();
                 break;
+        }
+    }
+
+    private static void setSliderX(Slider sliderX) {
+        if (ChartInteraction.filterDataSeries1 != null) {
+            Integer min = new Integer(ChartInteraction.filterDataSeries1.minValue().toString());
+            Integer max = new Integer(ChartInteraction.filterDataSeries1.maxValue().toString());
+            sliderX.setRange(min, max);
+            sliderX.setValue(max);
+        }
+    }
+
+    private static void setSliderY(Slider sliderY) {
+        if (ChartInteraction.filterDataSeries2 != null) {
+            Integer min = new Integer(ChartInteraction.filterDataSeries2.minValue().toString());
+            Integer max = new Integer(ChartInteraction.filterDataSeries2.maxValue().toString());
+            sliderY.setRange(min, max);
+            sliderY.setValue(max);
         }
     }
 }

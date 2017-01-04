@@ -2,11 +2,7 @@ package Util;
 
 import Model.*;
 import Object3D.Object3D;
-import Visualisation.Chart2D;
 import com.sun.istack.internal.NotNull;
-import hivis.common.HV;
-import hivis.data.DataSeries;
-import hivis.data.DataTable;
 import http.requests.GetRequest;
 import processing.core.PApplet;
 import processing.data.JSONObject;
@@ -117,87 +113,5 @@ public class Get {
         return fixtureObjects3D;
     }
 
-    public static Chart2D getTeamChart2D(PApplet pApplet, ArrayList<Object3D<Team>> teamObjects3D1, ArrayList<Object3D<Team>> teamObjects3D2, Filter teamFilter1, Filter teamFilter2, Integer chart2DType) {
-        switch (chart2DType) {
 
-            case 0:
-                DataSeries<String> teamNameDataSeries = HV.newSeries();
-                DataSeries<Integer> teamFilterDataSeries = HV.newIntegerSeries();
-
-                for (Object3D<Team> teamObject3D : teamObjects3D1) {
-                    teamNameDataSeries.append(teamObject3D.type.name);
-                    teamFilterDataSeries.append(teamObject3D.filterValue);
-                }
-                DataTable teamDataTable1 = HV.newTable()
-                        .addSeries("team name", teamNameDataSeries)
-                        .addSeries(teamFilter1.name, teamFilterDataSeries);
-
-                return new Chart2D(pApplet, teamDataTable1, chart2DType);
-
-            case 1:
-                DataSeries<Integer> teamFilterDataSeries1 = HV.newIntegerSeries();
-                DataSeries<Integer> teamFilterDataSeries2 = HV.newIntegerSeries();
-
-                for (Object3D<Team> teamObject3D : teamObjects3D1) {
-                    teamFilterDataSeries1.append(teamObject3D.filterValue);
-                }
-                for (Object3D<Team> teamObject3D : teamObjects3D2) {
-                    teamFilterDataSeries2.append(teamObject3D.filterValue);
-                }
-
-                if (teamFilter1.name.equals(teamFilter2.name)) {
-                    teamFilter2.name = teamFilter2.name + '.';
-                }
-
-                DataTable teamDataTable2 = HV.newTable()
-                        .addSeries(teamFilter1.name, teamFilterDataSeries1)
-                        .addSeries(teamFilter2.name, teamFilterDataSeries2);
-
-                return new Chart2D(pApplet, teamDataTable2, chart2DType);
-
-            default:
-                return null;
-        }
-    }
-
-    public static Chart2D getPlayerChart2D(PApplet pApplet, ArrayList<Object3D<Player>> playerObjects3D1, ArrayList<Object3D<Player>> playerObjects3D2, Filter playerFilter1, Filter playerFilter2, Integer chart2DType) {
-        switch (chart2DType) {
-
-            case 0:
-                DataSeries<String> playerNameDataSeries = HV.newSeries();
-                DataSeries<Integer> playerFilterDataSeries = HV.newIntegerSeries();
-
-                for (Object3D<Player> playerObject3D : playerObjects3D1) {
-                    playerNameDataSeries.append(playerObject3D.type.name);
-                    playerFilterDataSeries.append(playerObject3D.filterValue);
-                }
-                DataTable playerDataTable1 = HV.newTable()
-                        .addSeries("player name", playerNameDataSeries)
-                        .addSeries(playerFilter1.name, playerFilterDataSeries);
-                return new Chart2D(pApplet, playerDataTable1, chart2DType);
-
-            case 1:
-                DataSeries<Integer> playerFilterDataSeries1 = HV.newIntegerSeries();
-                DataSeries<Integer> playerFilterDataSeries2 = HV.newIntegerSeries();
-
-                for (Object3D<Player> playerObject3D : playerObjects3D1) {
-                    playerFilterDataSeries1.append(playerObject3D.filterValue);
-                }
-                for (Object3D<Player> playerObject3D : playerObjects3D2) {
-                    playerFilterDataSeries2.append(playerObject3D.filterValue);
-                }
-
-                if (playerFilter1.name.equals(playerFilter2.name)) {
-                    playerFilter2.name = playerFilter2.name + '.';
-                }
-
-                DataTable playerDataTable2 = HV.newTable()
-                        .addSeries(playerFilter1.name, playerFilterDataSeries1)
-                        .addSeries(playerFilter2.name, playerFilterDataSeries2);
-                return new Chart2D(pApplet, playerDataTable2, chart2DType);
-
-            default:
-                return null;
-        }
-    }
 }
