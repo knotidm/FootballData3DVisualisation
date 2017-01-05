@@ -15,11 +15,11 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 
 public class ChartInteraction<T> {
-    DataSeries<String> nameDataSeries;
-    DataSeries<Integer> filterDataSeries;
+    private DataSeries<String> nameDataSeries;
+    private DataSeries<Integer> filterDataSeries;
     public static DataSeries<Integer> filterDataSeries1;
     public static DataSeries<Integer> filterDataSeries2;
-    DataTable dataTable;
+    private DataTable dataTable;
     public static TableView tableView;
 
     public Chart2D getChart2D(PApplet pApplet, UserInterface userInterface, ArrayList<Object3D<T>> objects3D1, ArrayList<Object3D<T>> objects3D2, Filter filter1, Filter filter2, Integer chart2DType) {
@@ -28,16 +28,7 @@ public class ChartInteraction<T> {
                 nameDataSeries = HV.newSeries();
                 filterDataSeries = HV.newIntegerSeries();
 
-                for (Object3D<T> object3D : objects3D1) {
-                    if (object3D.type.getClass() == Team.class) {
-                        Team team = (Team) object3D.type;
-                        nameDataSeries.append(team.name);
-                    } else if (object3D.type.getClass() == Player.class) {
-                        Player player = (Player) object3D.type;
-                        nameDataSeries.append(player.name);
-                    }
-                    filterDataSeries.append(object3D.filterValue);
-                }
+                CreateDataSeries(objects3D1);
 
                 dataTable = HV.newTable()
                         .addSeries("name", nameDataSeries)
@@ -68,9 +59,32 @@ public class ChartInteraction<T> {
                 tableView = dataTable.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
 
                 return new Chart2D(pApplet, tableView, chart2DType);
+            case 2:
+                nameDataSeries = HV.newSeries();
+                filterDataSeries = HV.newIntegerSeries();
 
+                CreateDataSeries(objects3D1);
+
+                dataTable = HV.newTable()
+                        .addSeries("name", nameDataSeries)
+                        .addSeries(filter1.name, filterDataSeries);
+
+                return new Chart2D(pApplet, dataTable, chart2DType);
             default:
                 return null;
+        }
+    }
+
+    private void CreateDataSeries(ArrayList<Object3D<T>> objects3D1) {
+        for (Object3D<T> object3D : objects3D1) {
+            if (object3D.type.getClass() == Team.class) {
+                Team team = (Team) object3D.type;
+                nameDataSeries.append(team.name);
+            } else if (object3D.type.getClass() == Player.class) {
+                Player player = (Player) object3D.type;
+                nameDataSeries.append(player.name);
+            }
+            filterDataSeries.append(object3D.filterValue);
         }
     }
 }

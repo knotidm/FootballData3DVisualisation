@@ -13,7 +13,7 @@ public class Fixture {
     public String awayTeamName;
     public Result result;
 
-    Fixture(JSONObject fixture) {
+    public Fixture(JSONObject fixture) {
         date = Get.getDetailedDate(fixture.getString("date"));
         status = fixture.getString("status");
         matchday = fixture.getInt("matchday");

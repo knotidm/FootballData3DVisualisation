@@ -1,7 +1,9 @@
 package Visualisation;
 
+import hivis.common.HVDraw;
 import hivis.data.DataEvent;
 import hivis.data.DataListener;
+import hivis.data.DataSeries;
 import hivis.data.DataTable;
 import org.gicentre.utils.colour.ColourTable;
 import org.gicentre.utils.stat.BarChart;
@@ -13,9 +15,11 @@ public class Chart2D implements DataListener {
     public final XYChart xychart;
     public final BarChart barChart;
     private final DataTable dataTable;
-    Integer type;
+    private Integer type;
     private float[] xValues, yValues;
     public ColourTable colourTable;
+    DataSeries series;
+    private int[] colours;
 
     public Chart2D(PApplet pApplet, DataTable dataTable, Integer type) {
         this.pApplet = pApplet;
@@ -63,8 +67,18 @@ public class Chart2D implements DataListener {
                 xychart.setXAxisLabel(dataTable.getSeriesLabel(0));
                 xychart.setYAxisLabel(dataTable.getSeriesLabel(1));
                 xychart.setData(xValues, yValues);
-                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, xychart.getMinX(), xychart.getMaxX());
+                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, xychart.getMinY(), xychart.getMaxX());
                 xychart.setPointColour(xValues, colourTable);
+                break;
+            case 2:
+                series = dataTable.getSeries(1);
+                float min = PApplet.min(series.asFloatArray());
+                float max = PApplet.max(series.asFloatArray());
+                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, min, max);
+                colours = new int[series.length()];
+                for (int i = 0; i < series.length(); i++) {
+                    colours[i] = colourTable.findColour(series.getInt(i));
+                }
                 break;
         }
     }
@@ -77,6 +91,9 @@ public class Chart2D implements DataListener {
                     break;
                 case 1:
                     xychart.draw(120, 60, width - 220, height - 100);
+                    break;
+                case 2:
+                    HVDraw.pie(pApplet, series, 500, width / 2f, height / 2f, colours, 0);
                     break;
             }
         }

@@ -85,6 +85,7 @@ public class Main extends PApplet {
             e.printStackTrace();
         }
 
+//        competition = new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/430"));
         competition = initial.competitions.get(Event.competitionIndex);
         teamFilter1 = new TeamFilter(competition);
         teamFilter2 = new TeamFilter(competition);
@@ -174,6 +175,7 @@ public class Main extends PApplet {
                 for (int i = 0; i < teamObjects3D1.size(); i++) {
                     Object3D<Team> object3D = teamObjects3D1.get(i);
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
+//                    println(teamChart2D.colourTable.findColour(i));
                     object3D.draw(peasyCam, teamChart2D.colourTable.findColour(i));
                 }
                 grid.draw();

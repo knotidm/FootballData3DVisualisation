@@ -12,7 +12,7 @@ public class Standing {
     public Home home;
     public Away away;
 
-    Standing(JSONObject standing) {
+    public Standing(JSONObject standing) {
         teamName = standing.getString("teamName");
         goals = standing.getInt("goals");
         goalsAgainst = standing.getInt("goalsAgainst");

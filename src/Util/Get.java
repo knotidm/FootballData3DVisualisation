@@ -22,7 +22,7 @@ public class Get {
 
     public static JSONObject getJSONObject(String link) {
         GetRequest getRequest = new GetRequest(link);
-        getRequest.addHeader("X-Auth-Token", "b95ca7f69f22429d9e82720ea977198e");
+        getRequest.addHeader("X-Auth-Token", "324794156b594490a7c6244a6a10a034");
         getRequest.send();
         return JSONObject.parse(getRequest.getContent());
     }
@@ -112,6 +112,4 @@ public class Get {
         }
         return fixtureObjects3D;
     }
-
-
 }

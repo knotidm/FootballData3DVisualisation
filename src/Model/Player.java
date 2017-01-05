@@ -15,7 +15,7 @@ public class Player {
     public Date contractUntil;
     public BigDecimal marketValue;
 
-    Player(JSONObject player) {
+    public Player(JSONObject player) {
         name = player.getString("name");
         position = player.getString("position");
         jerseyNumber = player.getInt("jerseyNumber", 0);
