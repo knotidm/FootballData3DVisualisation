@@ -10,6 +10,8 @@ import org.gicentre.utils.stat.BarChart;
 import org.gicentre.utils.stat.XYChart;
 import processing.core.PApplet;
 
+import static processing.core.PConstants.PIE;
+
 public class Chart2D implements DataListener {
     PApplet pApplet;
     public final XYChart xychart;
@@ -20,6 +22,7 @@ public class Chart2D implements DataListener {
     public ColourTable colourTable;
     DataSeries series;
     private int[] colours;
+    private float[] angles;
 
     public Chart2D(PApplet pApplet, DataTable dataTable, Integer type) {
         this.pApplet = pApplet;
@@ -72,13 +75,22 @@ public class Chart2D implements DataListener {
                 break;
             case 2:
                 series = dataTable.getSeries(1);
-                float min = PApplet.min(series.asFloatArray());
+                float min = PApplet.min(series.asFloatArray()) - 1;
                 float max = PApplet.max(series.asFloatArray());
                 colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, min, max);
                 colours = new int[series.length()];
+                angles = new float[series.length()];
+
+                int seriesSum = 0;
+                for (int i = 0; i < series.length(); i++) {
+                    seriesSum += series.getInt(i);
+                }
+
                 for (int i = 0; i < series.length(); i++) {
                     colours[i] = colourTable.findColour(series.getInt(i));
+                    angles[i] = (series.getFloat(i) / seriesSum) * 360;
                 }
+
                 break;
         }
     }
@@ -93,7 +105,16 @@ public class Chart2D implements DataListener {
                     xychart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 2:
-                    HVDraw.pie(pApplet, series, 500, width / 2f, height / 2f, colours, 0);
+                    HVDraw.pie(pApplet, series, 600, width / 2f, height / 2f, colours, 0);
+                    pApplet.noFill();
+                    pApplet.stroke(0, 255, 0);
+                    float start = 0;
+                    float stop = 0;
+                    for (int i = 0; i < series.length(); i++) {
+                        stop += PApplet.radians(angles[i]);
+                        pApplet.arc(width / 2, height / 2, 600, 600, start, stop, PIE);
+                        start = stop;
+                    }
                     break;
             }
         }
