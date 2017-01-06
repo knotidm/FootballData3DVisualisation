@@ -67,6 +67,4 @@ public class Object3D<T> {
 
         pApplet.popMatrix();
     }
-
-
 }

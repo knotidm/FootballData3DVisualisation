@@ -8,15 +8,15 @@ import controlP5.Textlabel;
 
 public class Event {
     public static Integer modeIndex = 0;
-    public static Integer filterIndex1 = 0;
-    public static Integer filterIndex2 = 0;
     public static Integer levelIndex = 0;
-    public static Integer clickedObjects3D = 0;
-    public static Integer teamFilterModeIndex = 0;
-    public static Integer teamFieldIndex = 0;
-    public static Boolean chartView = false;
     public static Integer competitionIndex = 0;
+    public static Integer teamFilterModeIndex = 0;
+    public static Integer filterIndex1 = 0;
+    public static Boolean chartView = false;
     public static Integer chart2DTypeIndex = 0;
+    public static Integer filterIndex2 = 0;
+    public static Integer teamFieldIndex = 0;
+    public static Integer clickedObjects3D = 0;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {

@@ -3,7 +3,6 @@ package Interaction;
 import Object3D.Grid;
 import Object3D.Object3D;
 import UI.Event;
-import UI.UserInterface;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -11,33 +10,9 @@ import processing.core.PConstants;
 import java.util.ArrayList;
 
 public class ModeInteraction<T> {
-    public static Integer indexObject3D = 0;
     private static Integer indexGrid = 0;
     private static Float mouseShortestDistance;
-
-    public void switchMode(PApplet pApplet, PeasyCam peasyCam, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
-        switch (Event.modeIndex) {
-            case 0:
-                peasyCam.setActive(true);
-                resetIsSelectedObjects3DState(objects3D);
-                break;
-            case 1:
-                peasyCam.setActive(false);
-                dragObject3D(pApplet, userInterface, grid, objects3D);
-                break;
-            case 2:
-                peasyCam.setActive(false);
-                clickObject3D(pApplet, grid, objects3D);
-                break;
-        }
-    }
-
-    public void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {
-        for (Object3D<T> object3D : objects3D) {
-            object3D.isSelected = false;
-            object3D.isClicked = false;
-        }
-    }
+    public static Integer indexObject3D = 0;
 
     private void resetIsSelectedObjects3DState(ArrayList<Object3D<T>> objects3D) {
         for (Object3D<T> object3D : objects3D) {
@@ -45,7 +20,7 @@ public class ModeInteraction<T> {
         }
     }
 
-    private void dragObject3D(PApplet pApplet, UserInterface userInterface, Grid grid, ArrayList<Object3D<T>> objects3D) {
+    private void dragObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
         positionInRelationToGrid(pApplet, grid);
 
         if (pApplet.mousePressed) {
@@ -94,6 +69,30 @@ public class ModeInteraction<T> {
                 indexObject3D = object3D.index;
                 mouseShortestDistance = mouseDistance;
             }
+        }
+    }
+
+    public void switchMode(PApplet pApplet, PeasyCam peasyCam, Grid grid, ArrayList<Object3D<T>> objects3D) {
+        switch (Event.modeIndex) {
+            case 0:
+                peasyCam.setActive(true);
+                resetIsSelectedObjects3DState(objects3D);
+                break;
+            case 1:
+                peasyCam.setActive(false);
+                dragObject3D(pApplet, grid, objects3D);
+                break;
+            case 2:
+                peasyCam.setActive(false);
+                clickObject3D(pApplet, grid, objects3D);
+                break;
+        }
+    }
+
+    public void resetAllObjects3DStates(ArrayList<Object3D<T>> objects3D) {
+        for (Object3D<T> object3D : objects3D) {
+            object3D.isSelected = false;
+            object3D.isClicked = false;
         }
     }
 }

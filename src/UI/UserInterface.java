@@ -9,9 +9,8 @@ import java.util.Arrays;
 
 public class UserInterface extends PApplet {
     private PApplet pApplet;
-    public ControlP5 controlP5Foreground;
-    private ControlP5 controlP5;
 
+    private ControlP5 controlP5;
     private Button modeButton;
     private Textlabel modeText;
     private Button levelBackButton;
@@ -26,6 +25,7 @@ public class UserInterface extends PApplet {
     private ScrollableList teamFilter2;
     private ScrollableList playerFilter2;
 
+    private ControlP5 controlP5Foreground;
     public Slider sliderX;
     public Slider sliderY;
 
@@ -38,13 +38,13 @@ public class UserInterface extends PApplet {
         controlP5Foreground.setAutoDraw(false);
 
         sliderX = controlP5Foreground.addSlider("sliderX")
-                .setPosition(140, height - 25)
-                .setSize(pApplet.width - 200, 10)
+                .setPosition(145, height - 25)
+                .setSize(pApplet.width - 220, 10)
                 .setLabelVisible(false);
 
         sliderY = controlP5Foreground.addSlider("sliderY")
-                .setPosition(80, 70)
-                .setSize(10, pApplet.height - 140)
+                .setPosition(80, 72)
+                .setSize(10, pApplet.height - 146)
                 .setLabelVisible(false);
 
         Event.sliderXChange(sliderX);

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public class Initial implements Runnable {
     private Thread thread;
-    public ArrayList<Competition> competitions;
     private UserInterface userInterface;
+    public ArrayList<Competition> competitions;
 
     public Initial(UserInterface userInterface) {
-        competitions = new ArrayList<>();
         this.userInterface = userInterface;
+        competitions = new ArrayList<>();
     }
 
     @Override

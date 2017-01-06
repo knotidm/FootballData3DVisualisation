@@ -3,11 +3,11 @@ package Object3D;
 import processing.core.PApplet;
 
 public class Grid {
+    private PApplet pApplet;
+    private Integer grillesOnAxis;
     public Float[] x;
     public Float[] y;
     public Float[] z;
-    private PApplet pApplet;
-    private Integer grillesOnAxis;
 
     public Grid(PApplet pApplet, Integer gridSize, Integer grilleSize) {
         this.pApplet = pApplet;
@@ -28,6 +28,13 @@ public class Grid {
         }
     }
 
+    private float getAlphaChannel(float v) {
+        if (v < 0)
+            return PApplet.map(v, -150, 0, 0, 255);
+        else
+            return PApplet.map(v, 0, 30, 255, 0);
+    }
+
     public void resetZ() {
         for (int i = 0; i < grillesOnAxis * grillesOnAxis; i++) z[i] = 0f;
     }
@@ -36,13 +43,6 @@ public class Grid {
         for (int i = 0; i < grillesOnAxis * grillesOnAxis; i++) {
             z[i] -= (radius * 50) / PApplet.sqrt(PApplet.sq(gravityX - x[i]) + PApplet.sq(gravityY - y[i]));
         }
-    }
-
-    private float getAlphaChannel(float v) {
-        if (v < 0)
-            return PApplet.map(v, -150, 0, 0, 255);
-        else
-            return PApplet.map(v, 0, 30, 255, 0);
     }
 
     public void draw() {
