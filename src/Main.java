@@ -14,6 +14,7 @@ import UI.UserInterface;
 import Util.Get;
 import Util.Initial;
 import Visualisation.Chart2D;
+import Visualisation.Chart3D;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 
@@ -59,6 +60,8 @@ public class Main extends PApplet {
     private Boolean moveDown = false;
     private Boolean moveLeft = false;
     private Boolean moveRight = false;
+    private Chart3D teamChart3D;
+    private Chart3D playerChart3D;
 
     static public void main(String[] passedArgs) {
         String[] appletArgs = new String[]{"--window-color=#666666", "--stop-color=#cccccc", "Main"};
@@ -94,7 +97,8 @@ public class Main extends PApplet {
         teamModeInteraction = new ModeInteraction<>();
         teamFilterInteraction = new FilterInteraction<>();
         teamChartInteraction = new ChartInteraction<>();
-        teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
+        teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
+        teamChart3D = teamChartInteraction.getChart3D(this, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
 
         fixtureObjects3D = new ArrayList<>();
         fixtureModeInteraction = new ModeInteraction<>();
@@ -115,7 +119,7 @@ public class Main extends PApplet {
             teamFilter2 = new TeamFilter(competition);
             teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamFilter1.playedGames(), gridSize);
             teamObjects3D2 = Get.getTeamObjects3D(this, competition, teamFilter2.playedGames(), gridSize);
-            teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
+            teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
         }
 
         if (Event.modeIndex == 2 && Event.clickedObjects3D != 2 && !Event.chartView) {
@@ -129,7 +133,8 @@ public class Main extends PApplet {
                         playerFilter2 = new PlayerFilter(resultTeam);
                         playerObjects3D1 = Get.getPlayerObjects3D(this, resultTeam, playerFilter1.jerseyNumber(), gridSize);
                         playerObjects3D2 = Get.getPlayerObjects3D(this, resultTeam, playerFilter2.jerseyNumber(), gridSize);
-                        playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chart2DTypeIndex);
+                        playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
+                        playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
 
                         fixtureObjects3D = Get.getFixtureObjects3D(this, resultTeam, gridSize);
 
@@ -226,7 +231,8 @@ public class Main extends PApplet {
                 teamModeInteraction.switchMode(this, peasyCam, grid, teamObjects3D1);
                 teamObjects3D1 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D1, teamFilter1, Event.filterIndex1);
                 teamObjects3D2 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D2, teamFilter2, Event.filterIndex2);
-                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
+                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
+                teamChart3D = teamChartInteraction.getChart3D(this, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
 
                 grid.resetZ();
                 for (int i = 0; i < teamObjects3D1.size(); i++) {
@@ -253,7 +259,8 @@ public class Main extends PApplet {
                 playerModeInteraction.switchMode(this, peasyCam, grid, playerObjects3D1);
                 playerObjects3D1 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D1, playerFilter1, Event.filterIndex1);
                 playerObjects3D2 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D2, playerFilter2, Event.filterIndex2);
-                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chart2DTypeIndex);
+                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
+                playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
 
                 grid.resetZ();
                 for (int i = 0; i < playerObjects3D1.size(); i++) {
@@ -272,20 +279,36 @@ public class Main extends PApplet {
             if (Event.levelIndex == 0) {
                 teamObjects3D1 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D1, teamFilter1, Event.filterIndex1);
                 teamObjects3D2 = teamFilterInteraction.switchTeamFilter(competition, teamObjects3D2, teamFilter2, Event.filterIndex2);
-                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chart2DTypeIndex);
-                teamChart2D.draw(width, height);
+                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
+                teamChart3D = teamChartInteraction.getChart3D(this, teamObjects3D1, teamObjects3D2, teamFilter1, teamFilter2, Event.chartTypeIndex);
+                if (Event.chartTypeIndex != 3) teamChart2D.draw(width, height);
             }
             if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
                 playerObjects3D1 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D1, playerFilter1, Event.filterIndex1);
                 playerObjects3D2 = playerFilterInteraction.switchPlayerFilter(resultTeam, playerObjects3D2, playerFilter2, Event.filterIndex2);
-                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chart2DTypeIndex);
-                playerChart2D.draw(width, height);
+                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
+                playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerFilter1, playerFilter2, Event.chartTypeIndex);
+                if (Event.chartTypeIndex != 3) playerChart2D.draw(width, height);
             }
             peasyCam.endHUD();
 
-            if (Event.chart2DTypeIndex == 1) {
-                userInterface.sliderY.setMin(teamChart2D.xychart.getMinY());
-                userInterface.sliderY.setMax(teamChart2D.xychart.getMaxY());
+            if (Event.levelIndex == 0 && Event.chartTypeIndex == 3) {
+                peasyCam.setActive(true);
+
+                rotateX(PI / 2);
+
+                translate(-gridSize / 2, -gridSize / 2, 0);
+                grid.resetZ();
+                grid.draw();
+
+                teamChart3D.draw(width, height);
+            }
+
+            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.chartTypeIndex == 3) {
+                playerChart3D.draw(width, height);
+            }
+
+            if (Event.chartTypeIndex == 1) {
 
                 userInterface.onFrontOfPeasyCam(peasyCam);
             }

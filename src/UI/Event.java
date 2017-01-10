@@ -1,6 +1,7 @@
 package UI;
 
 import Interaction.ChartInteraction;
+import Visualisation.Chart3D;
 import controlP5.Button;
 import controlP5.ScrollableList;
 import controlP5.Slider;
@@ -13,10 +14,11 @@ public class Event {
     public static Integer teamFilterModeIndex = 0;
     public static Integer filterIndex1 = 0;
     public static Boolean chartView = false;
-    public static Integer chart2DTypeIndex = 0;
+    public static Integer chartTypeIndex = 0;
     public static Integer filterIndex2 = 0;
     public static Integer teamFieldIndex = 0;
     public static Integer clickedObjects3D = 0;
+    public static Float sliderParamValue = 0.0f;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -51,7 +53,7 @@ public class Event {
     }
 
     static void chartTypeChange(ScrollableList chart2DType) {
-        chart2DType.onChange(callbackEvent -> chart2DTypeIndex = (int) chart2DType.getValue());
+        chart2DType.onChange(callbackEvent -> chartTypeIndex = (int) chart2DType.getValue());
     }
 
     static void chartViewButtonClick(Button chartViewButton, Button modeButton, Textlabel modeText, ScrollableList chart2DType) {
@@ -68,6 +70,7 @@ public class Event {
                 modeText.show();
                 chart2DType.hide();
                 chartView = false;
+                chartTypeIndex = 0;
             }
         });
     }
@@ -118,7 +121,7 @@ public class Event {
                 levelText.setText("COMPETITION LEVEL");
                 teamFilterMode.show();
                 teamFilter1.show();
-                if (chartView && chart2DTypeIndex == 1) {
+                if (chartView && (chartTypeIndex == 1 || chartTypeIndex == 3)) {
                     teamFilter2.show();
                 } else teamFilter2.hide();
                 playerFilter1.hide();
@@ -134,7 +137,7 @@ public class Event {
                 teamFilter2.hide();
                 if (teamFieldIndex == 1) {
                     playerFilter1.show();
-                    if (chartView && chart2DTypeIndex == 1) {
+                    if (chartView && chartTypeIndex == 1) {
                         playerFilter2.show();
                     } else playerFilter2.hide();
                 }
@@ -173,5 +176,14 @@ public class Event {
             sliderY.setRange(min, max);
             sliderY.setValue(max);
         }
+    }
+
+    static void sliderParamChange(Slider sliderParam) {
+        sliderParam.onChange(callbackEvent -> {
+            sliderParamValue = sliderParam.getValue();
+            if (Chart3D.func != null) {
+                Chart3D.func.updateView(null);
+            }
+        });
     }
 }

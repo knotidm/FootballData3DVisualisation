@@ -6,6 +6,7 @@ import Model.Team;
 import Object3D.Object3D;
 import UI.UserInterface;
 import Visualisation.Chart2D;
+import Visualisation.Chart3D;
 import hivis.common.HV;
 import hivis.data.DataSeries;
 import hivis.data.DataTable;
@@ -25,31 +26,20 @@ public class ChartInteraction<T> {
     public Chart2D getChart2D(PApplet pApplet, UserInterface userInterface, ArrayList<Object3D<T>> objects3D1, ArrayList<Object3D<T>> objects3D2, Filter filter1, Filter filter2, Integer chart2DType) {
         switch (chart2DType) {
             case 0:
-                CreateDataSeries(objects3D1);
+                CreateDataSeries1(objects3D1);
                 dataTable = HV.newTable().addSeries("name", nameDataSeries).addSeries(filter1.name, filterDataSeries);
                 return new Chart2D(pApplet, dataTable, chart2DType);
             case 1:
-                filterDataSeries1 = HV.newIntegerSeries();
-                filterDataSeries2 = HV.newIntegerSeries();
-
-                for (Object3D<T> object3D : objects3D1) {
-                    filterDataSeries1.append(object3D.filterValue);
-                }
-
-                for (Object3D<T> object3D : objects3D2) {
-                    filterDataSeries2.append(object3D.filterValue);
-                }
-
+                CreateDataSeries2(objects3D1, objects3D2);
                 if (filter1.name.equals(filter2.name)) {
                     filter2.name = filter2.name + '.';
                 }
-
                 dataTable = HV.newTable().addSeries(filter1.name, filterDataSeries1).addSeries(filter2.name, filterDataSeries2);
 //                tableView = dataTable.selectRows((input, index) -> input.getSeries(0).getInt(index) > userInterface.sliderX.getValue());
                 tableView = dataTable.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
                 return new Chart2D(pApplet, tableView, chart2DType);
             case 2:
-                CreateDataSeries(objects3D1);
+                CreateDataSeries1(objects3D1);
                 dataTable = HV.newTable().addSeries("name", nameDataSeries).addSeries(filter1.name, filterDataSeries);
                 return new Chart2D(pApplet, dataTable, chart2DType);
             default:
@@ -57,7 +47,18 @@ public class ChartInteraction<T> {
         }
     }
 
-    private void CreateDataSeries(ArrayList<Object3D<T>> objects3D1) {
+    public Chart3D getChart3D(PApplet pApplet, ArrayList<Object3D<T>> objects3D1, ArrayList<Object3D<T>> objects3D2, Filter filter1, Filter filter2, Integer chart2DType) {
+        if (chart2DType == 3) {
+            CreateDataSeries2(objects3D1, objects3D2);
+            if (filter1.name.equals(filter2.name)) {
+                filter2.name = filter2.name + '.';
+            }
+            dataTable = HV.newTable().addSeries(filter1.name, filterDataSeries1).addSeries(filter2.name, filterDataSeries2);
+            return new Chart3D(pApplet, dataTable);
+        } else return null;
+    }
+
+    private void CreateDataSeries1(ArrayList<Object3D<T>> objects3D1) {
         nameDataSeries = HV.newSeries();
         filterDataSeries = HV.newIntegerSeries();
 
@@ -70,6 +71,19 @@ public class ChartInteraction<T> {
                 nameDataSeries.append(player.name);
             }
             filterDataSeries.append(object3D.filterValue);
+        }
+    }
+
+    private void CreateDataSeries2(ArrayList<Object3D<T>> objects3D1, ArrayList<Object3D<T>> objects3D2) {
+        filterDataSeries1 = HV.newIntegerSeries();
+        filterDataSeries2 = HV.newIntegerSeries();
+
+        for (Object3D<T> object3D : objects3D1) {
+            filterDataSeries1.append(object3D.filterValue);
+        }
+
+        for (Object3D<T> object3D : objects3D2) {
+            filterDataSeries2.append(object3D.filterValue);
         }
     }
 }

@@ -20,6 +20,13 @@ public class ModeInteraction<T> {
         }
     }
 
+    private void setIsSelectedObject3DState(PApplet pApplet, ArrayList<Object3D<T>> objects3D) {
+        indexObject3D = 0;
+        resetIsSelectedObjects3DState(objects3D);
+        closestObject3DInRelationToPosition(pApplet, objects3D);
+        objects3D.get(indexObject3D).isSelected = true;
+    }
+
     private void dragObject3D(PApplet pApplet, Grid grid, ArrayList<Object3D<T>> objects3D) {
         positionInRelationToGrid(pApplet, grid);
 
@@ -32,10 +39,7 @@ public class ModeInteraction<T> {
                 objects3D.get(indexObject3D).location.z += pApplet.pmouseY - pApplet.mouseY;
             }
         } else {
-            indexObject3D = 0;
-            resetIsSelectedObjects3DState(objects3D);
-            closestObject3DInRelationToPosition(pApplet, objects3D);
-            objects3D.get(indexObject3D).isSelected = true;
+            setIsSelectedObject3DState(pApplet, objects3D);
         }
     }
 
@@ -43,10 +47,7 @@ public class ModeInteraction<T> {
         positionInRelationToGrid(pApplet, grid);
 
         if (!pApplet.mousePressed) {
-            indexObject3D = 0;
-            resetIsSelectedObjects3DState(objects3D);
-            closestObject3DInRelationToPosition(pApplet, objects3D);
-            objects3D.get(indexObject3D).isSelected = true;
+            setIsSelectedObject3DState(pApplet, objects3D);
         }
     }
 

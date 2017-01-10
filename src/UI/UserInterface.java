@@ -28,6 +28,7 @@ public class UserInterface extends PApplet {
     private ControlP5 controlP5Foreground;
     public Slider sliderX;
     public Slider sliderY;
+    private Slider sliderParam;
 
     public UserInterface(PApplet pApplet) {
         this.pApplet = pApplet;
@@ -47,8 +48,16 @@ public class UserInterface extends PApplet {
                 .setSize(10, pApplet.height - 146)
                 .setLabelVisible(false);
 
+        sliderParam = controlP5Foreground.addSlider("sliderParam")
+                .setRange(1, 3)
+                .setValue(1.5f)
+                .setPosition(15, height - 15)
+                .setSize(width - 30, 10)
+                .setLabelVisible(false);
+
         Event.sliderXChange(sliderX);
         Event.sliderYChange(sliderY);
+        Event.sliderParamChange(sliderParam);
     }
 
     @Override
@@ -95,7 +104,7 @@ public class UserInterface extends PApplet {
                 .setOpen(false).hide();
 
         chart2DType = controlP5.addScrollableList("CHART 2D TYPE").setType(ScrollableList.LIST)
-                .addItems(Arrays.asList("BAR CHART", "XY CHART", "CIRCLE")).setPosition(10, 430)
+                .addItems(Arrays.asList("BAR CHART", "XY CHART", "PIE CHART", "3D CHART")).setPosition(10, 430)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
                 .setOpen(false).hide();
 
