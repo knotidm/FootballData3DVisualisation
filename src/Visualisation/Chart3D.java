@@ -6,22 +6,23 @@ import hivis.data.DataListener;
 import hivis.data.DataSeries;
 import hivis.data.DataTable;
 import hivis.data.view.CalcSeries;
+import org.gicentre.utils.colour.ColourTable;
 import processing.core.PApplet;
 
 public class Chart3D implements DataListener {
     private PApplet pApplet;
     private DataTable dataTable;
-    private DataSeries<Double> x;
-    private DataSeries<Double> y;
+    private DataSeries<Integer> x;
+    private DataSeries<Integer> y;
     public static CalcSeries.DoubleSeries func;
+    private ColourTable colourTable;
+    public int[] colours;
 
     public Chart3D(PApplet pApplet, DataTable dataTable) {
         this.pApplet = pApplet;
         this.dataTable = dataTable;
         dataTable.addChangeListener(this);
 
-        x = dataTable.getSeries(0).asDouble();
-        y = dataTable.getSeries(1).asDouble();
 
         updateData();
     }
@@ -32,7 +33,17 @@ public class Chart3D implements DataListener {
     }
 
     private void updateData() {
-        func = new CalcSeries.DoubleSeries<Double>(x, y) {
+        x = dataTable.getSeries(0).asInt();
+        y = dataTable.getSeries(1).asInt();
+        colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, x.minValue(), x.maxValue());
+
+        colours = new int[x.length()];
+
+        for (int i = 0; i < x.length(); i++) {
+            colours[i] = colourTable.findColour(x.getInt(i));
+        }
+
+        func = new CalcSeries.DoubleSeries<Integer>(x, y) {
             public double calcDouble(int index) {
                 double x = inputSeries.get(0).get(index);
                 double y = inputSeries.get(1).get(index);
@@ -50,16 +61,16 @@ public class Chart3D implements DataListener {
             pApplet.scale(10, 10);
 
             for (int row = 0; row < dataTable.length(); row++) {
-                float xCoord = x.getFloat(row);
-                float yCoord = y.getFloat(row);
+                float xCoord = x.getInt(row);
+                float yCoord = y.getInt(row);
                 float value = func.getFloat(row);
 
-                pApplet.fill(PApplet.abs(value % 1), 1, 1);
-
+                pApplet.fill(colours[row]);
                 pApplet.pushMatrix();
 
-                pApplet.translate(xCoord, yCoord, value);
-                pApplet.rect(0, 0, 0.01f, 0.01f);
+                pApplet.translate(xCoord, yCoord, y.getInt(row) * 2);
+                pApplet.box(1, 1, y.getInt(row) * 4);
+//                pApplet.rect(0, 0, 0.1f, 0.1f);
                 pApplet.popMatrix();
             }
         }

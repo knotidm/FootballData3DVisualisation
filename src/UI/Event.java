@@ -114,16 +114,35 @@ public class Event {
         }
     }
 
-    static void switchLevel(Button modeButton, Textlabel modeText, Button levelBackButton, Textlabel levelText, ScrollableList teamFilterMode, ScrollableList teamFilter1, ScrollableList teamFilter2, ScrollableList playerFilter1, ScrollableList playerFilter2, Button chartViewButton, ScrollableList teamField) {
+    static void switchLevel(Button modeButton, Textlabel modeText,
+                            Button levelBackButton, Textlabel levelText,
+                            ScrollableList teamFilterMode,
+                            ScrollableList teamFilter1, ScrollableList teamFilter2,
+                            ScrollableList playerFilter1, ScrollableList playerFilter2,
+                            Button chartViewButton,
+                            ScrollableList teamField,
+                            Slider sliderX, Slider sliderY, Slider sliderParam) {
         switch (levelIndex) {
             case 0:
                 levelBackButton.hide();
                 levelText.setText("COMPETITION LEVEL");
                 teamFilterMode.show();
                 teamFilter1.show();
-                if (chartView && (chartTypeIndex == 1 || chartTypeIndex == 3)) {
-                    teamFilter2.show();
-                } else teamFilter2.hide();
+                if (chartView) {
+                    sliderX.hide();
+                    sliderY.hide();
+                    sliderParam.hide();
+                    if (chartTypeIndex == 1) {
+                        teamFilter2.show();
+                        sliderX.show();
+                        sliderY.show();
+                    } else if (chartTypeIndex == 3) {
+                        teamFilter2.show();
+                        sliderParam.show();
+                    }
+                } else {
+                    teamFilter2.hide();
+                }
                 playerFilter1.hide();
                 playerFilter2.hide();
                 break;

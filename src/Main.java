@@ -250,7 +250,7 @@ public class Main extends PApplet {
                 for (int i = 0; i < fixtureObjects3D.size(); i++) {
                     Object3D<Fixture> object3D = fixtureObjects3D.get(i);
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                    object3D.draw(peasyCam, teamChart2D.colours[i]);
+                    object3D.draw(peasyCam, this.color(255, 0, 0));
                 }
                 grid.draw();
             }
@@ -297,21 +297,19 @@ public class Main extends PApplet {
 
                 rotateX(PI / 2);
 
+                teamChart3D.draw(width, height);
+
                 translate(-gridSize / 2, -gridSize / 2, 0);
                 grid.resetZ();
                 grid.draw();
 
-                teamChart3D.draw(width, height);
             }
 
             if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.chartTypeIndex == 3) {
                 playerChart3D.draw(width, height);
             }
 
-            if (Event.chartTypeIndex == 1) {
-
-                userInterface.onFrontOfPeasyCam(peasyCam);
-            }
+            userInterface.onFrontOfPeasyCam(peasyCam);
         }
     }
 

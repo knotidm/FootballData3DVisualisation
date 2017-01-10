@@ -135,7 +135,14 @@ public class UserInterface extends PApplet {
     public void draw() {
         background(0);
         Event.switchModeText(modeText);
-        Event.switchLevel(modeButton, modeText, levelBackButton, levelText, teamFilterMode, teamFilter1, teamFilter2, playerFilter1, playerFilter2, chartViewButton, teamField);
+        Event.switchLevel(modeButton, modeText,
+                levelBackButton, levelText,
+                teamFilterMode,
+                teamFilter1, teamFilter2,
+                playerFilter1, playerFilter2,
+                chartViewButton,
+                teamField,
+                sliderX, sliderY, sliderParam);
     }
 
     public void onFrontOfPeasyCam(PeasyCam peasyCam) {
