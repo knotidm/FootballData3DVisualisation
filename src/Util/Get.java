@@ -2,6 +2,8 @@ package Util;
 
 import Model.*;
 import Object3D.Object3D;
+import Stats.PlayerStats;
+import Stats.TeamStats;
 import com.sun.istack.internal.NotNull;
 import http.requests.GetRequest;
 import processing.core.PApplet;
@@ -14,7 +16,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
@@ -75,27 +76,27 @@ public class Get {
         return numberFormat.format(bigDecimal);
     }
 
-    public static ArrayList<Object3D<Team>> getTeamObjects3D(PApplet pApplet, Competition competition, Collection<Integer> filteredValues, Integer gridSize) {
+    public static ArrayList<Object3D<Team>> getTeamObjects3D(PApplet pApplet, Competition competition, TeamStats teamStats, Integer gridSize) {
         ArrayList<Object3D<Team>> teamObjects3D = new ArrayList<>();
         for (Integer i = 0; i < competition.standings.size(); i++) {
             teamObjects3D.add(new Object3D<Team>(pApplet,
                     new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
                     Get.getTeam(competition, i),
-                    new ArrayList<>(filteredValues).get(i)
+                    new ArrayList<>(teamStats.values).get(i)
             ));
         }
         return teamObjects3D;
     }
 
-    public static ArrayList<Object3D<Player>> getPlayerObjects3D(PApplet pApplet, Team team, Collection<Integer> filteredValues, Integer gridSize) {
+    public static ArrayList<Object3D<Player>> getPlayerObjects3D(PApplet pApplet, Team team, PlayerStats playerStats, Integer gridSize) {
         ArrayList<Object3D<Player>> playerObjects3D = new ArrayList<>();
         for (Integer i = 0; i < team.players.size(); i++) {
             playerObjects3D.add(new Object3D<Player>(pApplet,
                     new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
                     i,
                     new ArrayList<>(team.players).get(i),
-                    new ArrayList<>(filteredValues).get(i)
+                    new ArrayList<>(playerStats.values).get(i)
             ));
         }
         return playerObjects3D;

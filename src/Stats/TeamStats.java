@@ -8,16 +8,50 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 
 public class TeamStats extends Stats {
-    public Competition competition;
-    public Integer modeIndex;
+    private Competition competition;
 
-    public TeamStats(Competition competition, Integer modeIndex) {
+    public TeamStats(Competition competition, Integer modeIndex, Integer teamStatsIndex) {
         super();
         this.competition = competition;
-        this.modeIndex = modeIndex;
+        switchStats(teamStatsIndex, modeIndex);
     }
 
-    public Collection<Integer> playedGames() {
+    public void switchStats(Integer teamStatsIndex, Integer modeIndex) {
+        switch (teamStatsIndex) {
+            case 0:
+                values = playedGames(modeIndex);
+                break;
+            case 1:
+                values = points(modeIndex);
+                break;
+            case 2:
+                values = goals(modeIndex);
+                break;
+            case 3:
+                values = goalsAgainst(modeIndex);
+                break;
+            case 4:
+                values = goalDifference(modeIndex);
+                break;
+            case 5:
+                values = wins(modeIndex);
+                break;
+            case 6:
+                values = draws(modeIndex);
+                break;
+            case 7:
+                values = losses(modeIndex);
+                break;
+            case 8:
+                values = squadMarketValue(modeIndex);
+                break;
+            case 9:
+                values = averageAge(modeIndex);
+                break;
+        }
+    }
+
+    private Collection<Integer> playedGames(Integer modeIndex) {
         name = "Played Games";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -36,7 +70,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> points() {
+    private Collection<Integer> points(Integer modeIndex) {
         name = "Points";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -55,7 +89,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> goals() {
+    private Collection<Integer> goals(Integer modeIndex) {
         name = "Goals";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -74,7 +108,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> goalsAgainst() {
+    private Collection<Integer> goalsAgainst(Integer modeIndex) {
         name = "GoalsAgainst";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -93,7 +127,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> goalDifference() {
+    private Collection<Integer> goalDifference(Integer modeIndex) {
         name = "GoalDifference";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -112,7 +146,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> wins() {
+    private Collection<Integer> wins(Integer modeIndex) {
         name = "Wins";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -131,7 +165,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> draws() {
+    private Collection<Integer> draws(Integer modeIndex) {
         name = "Draws";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -150,7 +184,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> losses() {
+    private Collection<Integer> losses(Integer modeIndex) {
         name = "Losses";
         values.clear();
         for (Standing standing : competition.standings) {
@@ -169,7 +203,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> squadMarketValue() {
+    private Collection<Integer> squadMarketValue(Integer modeIndex) {
         name = "Squad Market Value";
         values.clear();
         for (Team team : competition.teams) {
@@ -178,7 +212,7 @@ public class TeamStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> averageAge() {
+    private Collection<Integer> averageAge(Integer modeIndex) {
         name = "Average Age";
         values.clear();
         for (Team team : competition.teams) {

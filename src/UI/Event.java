@@ -87,15 +87,27 @@ public class Event {
 
     static void sliderXChange(Slider sliderX) {
         sliderX.onPress(callbackEvent -> {
-            ChartInteraction.tableView.updateView(null);
-            setSliderX(sliderX);
+            try {
+                ChartInteraction.tableView.updateView(null);
+
+            } catch (Exception ignored) {
+
+            } finally {
+                setSliderX(sliderX);
+            }
         });
     }
 
     static void sliderYChange(Slider sliderY) {
         sliderY.onPress(callbackEvent -> {
-            ChartInteraction.tableView.updateView(null);
-            setSliderY(sliderY);
+            try {
+                ChartInteraction.tableView.updateView(null);
+
+            } catch (Exception ignored) {
+
+            } finally {
+                setSliderY(sliderY);
+            }
         });
     }
 
@@ -264,18 +276,18 @@ public class Event {
     }
 
     private static void setSliderX(Slider sliderX) {
-        if (ChartInteraction.filterDataSeries1 != null) {
-            Integer min = new Integer(ChartInteraction.filterDataSeries1.minValue().toString());
-            Integer max = new Integer(ChartInteraction.filterDataSeries1.maxValue().toString());
+        if (ChartInteraction.integerDataSeries1 != null) {
+            Integer min = new Integer(ChartInteraction.integerDataSeries1.minValue().toString());
+            Integer max = new Integer(ChartInteraction.integerDataSeries1.maxValue().toString());
             sliderX.setRange(min, max);
             sliderX.setValue(max);
         }
     }
 
     private static void setSliderY(Slider sliderY) {
-        if (ChartInteraction.filterDataSeries2 != null) {
-            Integer min = new Integer(ChartInteraction.filterDataSeries2.minValue().toString());
-            Integer max = new Integer(ChartInteraction.filterDataSeries2.maxValue().toString());
+        if (ChartInteraction.integerDataSeries2 != null) {
+            Integer min = new Integer(ChartInteraction.integerDataSeries2.minValue().toString());
+            Integer max = new Integer(ChartInteraction.integerDataSeries2.maxValue().toString());
             sliderY.setRange(min, max);
             sliderY.setValue(max);
         }

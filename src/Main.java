@@ -29,7 +29,6 @@ public class Main extends PApplet {
     private TeamStats teamStats1;
     private TeamStats teamStats2;
     private ArrayList<Object3D<Team>> teamObjects3D1;
-    private ArrayList<Object3D<Team>> teamObjects3D2;
     private ModeInteraction<Team> teamModeInteraction;
     private StatsInteraction<Team> teamStatsInteraction;
     private ChartInteraction<Team> teamChartInteraction;
@@ -43,7 +42,6 @@ public class Main extends PApplet {
     private PlayerStats playerStats1;
     private PlayerStats playerStats2;
     private ArrayList<Object3D<Player>> playerObjects3D1;
-    private ArrayList<Object3D<Player>> playerObjects3D2;
     private ModeInteraction<Player> playerModeInteraction;
     private StatsInteraction<Player> playerStatsInteraction;
     private ChartInteraction<Player> playerChartInteraction;
@@ -90,10 +88,9 @@ public class Main extends PApplet {
 
         competition = initial.competitions.get(Event.competitionIndex);
 
-        teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex);
-        teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex);
-        teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamStats1.playedGames(), gridSize);
-        teamObjects3D2 = Get.getTeamObjects3D(this, competition, teamStats2.playedGames(), gridSize);
+        teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex, Event.stats1Index);
+        teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex, Event.stats2Index);
+        teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamStats1, gridSize);
         teamModeInteraction = new ModeInteraction<>();
         teamStatsInteraction = new StatsInteraction<>();
         teamChartInteraction = new ChartInteraction<>();
@@ -113,10 +110,9 @@ public class Main extends PApplet {
         if (!competition.equals(initial.competitions.get(Event.competitionIndex))) {
             competition = initial.competitions.get(Event.competitionIndex);
 
-            teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex);
-            teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex);
-            teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamStats1.playedGames(), gridSize);
-            teamObjects3D2 = Get.getTeamObjects3D(this, competition, teamStats2.playedGames(), gridSize);
+            teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex, Event.stats1Index);
+            teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex, Event.stats2Index);
+            teamObjects3D1 = Get.getTeamObjects3D(this, competition, teamStats1, gridSize);
         }
 
         if (Event.modeIndex == 2 && !Event.chartView) {
@@ -126,12 +122,11 @@ public class Main extends PApplet {
                         teamModeInteraction.resetAllObjects3DStates(teamObjects3D1);
                         resultTeam = teamObjects3D1.get(ModeInteraction.indexObject3D).type;
 
-                        playerStats1 = new PlayerStats(resultTeam);
-                        playerStats2 = new PlayerStats(resultTeam);
-                        playerObjects3D1 = Get.getPlayerObjects3D(this, resultTeam, playerStats1.jerseyNumber(), gridSize);
-                        playerObjects3D2 = Get.getPlayerObjects3D(this, resultTeam, playerStats2.jerseyNumber(), gridSize);
-                        playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
-                        playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
+                        playerStats1 = new PlayerStats(resultTeam, Event.stats1Index);
+                        playerStats2 = new PlayerStats(resultTeam, Event.stats2Index);
+                        playerObjects3D1 = Get.getPlayerObjects3D(this, resultTeam, playerStats1, gridSize);
+                        playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerStats1, playerStats2, Event.chartTypeIndex);
+                        playerChart3D = playerChartInteraction.getChart3D(this, userInterface, playerStats1, playerStats2, Event.chartTypeIndex);
 
                         fixtureObjects3D = Get.getFixtureObjects3D(this, resultTeam, gridSize);
 
@@ -226,18 +221,17 @@ public class Main extends PApplet {
 
             if (Event.levelIndex == 0) {
                 teamModeInteraction.switchMode(this, peasyCam, grid, teamObjects3D1);
-                teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex);
-                teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex);
-                teamObjects3D1 = teamStatsInteraction.switchTeamStats(teamObjects3D1, teamStats1, Event.stats1Index);
-                teamObjects3D2 = teamStatsInteraction.switchTeamStats(teamObjects3D2, teamStats2, Event.stats2Index);
-                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamStats1, teamStats2, Event.chartTypeIndex);
-                teamChart3D = teamChartInteraction.getChart3D(this, teamObjects3D1, teamObjects3D2, teamStats1, teamStats2, Event.chartTypeIndex);
+                teamStats1.switchStats(Event.stats1Index, Event.teamStats1ModeIndex);
+                teamStats2.switchStats(Event.stats2Index, Event.teamStats2ModeIndex);
+                teamObjects3D1 = teamStatsInteraction.setTeamObjects3DStats(teamObjects3D1, teamStats1);
+                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamStats1, teamStats2, Event.chartTypeIndex);
+                teamChart3D = teamChartInteraction.getChart3D(this, userInterface, teamStats1, teamStats2, Event.chartTypeIndex);
 
                 grid.resetZ();
                 for (int i = 0; i < teamObjects3D1.size(); i++) {
                     Object3D<Team> object3D = teamObjects3D1.get(i);
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                    object3D.draw(peasyCam, teamChart2D.colours[i]);
+                    object3D.draw(peasyCam, ChartInteraction.colours[i]);
                 }
                 grid.draw();
             }
@@ -256,16 +250,17 @@ public class Main extends PApplet {
 
             if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.clickedObjects3D != 2) {
                 playerModeInteraction.switchMode(this, peasyCam, grid, playerObjects3D1);
-                playerObjects3D1 = playerStatsInteraction.switchPlayerStats(playerObjects3D1, playerStats1, Event.stats1Index);
-                playerObjects3D2 = playerStatsInteraction.switchPlayerStats(playerObjects3D2, playerStats2, Event.stats2Index);
-                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
-                playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
+                playerStats1.switchStats(Event.stats1Index);
+                playerStats2.switchStats(Event.stats2Index);
+                playerObjects3D1 = playerStatsInteraction.setPlayerObjects3DStats(playerObjects3D1, playerStats1);
+                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerStats1, playerStats2, Event.chartTypeIndex);
+                playerChart3D = playerChartInteraction.getChart3D(this, userInterface, playerStats1, playerStats2, Event.chartTypeIndex);
 
                 grid.resetZ();
                 for (int i = 0; i < playerObjects3D1.size(); i++) {
                     Object3D<Player> object3D = playerObjects3D1.get(i);
                     grid.setZ(object3D.location.x, object3D.location.y, object3D.size - object3D.location.y * 0.01f);
-                    object3D.draw(peasyCam, playerChart2D.colours[i]);
+                    object3D.draw(peasyCam, ChartInteraction.colours[i]);
                 }
                 grid.draw();
             }
@@ -276,39 +271,40 @@ public class Main extends PApplet {
             peasyCam.beginHUD();
 
             if (Event.levelIndex == 0) {
-                teamStats1 = new TeamStats(competition, Event.teamStats1ModeIndex);
-                teamStats2 = new TeamStats(competition, Event.teamStats2ModeIndex);
-                teamObjects3D1 = teamStatsInteraction.switchTeamStats(teamObjects3D1, teamStats1, Event.stats1Index);
-                teamObjects3D2 = teamStatsInteraction.switchTeamStats(teamObjects3D2, teamStats2, Event.stats2Index);
-                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamObjects3D2, teamStats1, teamStats2, Event.chartTypeIndex);
-                teamChart3D = teamChartInteraction.getChart3D(this, teamObjects3D1, teamObjects3D2, teamStats1, teamStats2, Event.chartTypeIndex);
+                teamStats1.switchStats(Event.stats1Index, Event.teamStats1ModeIndex);
+                teamStats2.switchStats(Event.stats2Index, Event.teamStats2ModeIndex);
+                teamObjects3D1 = teamStatsInteraction.setTeamObjects3DStats(teamObjects3D1, teamStats1);
+                teamChart2D = teamChartInteraction.getChart2D(this, userInterface, teamObjects3D1, teamStats1, teamStats2, Event.chartTypeIndex);
+                teamChart3D = teamChartInteraction.getChart3D(this, userInterface, teamStats1, teamStats2, Event.chartTypeIndex);
                 if (Event.chartTypeIndex != 3) teamChart2D.draw(width, height);
             }
             if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-                playerObjects3D1 = playerStatsInteraction.switchPlayerStats(playerObjects3D1, playerStats1, Event.stats1Index);
-                playerObjects3D2 = playerStatsInteraction.switchPlayerStats(playerObjects3D2, playerStats2, Event.stats2Index);
-                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
-                playerChart3D = playerChartInteraction.getChart3D(this, playerObjects3D1, playerObjects3D2, playerStats1, playerStats2, Event.chartTypeIndex);
+                playerStats1.switchStats(Event.stats1Index);
+                playerStats2.switchStats(Event.stats2Index);
+                playerObjects3D1 = playerStatsInteraction.setPlayerObjects3DStats(playerObjects3D1, playerStats1);
+                playerChart2D = playerChartInteraction.getChart2D(this, userInterface, playerObjects3D1, playerStats1, playerStats2, Event.chartTypeIndex);
+                playerChart3D = playerChartInteraction.getChart3D(this, userInterface, playerStats1, playerStats2, Event.chartTypeIndex);
                 if (Event.chartTypeIndex != 3) playerChart2D.draw(width, height);
             }
             peasyCam.endHUD();
 
-            if (Event.levelIndex == 0 && Event.chartTypeIndex == 3) {
+            if (Event.chartTypeIndex == 3) {
                 peasyCam.setActive(true);
-
                 rotateX(PI / 2);
 
-                teamChart3D.draw(width, height);
+                if (Event.levelIndex == 0) {
+                    teamChart3D.draw(width, height);
+                }
 
-                translate(-gridSize / 2, -gridSize / 2, 0);
-                grid.resetZ();
-                grid.draw();
+                if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
+                    playerChart3D.draw(width, height);
+                }
 
+//                translate(-gridSize / 2, -gridSize / 2, 0);
+//                grid.resetZ();
+//                grid.draw();
             }
 
-            if (Event.levelIndex == 1 && Event.teamFieldIndex == 1 && Event.chartTypeIndex == 3) {
-                playerChart3D.draw(width, height);
-            }
 
             userInterface.onFrontOfPeasyCam(peasyCam);
         }

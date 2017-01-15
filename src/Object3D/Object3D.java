@@ -14,17 +14,17 @@ public class Object3D<T> {
     public PVector location;
     public Integer index;
     public T type;
-    public Integer filterValue;
+    public Integer statsValue;
     public Integer size;
     public Boolean isSelected;
     public Boolean isClicked;
 
-    public Object3D(PApplet pApplet, PVector location, Integer index, T type, Integer filterValue) {
+    public Object3D(PApplet pApplet, PVector location, Integer index, T type, Integer statsValue) {
         this.pApplet = pApplet;
         this.location = location;
         this.index = index;
         this.type = type;
-        this.filterValue = filterValue;
+        this.statsValue = statsValue;
         this.size = 20;
         this.isSelected = false;
         this.isClicked = false;
@@ -56,7 +56,7 @@ public class Object3D<T> {
         if (type.getClass() == Team.class) {
             Team team = (Team) type;
             pApplet.text(team.name, 0, -size, 0);
-            pApplet.text(filterValue, 0, -size * 2, 0);
+            pApplet.text(statsValue, 0, -size * 2, 0);
         } else if (type.getClass() == Fixture.class) {
             Fixture fixture = (Fixture) type;
             pApplet.text(String.format("%s vs %s", fixture.homeTeamName, fixture.awayTeamName), 0, -size, 0);

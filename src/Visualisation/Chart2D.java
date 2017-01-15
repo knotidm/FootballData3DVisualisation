@@ -21,8 +21,8 @@ public class Chart2D implements DataListener {
     private ColourTable colourTable;
     private float[] xValues, yValues;
     private float[] angles;
-    public final XYChart xychart;
-    public int[] colours;
+    private final XYChart xychart;
+    private int[] colours;
 
     public Chart2D(PApplet pApplet, DataTable dataTable, Integer type) {
         this.pApplet = pApplet;

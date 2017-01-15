@@ -16,13 +16,12 @@ public class Chart3D implements DataListener {
     private DataSeries<Integer> y;
     public static CalcSeries.DoubleSeries func;
     private ColourTable colourTable;
-    public int[] colours;
+    private int[] colours;
 
     public Chart3D(PApplet pApplet, DataTable dataTable) {
         this.pApplet = pApplet;
         this.dataTable = dataTable;
         dataTable.addChangeListener(this);
-
 
         updateData();
     }

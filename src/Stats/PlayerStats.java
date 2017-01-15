@@ -12,12 +12,30 @@ import java.util.GregorianCalendar;
 public class PlayerStats extends Stats {
     public Team team;
 
-    public PlayerStats(Team team) {
+    public PlayerStats(Team team, Integer playerStatsIndex) {
         super();
         this.team = team;
+        switchStats(playerStatsIndex);
     }
 
-    public Collection<Integer> jerseyNumber() {
+    public void switchStats(Integer playerStatsIndex) {
+        switch (playerStatsIndex) {
+            case 0:
+                values = jerseyNumber();
+                break;
+            case 1:
+                values = marketValue();
+                break;
+            case 2:
+                values = age();
+                break;
+            case 3:
+                values = yearsToEndContract();
+                break;
+        }
+    }
+
+    private Collection<Integer> jerseyNumber() {
         name = "Jersey Number";
         values.clear();
         for (Player player : team.players) {
@@ -26,7 +44,7 @@ public class PlayerStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> marketValue() {
+    private Collection<Integer> marketValue() {
         name = "Market Value";
         values.clear();
         for (Player player : team.players) {
@@ -35,7 +53,7 @@ public class PlayerStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> age() {
+    private Collection<Integer> age() {
         name = "Age";
         values.clear();
         for (Player player : team.players) {
@@ -46,7 +64,7 @@ public class PlayerStats extends Stats {
         return values;
     }
 
-    public Collection<Integer> yearsToEndContract() {
+    private Collection<Integer> yearsToEndContract() {
         name = "Years To End Contract";
         values.clear();
         for (Player player : team.players) {
