@@ -135,22 +135,35 @@ public class Event {
                 if (chartView) {
                     modeButton.hide();
                     modeText.hide();
-
-                    if (chartTypeIndex == 1) {
-                        teamStats2Mode.show();
-                        teamStats2.show();
-                        sliderX.show();
-                        sliderY.show();
-                    } else if (chartTypeIndex == 3) {
-                        teamStats2Mode.show();
-                        teamStats2.show();
-                        sliderParam.show();
-                    } else {
-                        teamStats2Mode.hide();
-                        teamStats2.hide();
-                        sliderX.hide();
-                        sliderY.hide();
-                        sliderParam.hide();
+                    switch (chartTypeIndex) {
+                        case 0:
+                            teamStats2Mode.hide();
+                            teamStats2.hide();
+                            sliderX.show();
+                            sliderY.hide();
+                            sliderParam.hide();
+                            break;
+                        case 1:
+                            teamStats2Mode.show();
+                            teamStats2.show();
+                            sliderX.show();
+                            sliderY.show();
+                            sliderParam.hide();
+                            break;
+                        case 2:
+                            teamStats2Mode.hide();
+                            teamStats2.hide();
+                            sliderX.show();
+                            sliderY.hide();
+                            sliderParam.hide();
+                            break;
+                        case 3:
+                            teamStats2Mode.show();
+                            teamStats2.show();
+                            sliderX.hide();
+                            sliderY.hide();
+                            sliderParam.show();
+                            break;
                     }
 
                     chartType.show();
@@ -188,18 +201,31 @@ public class Event {
                     modeButton.hide();
                     modeText.hide();
 
-                    if (chartTypeIndex == 1) {
-                        playerStats2.show();
-                        sliderX.show();
-                        sliderY.show();
-                    } else if (chartTypeIndex == 3) {
-                        playerStats2.show();
-                        sliderParam.show();
-                    } else {
-                        playerStats2.hide();
-                        sliderX.hide();
-                        sliderY.hide();
-                        sliderParam.hide();
+                    switch (chartTypeIndex) {
+                        case 0:
+                            playerStats2.hide();
+                            sliderX.show();
+                            sliderY.hide();
+                            sliderParam.hide();
+                            break;
+                        case 1:
+                            playerStats2.show();
+                            sliderX.show();
+                            sliderY.show();
+                            sliderParam.hide();
+                            break;
+                        case 2:
+                            playerStats2.hide();
+                            sliderX.show();
+                            sliderY.hide();
+                            sliderParam.hide();
+                            break;
+                        case 3:
+                            playerStats2.show();
+                            sliderX.hide();
+                            sliderY.hide();
+                            sliderParam.show();
+                            break;
                     }
 
                     chartType.show();
