@@ -11,11 +11,12 @@ public class Event {
     public static Integer modeIndex = 0;
     public static Integer levelIndex = 0;
     public static Integer competitionIndex = 0;
-    public static Integer teamFilterModeIndex = 0;
-    public static Integer filterIndex1 = 0;
+    public static Integer teamStats1ModeIndex = 0;
+    public static Integer teamStats2ModeIndex = 0;
+    public static Integer stats1Index = 0;
+    public static Integer stats2Index = 0;
     public static Boolean chartView = false;
     public static Integer chartTypeIndex = 0;
-    public static Integer filterIndex2 = 0;
     public static Integer teamFieldIndex = 0;
     public static Integer clickedObjects3D = 0;
     public static Float sliderParamValue = 0.0f;
@@ -31,8 +32,8 @@ public class Event {
         levelBackButton.onClick(callbackEvent -> {
             levelIndex--;
             clickedObjects3D = 0;
-            filterIndex1 = 0;
-            filterIndex2 = 0;
+            stats1Index = 0;
+            stats2Index = 0;
         });
     }
 
@@ -40,48 +41,46 @@ public class Event {
         competition.onChange(callbackEvent -> competitionIndex = (int) competition.getValue());
     }
 
-    static void teamFilterModeChange(ScrollableList teamFilterMode) {
-        teamFilterMode.onChange(callbackEvent -> teamFilterModeIndex = (int) teamFilterMode.getValue());
+    static void teamStats1ModeChange(ScrollableList teamStats1Mode) {
+        teamStats1Mode.onChange(callbackEvent -> teamStats1ModeIndex = (int) teamStats1Mode.getValue());
     }
 
-    static void filterChange1(ScrollableList filter) {
-        filter.onChange(callbackEvent -> filterIndex1 = (int) filter.getValue());
+    static void teamStats2ModeChange(ScrollableList teamStats2Mode) {
+        teamStats2Mode.onChange(callbackEvent -> teamStats2ModeIndex = (int) teamStats2Mode.getValue());
     }
 
-    static void filterChange2(ScrollableList filter) {
-        filter.onChange(callbackEvent -> filterIndex2 = (int) filter.getValue());
+    static void stats1Change(ScrollableList stats1) {
+        stats1.onChange(callbackEvent -> stats1Index = (int) stats1.getValue());
     }
 
-    static void chartTypeChange(ScrollableList chart2DType) {
-        chart2DType.onChange(callbackEvent -> chartTypeIndex = (int) chart2DType.getValue());
+    static void stats2Change(ScrollableList stats2) {
+        stats2.onChange(callbackEvent -> stats2Index = (int) stats2.getValue());
     }
 
-    static void chartViewButtonClick(Button chartViewButton, Button modeButton, Textlabel modeText, ScrollableList chart2DType) {
+    static void chartViewButtonClick(Button chartViewButton) {
         chartViewButton.onClick(callbackEvent -> {
             if (!chartView) {
                 chartViewButton.setLabel("VIEW SCENE");
-                modeButton.hide();
-                modeText.hide();
-                chart2DType.show();
                 chartView = true;
             } else {
                 chartViewButton.setLabel("VIEW CHART");
-                modeButton.show();
-                modeText.show();
-                chart2DType.hide();
                 chartView = false;
                 chartTypeIndex = 0;
             }
         });
     }
 
-    static void teamFieldChange(ScrollableList teamField, ScrollableList playerFilter) {
+    static void chartTypeChange(ScrollableList chartType) {
+        chartType.onChange(callbackEvent -> chartTypeIndex = (int) chartType.getValue());
+    }
+
+    static void teamFieldChange(ScrollableList teamField, ScrollableList playerStats) {
         teamField.onChange(callbackEvent -> {
             if (teamField.isMouseOver()) {
                 levelIndex = 1;
                 teamFieldIndex = (int) teamField.getValue();
-                filterIndex1 = (int) playerFilter.getValue();
-                filterIndex2 = (int) playerFilter.getValue();
+                stats1Index = (int) playerStats.getValue();
+                stats2Index = (int) playerStats.getValue();
             }
         });
     }
@@ -116,65 +115,124 @@ public class Event {
 
     static void switchLevel(Button modeButton, Textlabel modeText,
                             Button levelBackButton, Textlabel levelText,
-                            ScrollableList teamFilterMode,
-                            ScrollableList teamFilter1, ScrollableList teamFilter2,
-                            ScrollableList playerFilter1, ScrollableList playerFilter2,
-                            Button chartViewButton,
+                            ScrollableList teamStats1Mode, ScrollableList teamStats2Mode,
+                            ScrollableList teamStats1, ScrollableList teamStats2,
+                            ScrollableList playerStats1, ScrollableList playerStats2,
+                            Button chartViewButton, ScrollableList chartType,
                             ScrollableList teamField,
                             Slider sliderX, Slider sliderY, Slider sliderParam) {
         switch (levelIndex) {
             case 0:
                 levelBackButton.hide();
                 levelText.setText("COMPETITION LEVEL");
-                teamFilterMode.show();
-                teamFilter1.show();
+
+                teamStats1Mode.show();
+                teamStats1.show();
+
+                playerStats1.hide();
+                playerStats2.hide();
+
                 if (chartView) {
-                    sliderX.hide();
-                    sliderY.hide();
-                    sliderParam.hide();
+                    modeButton.hide();
+                    modeText.hide();
+
                     if (chartTypeIndex == 1) {
-                        teamFilter2.show();
+                        teamStats2Mode.show();
+                        teamStats2.show();
                         sliderX.show();
                         sliderY.show();
                     } else if (chartTypeIndex == 3) {
-                        teamFilter2.show();
+                        teamStats2Mode.show();
+                        teamStats2.show();
                         sliderParam.show();
+                    } else {
+                        teamStats2Mode.hide();
+                        teamStats2.hide();
+                        sliderX.hide();
+                        sliderY.hide();
+                        sliderParam.hide();
                     }
-                } else {
-                    teamFilter2.hide();
+
+                    chartType.show();
                 }
-                playerFilter1.hide();
-                playerFilter2.hide();
+                if (!chartView) {
+                    modeButton.show();
+                    modeText.show();
+
+                    chartType.hide();
+                    teamStats2Mode.hide();
+                    teamStats2.hide();
+                    sliderX.hide();
+                    sliderY.hide();
+                    sliderParam.hide();
+                }
                 break;
             case 1:
                 modeButton.show();
                 modeText.show();
+
                 levelBackButton.show();
                 levelText.setText("TEAM LEVEL");
-                teamFilterMode.hide();
-                teamFilter1.hide();
-                teamFilter2.hide();
-                if (teamFieldIndex == 1) {
-                    playerFilter1.show();
-                    if (chartView && chartTypeIndex == 1) {
-                        playerFilter2.show();
-                    } else playerFilter2.hide();
-                }
+
+                teamStats1Mode.hide();
+                teamStats1.hide();
+                teamStats2Mode.hide();
+                teamStats2.hide();
+
+                playerStats1.show();
+
                 chartViewButton.show();
                 teamField.hide();
+
+                if (chartView) {
+                    modeButton.hide();
+                    modeText.hide();
+
+                    if (chartTypeIndex == 1) {
+                        playerStats2.show();
+                        sliderX.show();
+                        sliderY.show();
+                    } else if (chartTypeIndex == 3) {
+                        playerStats2.show();
+                        sliderParam.show();
+                    } else {
+                        playerStats2.hide();
+                        sliderX.hide();
+                        sliderY.hide();
+                        sliderParam.hide();
+                    }
+
+                    chartType.show();
+                }
+                if (!chartView) {
+                    modeButton.show();
+                    modeText.show();
+
+                    chartType.hide();
+                    playerStats2.hide();
+                    sliderX.hide();
+                    sliderY.hide();
+                    sliderParam.hide();
+                }
+
                 break;
             case 2:
                 modeButton.hide();
                 modeText.hide();
+
+                playerStats1.hide();
+                playerStats2.hide();
+
+                chartViewButton.hide();
+                chartType.hide();
+
                 if (teamFieldIndex == 0) {
                     levelText.setText("FIXTURE LEVEL");
                 }
                 if (teamFieldIndex == 1) {
                     levelText.setText("PLAYER LEVEL");
-                    playerFilter1.hide();
-                    playerFilter2.hide();
                 }
-                chartViewButton.hide();
+
                 break;
         }
     }

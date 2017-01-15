@@ -1,26 +1,27 @@
-package Filter;
+package Stats;
 
 import Model.*;
-import UI.Event;
 
 import java.time.Year;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
-public class TeamFilter extends Filter {
-    private Competition competition;
+public class TeamStats extends Stats {
+    public Competition competition;
+    public Integer modeIndex;
 
-    public TeamFilter(Competition competition) {
+    public TeamStats(Competition competition, Integer modeIndex) {
         super();
         this.competition = competition;
+        this.modeIndex = modeIndex;
     }
 
     public Collection<Integer> playedGames() {
         name = "Played Games";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.wins + standing.draws + standing.losses);
                     break;
@@ -39,7 +40,7 @@ public class TeamFilter extends Filter {
         name = "Points";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(3 * standing.wins + standing.draws);
                     break;
@@ -58,7 +59,7 @@ public class TeamFilter extends Filter {
         name = "Goals";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.goals);
                     break;
@@ -77,7 +78,7 @@ public class TeamFilter extends Filter {
         name = "GoalsAgainst";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.goalsAgainst);
                     break;
@@ -96,7 +97,7 @@ public class TeamFilter extends Filter {
         name = "GoalDifference";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.goals - standing.goalsAgainst);
                     break;
@@ -115,7 +116,7 @@ public class TeamFilter extends Filter {
         name = "Wins";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.wins);
                     break;
@@ -134,7 +135,7 @@ public class TeamFilter extends Filter {
         name = "Draws";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.draws);
                     break;
@@ -153,7 +154,7 @@ public class TeamFilter extends Filter {
         name = "Losses";
         values.clear();
         for (Standing standing : competition.standings) {
-            switch (Event.teamFilterModeIndex) {
+            switch (modeIndex) {
                 case 0:
                     values.add(standing.losses);
                     break;

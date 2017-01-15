@@ -3,11 +3,11 @@ package Model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Filter {
+public class Stats {
     public String name;
     public Collection<Integer> values;
 
-    public Filter() {
+    public Stats() {
         values = new ArrayList<>();
     }
 }

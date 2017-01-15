@@ -1,6 +1,6 @@
-package Filter;
+package Stats;
 
-import Model.Filter;
+import Model.Stats;
 import Model.Player;
 import Model.Team;
 
@@ -9,10 +9,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
-public class PlayerFilter extends Filter {
-    private Team team;
+public class PlayerStats extends Stats {
+    public Team team;
 
-    public PlayerFilter(Team team) {
+    public PlayerStats(Team team) {
         super();
         this.team = team;
     }
