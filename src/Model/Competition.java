@@ -16,6 +16,13 @@ public class Competition {
     public Integer numberOfMatchdays;
     public Integer numberOfGames;
 
+
+    public Competition() {
+        teams = new ArrayList<>();
+        standings = new ArrayList<>();
+        name = "Custom";
+    }
+
     public Competition(JSONObject competition) {
         teams = getTeams(competition.getJSONObject("_links").getJSONObject("teams").getString("href"));
         standings = getStandings(competition.getJSONObject("_links").getJSONObject("leagueTable").getString("href"));
@@ -25,6 +32,7 @@ public class Competition {
         numberOfMatchdays = competition.getInt("numberOfMatchdays");
         numberOfGames = competition.getInt("numberOfGames");
     }
+
 
     private Collection<Team> getTeams(String link) {
         JSONArray teamsJSON = Get.getJSONObject(link).getJSONArray("teams");

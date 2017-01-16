@@ -1,7 +1,6 @@
 package UI;
 
 import Interaction.ChartInteraction;
-import Visualisation.Chart3D;
 import controlP5.Button;
 import controlP5.ScrollableList;
 import controlP5.Slider;
@@ -10,16 +9,18 @@ import controlP5.Textlabel;
 public class Event {
     public static Integer modeIndex = 0;
     public static Integer levelIndex = 0;
+    public static Boolean customList = false;
     public static Integer competitionIndex = 0;
     public static Integer teamStats1ModeIndex = 0;
     public static Integer teamStats2ModeIndex = 0;
+    public static Integer teamStats3ModeIndex = 0;
     public static Integer stats1Index = 0;
     public static Integer stats2Index = 0;
+    public static Integer stats3Index = 0;
     public static Boolean chartView = false;
     public static Integer chartTypeIndex = 0;
     public static Integer teamFieldIndex = 0;
     public static Integer clickedObjects3D = 0;
-    public static Float sliderParamValue = 0.0f;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -37,6 +38,18 @@ public class Event {
         });
     }
 
+    static void customListButtonClick(Button customListButton) {
+        customListButton.onClick(callbackEvent -> {
+            if (!customList) {
+                customListButton.setLabel("CUSTOM LIST");
+                customList = true;
+            } else {
+                customListButton.setLabel("LEAGUE LIST");
+                customList = false;
+            }
+        });
+    }
+
     static void competitionChange(ScrollableList competition) {
         competition.onChange(callbackEvent -> competitionIndex = (int) competition.getValue());
     }
@@ -49,12 +62,20 @@ public class Event {
         teamStats2Mode.onChange(callbackEvent -> teamStats2ModeIndex = (int) teamStats2Mode.getValue());
     }
 
+    static void teamStats3ModeChange(ScrollableList teamStats3Mode) {
+        teamStats3Mode.onChange(callbackEvent -> teamStats3ModeIndex = (int) teamStats3Mode.getValue());
+    }
+
     static void stats1Change(ScrollableList stats1) {
         stats1.onChange(callbackEvent -> stats1Index = (int) stats1.getValue());
     }
 
     static void stats2Change(ScrollableList stats2) {
         stats2.onChange(callbackEvent -> stats2Index = (int) stats2.getValue());
+    }
+
+    static void stats3Change(ScrollableList stats3) {
+        stats3.onChange(callbackEvent -> stats3Index = (int) stats3.getValue());
     }
 
     static void chartViewButtonClick(Button chartViewButton) {
@@ -111,6 +132,20 @@ public class Event {
         });
     }
 
+
+    static void sliderZChange(Slider sliderZ) {
+        sliderZ.onPress(callbackEvent -> {
+            try {
+                ChartInteraction.tableView.updateView(null);
+
+            } catch (Exception ignored) {
+
+            } finally {
+                setSliderZ(sliderZ);
+            }
+        });
+    }
+
     static void switchModeText(Textlabel modeText) {
         switch (modeIndex) {
             case 0:
@@ -127,12 +162,12 @@ public class Event {
 
     static void switchLevel(Button modeButton, Textlabel modeText,
                             Button levelBackButton, Textlabel levelText,
-                            ScrollableList teamStats1Mode, ScrollableList teamStats2Mode,
-                            ScrollableList teamStats1, ScrollableList teamStats2,
-                            ScrollableList playerStats1, ScrollableList playerStats2,
+                            ScrollableList teamStats1Mode, ScrollableList teamStats2Mode, ScrollableList teamStats3Mode,
+                            ScrollableList teamStats1, ScrollableList teamStats2, ScrollableList teamStats3,
+                            ScrollableList playerStats1, ScrollableList playerStats2, ScrollableList playerStats3,
                             Button chartViewButton, ScrollableList chartType,
                             ScrollableList teamField,
-                            Slider sliderX, Slider sliderY, Slider sliderParam) {
+                            Slider sliderX, Slider sliderY, Slider sliderZ) {
         switch (levelIndex) {
             case 0:
                 levelBackButton.hide();
@@ -143,6 +178,7 @@ public class Event {
 
                 playerStats1.hide();
                 playerStats2.hide();
+                playerStats3.hide();
 
                 if (chartView) {
                     modeButton.hide();
@@ -151,30 +187,38 @@ public class Event {
                         case 0:
                             teamStats2Mode.hide();
                             teamStats2.hide();
+                            teamStats3Mode.hide();
+                            teamStats3.hide();
                             sliderX.show();
                             sliderY.hide();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 1:
                             teamStats2Mode.show();
                             teamStats2.show();
+                            teamStats3Mode.hide();
+                            teamStats3.hide();
                             sliderX.show();
                             sliderY.show();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 2:
                             teamStats2Mode.hide();
                             teamStats2.hide();
+                            teamStats3Mode.hide();
+                            teamStats3.hide();
                             sliderX.show();
                             sliderY.hide();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 3:
                             teamStats2Mode.show();
                             teamStats2.show();
-                            sliderX.hide();
-                            sliderY.hide();
-                            sliderParam.show();
+                            teamStats3Mode.show();
+                            teamStats3.show();
+                            sliderX.show();
+                            sliderY.show();
+                            sliderZ.show();
                             break;
                     }
 
@@ -187,9 +231,11 @@ public class Event {
                     chartType.hide();
                     teamStats2Mode.hide();
                     teamStats2.hide();
+                    teamStats3Mode.hide();
+                    teamStats3.hide();
                     sliderX.hide();
                     sliderY.hide();
-                    sliderParam.hide();
+                    sliderZ.hide();
                 }
                 break;
             case 1:
@@ -203,6 +249,8 @@ public class Event {
                 teamStats1.hide();
                 teamStats2Mode.hide();
                 teamStats2.hide();
+                teamStats3Mode.hide();
+                teamStats3.hide();
 
                 playerStats1.show();
 
@@ -216,27 +264,31 @@ public class Event {
                     switch (chartTypeIndex) {
                         case 0:
                             playerStats2.hide();
+                            playerStats3.hide();
                             sliderX.show();
                             sliderY.hide();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 1:
                             playerStats2.show();
+                            playerStats3.hide();
                             sliderX.show();
                             sliderY.show();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 2:
                             playerStats2.hide();
+                            playerStats3.hide();
                             sliderX.show();
                             sliderY.hide();
-                            sliderParam.hide();
+                            sliderZ.hide();
                             break;
                         case 3:
                             playerStats2.show();
-                            sliderX.hide();
-                            sliderY.hide();
-                            sliderParam.show();
+                            playerStats3.show();
+                            sliderX.show();
+                            sliderY.show();
+                            sliderZ.show();
                             break;
                     }
 
@@ -248,9 +300,11 @@ public class Event {
 
                     chartType.hide();
                     playerStats2.hide();
+                    playerStats3.hide();
+
                     sliderX.hide();
                     sliderY.hide();
-                    sliderParam.hide();
+                    sliderZ.hide();
                 }
 
                 break;
@@ -260,6 +314,7 @@ public class Event {
 
                 playerStats1.hide();
                 playerStats2.hide();
+                playerStats3.hide();
 
                 chartViewButton.hide();
                 chartType.hide();
@@ -293,12 +348,12 @@ public class Event {
         }
     }
 
-    static void sliderParamChange(Slider sliderParam) {
-        sliderParam.onChange(callbackEvent -> {
-            sliderParamValue = sliderParam.getValue();
-            if (Chart3D.func != null) {
-                Chart3D.func.updateView(null);
-            }
-        });
+    private static void setSliderZ(Slider sliderZ) {
+        if (ChartInteraction.integerDataSeries3 != null) {
+            Integer min = new Integer(ChartInteraction.integerDataSeries3.minValue().toString());
+            Integer max = new Integer(ChartInteraction.integerDataSeries3.maxValue().toString());
+            sliderZ.setRange(min, max);
+            sliderZ.setValue(max);
+        }
     }
 }

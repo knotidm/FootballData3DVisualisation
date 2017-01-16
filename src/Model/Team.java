@@ -14,7 +14,11 @@ public class Team {
     public String name;
     public BigDecimal squadMarketValue;
 
-    public Team() {}
+    public Team() {
+        fixtures = new ArrayList<>();
+        players = new ArrayList<>();
+        name = "Custom";
+    }
 
     public Team(JSONObject team) {
         fixtures = getFixtures(team.getJSONObject("_links").getJSONObject("fixtures").getString("href"));

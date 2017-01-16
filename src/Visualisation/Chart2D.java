@@ -91,23 +91,24 @@ public class Chart2D implements DataListener {
                 break;
             case 2:
                 dataSeries = dataTable.getSeries(0);
-                float min = PApplet.min(dataSeries.asFloatArray()) - 1;
-                float max = PApplet.max(dataSeries.asFloatArray());
-                colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, min, max);
+                if (dataSeries.length() != 0) {
+                    float min = PApplet.min(dataSeries.asFloatArray()) - 1;
+                    float max = PApplet.max(dataSeries.asFloatArray());
+                    colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, min, max);
 
-                colours = new int[dataSeries.length()];
-                angles = new float[dataSeries.length()];
+                    colours = new int[dataSeries.length()];
+                    angles = new float[dataSeries.length()];
 
-                int seriesSum = 0;
-                for (int i = 0; i < dataSeries.length(); i++) {
-                    seriesSum += dataSeries.getInt(i);
+                    int seriesSum = 0;
+                    for (int i = 0; i < dataSeries.length(); i++) {
+                        seriesSum += dataSeries.getInt(i);
+                    }
+
+                    for (int i = 0; i < dataSeries.length(); i++) {
+                        colours[i] = colourTable.findColour(dataSeries.getInt(i));
+                        angles[i] = (dataSeries.getFloat(i) / seriesSum) * 360;
+                    }
                 }
-
-                for (int i = 0; i < dataSeries.length(); i++) {
-                    colours[i] = colourTable.findColour(dataSeries.getInt(i));
-                    angles[i] = (dataSeries.getFloat(i) / seriesSum) * 360;
-                }
-
                 break;
         }
     }
@@ -122,23 +123,25 @@ public class Chart2D implements DataListener {
                     xychart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 2:
-                    HVDraw.pie(pApplet, dataSeries, 600, width / 2f, height / 2f, colours, 0);
-                    pApplet.noFill();
-                    pApplet.stroke(0);
-                    float start = 0;
-                    float stop = 0;
-                    for (int i = 0; i < dataSeries.length(); i++) {
-                        stop += PApplet.radians(angles[i]);
-                        pApplet.arc(width / 2, height / 2, 600, 600, start, stop, PIE);
-                        start = stop;
-                    }
+                    if (dataSeries.length() != 0) {
+                        HVDraw.pie(pApplet, dataSeries, 600, width / 2f, height / 2f, colours, 0);
+                        pApplet.noFill();
+                        pApplet.stroke(0);
+                        float start = 0;
+                        float stop = 0;
+                        for (int i = 0; i < dataSeries.length(); i++) {
+                            stop += PApplet.radians(angles[i]);
+                            pApplet.arc(width / 2, height / 2, 600, 600, start, stop, PIE);
+                            start = stop;
+                        }
 
-                    pApplet.textSize(14);
-                    for (int i = 0; i < colours.length; i++) {
-                        pApplet.fill(colours[i]);
-                        int y = i * 20;
-                        pApplet.rect(20, 20 + y, 40, 20);
-                        pApplet.text(dataTable.getSeries(1).asStringArray()[i], 140, 37 + y);
+                        pApplet.textSize(14);
+                        for (int i = 0; i < colours.length; i++) {
+                            pApplet.fill(colours[i]);
+                            int y = i * 20;
+                            pApplet.rect(20, 20 + y, 40, 20);
+                            pApplet.text(dataTable.getSeries(1).asStringArray()[i], 140, 37 + y);
+                        }
                     }
                     break;
             }

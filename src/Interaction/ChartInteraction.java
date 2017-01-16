@@ -21,6 +21,7 @@ public class ChartInteraction<T> {
     private DataTable dataTable;
     public static DataSeries<Integer> integerDataSeries1;
     public static DataSeries<Integer> integerDataSeries2;
+    public static DataSeries<Integer> integerDataSeries3;
     public static TableView tableView;
     private ColourTable colourTable;
     public static int[] colours;
@@ -45,7 +46,7 @@ public class ChartInteraction<T> {
                 }
                 dataTable = HV.newTable().addSeries(stats1.name, integerDataSeries1).addSeries(stats2.name, integerDataSeries2);
                 tableView = dataTable.selectRows((input, index) -> input.getSeries(0).getInt(index) > userInterface.sliderX.getValue());
-                tableView = dataTable.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
+                tableView = tableView.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
                 return new Chart2D(pApplet, tableView, chart2DType);
             case 2:
                 createDataSeries1(objects3D1);
@@ -61,14 +62,25 @@ public class ChartInteraction<T> {
         }
     }
 
-    public Chart3D getChart3D(PApplet pApplet,UserInterface userInterface, Stats stats1, Stats stats2, Integer chart2DType) {
+    public Chart3D getChart3D(PApplet pApplet, UserInterface userInterface, Stats stats1, Stats stats2, Stats stats3, Integer chart2DType) {
         if (chart2DType == 3) {
             createDataSeries2(stats1, stats2);
+            integerDataSeries3 = HV.newIntegerSeries();
+            for (Integer stat : stats3.values) {
+                integerDataSeries3.append(stat);
+            }
+
             if (stats1.name.equals(stats2.name)) {
                 stats2.name = stats2.name + '.';
             }
-            dataTable = HV.newTable().addSeries(stats1.name, integerDataSeries1).addSeries(stats2.name, integerDataSeries2);
+            if (stats1.name.equals(stats3.name) || stats2.name.equals(stats3.name)) {
+                stats3.name = stats3.name + "..";
+            }
+            dataTable = HV.newTable().addSeries(stats1.name, integerDataSeries1).addSeries(stats2.name, integerDataSeries2).addSeries(stats3.name, integerDataSeries3);
             tableView = dataTable.selectRows((input, index) -> input.getSeries(0).getInt(index) > userInterface.sliderX.getValue());
+            tableView = tableView.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
+            tableView = tableView.selectRows((input, index) -> input.getSeries(2).getInt(index) > userInterface.sliderZ.getValue());
+
             return new Chart3D(pApplet, tableView);
         } else return null;
     }
@@ -102,7 +114,7 @@ public class ChartInteraction<T> {
         }
     }
 
-    private void createColours(){
+    private void createColours() {
         colourTable = ColourTable.getPresetColourTable(ColourTable.YL_OR_RD, integerDataSeries1.minValue(), integerDataSeries1.maxValue());
         colours = new int[integerDataSeries1.length()];
         for (int i = 0; i < integerDataSeries1.length(); i++) {
