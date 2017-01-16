@@ -186,7 +186,7 @@ public class Main extends PApplet {
                         teamStats5 = new TeamStats(custom, Event.teamStats2ModeIndex, Event.stats2Index);
                         teamStats6 = new TeamStats(custom, Event.teamStats3ModeIndex, Event.stats3Index);
 
-                        teamObjects3D2 = Get.getTeamObjects3D(this, custom, teamStats3, gridSize);
+                        teamObjects3D2 = Get.getTeamObjects3D(this, custom, teamStats4, gridSize);
                         break;
                     case 1:
                         Object3D<Player> playerObject3D = playerObjects3D1.get(ModeInteraction.indexObject3D);
@@ -197,7 +197,7 @@ public class Main extends PApplet {
                         playerStats5 = new PlayerStats(customTeam, Event.stats2Index);
                         playerStats6 = new PlayerStats(customTeam, Event.stats3Index);
 
-                        playerObjects3D2 = Get.getPlayerObjects3D(this, customTeam, playerStats3, gridSize);
+                        playerObjects3D2 = Get.getPlayerObjects3D(this, customTeam, playerStats4, gridSize);
                         break;
                 }
             }
