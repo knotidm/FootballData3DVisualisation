@@ -13,6 +13,7 @@ public class TeamStats extends Stats {
     public TeamStats(Competition competition, Integer modeIndex, Integer teamStatsIndex) {
         super();
         this.competition = competition;
+        super.name = "";
         switchStats(teamStatsIndex, modeIndex);
     }
 
@@ -52,17 +53,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> playedGames(Integer modeIndex) {
-        name = "Played Games";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Played Games Overall";
                     values.add(standing.wins + standing.draws + standing.losses);
                     break;
                 case 1:
+                    name = "Played Games Home";
                     values.add(standing.home.wins + standing.home.draws + standing.home.losses);
                     break;
                 case 2:
+                    name = "Played Games Away";
                     values.add(standing.away.wins + standing.away.draws + standing.away.losses);
                     break;
             }
@@ -71,17 +74,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> points(Integer modeIndex) {
-        name = "Points";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Points Overall";
                     values.add(3 * standing.wins + standing.draws);
                     break;
                 case 1:
+                    name = "Points Home";
                     values.add(3 * standing.home.wins + standing.home.draws);
                     break;
                 case 2:
+                    name = "Points Away";
                     values.add(3 * standing.away.wins + standing.away.draws);
                     break;
             }
@@ -90,17 +95,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> goals(Integer modeIndex) {
-        name = "Goals";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Goals Overall";
                     values.add(standing.goals);
                     break;
                 case 1:
+                    name = "Goals Home";
                     values.add(standing.home.goals);
                     break;
                 case 2:
+                    name = "Goals Away";
                     values.add(standing.away.goals);
                     break;
             }
@@ -109,17 +116,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> goalsAgainst(Integer modeIndex) {
-        name = "GoalsAgainst";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "GoalsAgainst Overall";
                     values.add(standing.goalsAgainst);
                     break;
                 case 1:
+                    name = "GoalsAgainst Home";
                     values.add(standing.home.goalsAgainst);
                     break;
                 case 2:
+                    name = "GoalsAgainst Away";
                     values.add(standing.away.goalsAgainst);
                     break;
             }
@@ -128,17 +137,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> goalDifference(Integer modeIndex) {
-        name = "GoalDifference";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "GoalDifference Overall";
                     values.add(standing.goals - standing.goalsAgainst);
                     break;
                 case 1:
+                    name = "GoalDifference Home";
                     values.add(standing.home.goals - standing.home.goalsAgainst);
                     break;
                 case 2:
+                    name = "GoalDifference Away";
                     values.add(standing.away.goals - standing.away.goalsAgainst);
                     break;
             }
@@ -147,17 +158,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> wins(Integer modeIndex) {
-        name = "Wins";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Wins Overall";
                     values.add(standing.wins);
                     break;
                 case 1:
+                    name = "Wins Home";
                     values.add(standing.home.wins);
                     break;
                 case 2:
+                    name = "Wins Away";
                     values.add(standing.away.wins);
                     break;
             }
@@ -166,17 +179,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> draws(Integer modeIndex) {
-        name = "Draws";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Draws Overall";
                     values.add(standing.draws);
                     break;
                 case 1:
+                    name = "Draws Home";
                     values.add(standing.home.draws);
                     break;
                 case 2:
+                    name = "Draws Away";
                     values.add(standing.away.draws);
                     break;
             }
@@ -185,17 +200,19 @@ public class TeamStats extends Stats {
     }
 
     private Collection<Integer> losses(Integer modeIndex) {
-        name = "Losses";
         values.clear();
         for (Standing standing : competition.standings) {
             switch (modeIndex) {
                 case 0:
+                    name = "Losses Overall";
                     values.add(standing.losses);
                     break;
                 case 1:
+                    name = "Losses Home";
                     values.add(standing.home.losses);
                     break;
                 case 2:
+                    name = "Losses Away";
                     values.add(standing.away.losses);
                     break;
             }

@@ -39,12 +39,18 @@ public class ChartInteraction<T> {
                 } else return new Chart2D(pApplet, dataTable, chart2DType);
             case 1:
                 createDataSeries2(stats1, stats2);
+                nameDataSeries = HV.newSeries();
+
+                for (Object3D<T> object3D : objects3D1) {
+                    setNameDataSeries(object3D);
+                }
+
                 createColours();
 
                 if (stats1.name.equals(stats2.name)) {
                     stats2.name = stats2.name + '.';
                 }
-                dataTable = HV.newTable().addSeries(stats1.name, integerDataSeries1).addSeries(stats2.name, integerDataSeries2);
+                dataTable = HV.newTable().addSeries(stats1.name, integerDataSeries1).addSeries(stats2.name, integerDataSeries2).addSeries("name", nameDataSeries);
                 tableView = dataTable.selectRows((input, index) -> input.getSeries(0).getInt(index) > userInterface.sliderX.getValue());
                 tableView = tableView.selectRows((input, index) -> input.getSeries(1).getInt(index) > userInterface.sliderY.getValue());
                 return new Chart2D(pApplet, tableView, chart2DType);
@@ -91,13 +97,7 @@ public class ChartInteraction<T> {
 
         for (Object3D<T> object3D : objects3D1) {
             integerDataSeries1.append(object3D.statsValue);
-            if (object3D.type.getClass() == Team.class) {
-                Team team = (Team) object3D.type;
-                nameDataSeries.append(team.name);
-            } else if (object3D.type.getClass() == Player.class) {
-                Player player = (Player) object3D.type;
-                nameDataSeries.append(player.name);
-            }
+            setNameDataSeries(object3D);
         }
     }
 
@@ -119,6 +119,16 @@ public class ChartInteraction<T> {
         colours = new int[integerDataSeries1.length()];
         for (int i = 0; i < integerDataSeries1.length(); i++) {
             colours[i] = colourTable.findColour(integerDataSeries1.getInt(i));
+        }
+    }
+
+    private void setNameDataSeries(Object3D object3D) {
+        if (object3D.type.getClass() == Team.class) {
+            Team team = (Team) object3D.type;
+            nameDataSeries.append(team.name);
+        } else if (object3D.type.getClass() == Player.class) {
+            Player player = (Player) object3D.type;
+            nameDataSeries.append(player.name);
         }
     }
 }

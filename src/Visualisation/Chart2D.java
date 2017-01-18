@@ -9,6 +9,9 @@ import org.gicentre.utils.colour.ColourTable;
 import org.gicentre.utils.stat.BarChart;
 import org.gicentre.utils.stat.XYChart;
 import processing.core.PApplet;
+import processing.core.PVector;
+
+import java.util.ArrayList;
 
 import static processing.core.PConstants.PIE;
 
@@ -42,6 +45,7 @@ public class Chart2D implements DataListener {
         xychart.showYAxis(true);
         xychart.setXFormat("#");
         xychart.setYFormat("#");
+        xychart.setPointSize(5);
 
         updateData();
     }
@@ -117,10 +121,29 @@ public class Chart2D implements DataListener {
         synchronized (dataTable) {
             switch (type) {
                 case 0:
+
                     barChart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 1:
+
                     xychart.draw(120, 60, width - 220, height - 100);
+                    float[] xData = xychart.getXData();
+                    float[] yData = xychart.getYData();
+
+                    ArrayList<PVector> pVectors = new ArrayList<>();
+                    for (int i = 0; i < xData.length; i++) {
+                        pVectors.add(xychart.getDataToScreen(new PVector(xData[i], yData[i])));
+                    }
+
+                    for (int i = 0; i < pVectors.size(); i++) {
+                        PVector pVector = pVectors.get(i);
+                        if ((pApplet.mouseX >= (int) (pVector.x - 5) && pApplet.mouseX <= (int) (pVector.x + 5)) &&
+                                (pApplet.mouseY >= (int) (pVector.y - 5) && pApplet.mouseY <= (int) (pVector.y + 5))) {
+                            pApplet.text(dataTable.getSeries(2).asStringArray()[i], pApplet.mouseX, pApplet.mouseY);
+                        }
+//                        pApplet.text(dataTable.getSeries(2).asStringArray()[i], pVector.x, pVector.y);
+                    }
+
                     break;
                 case 2:
                     if (dataSeries.length() != 0) {
@@ -139,7 +162,7 @@ public class Chart2D implements DataListener {
                         for (int i = 0; i < colours.length; i++) {
                             pApplet.fill(colours[i]);
                             int y = i * 20;
-                            pApplet.rect(20, 20 + y, 40, 20);
+                            pApplet.text(dataTable.getSeries(0).asStringArray()[i], 25, 37 + y);
                             pApplet.text(dataTable.getSeries(1).asStringArray()[i], 140, 37 + y);
                         }
                     }

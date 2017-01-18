@@ -15,6 +15,7 @@ public class PlayerStats extends Stats {
     public PlayerStats(Team team, Integer playerStatsIndex) {
         super();
         this.team = team;
+        super.name = "";
         switchStats(playerStatsIndex);
     }
 

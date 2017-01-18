@@ -213,32 +213,26 @@ public class Main extends PApplet {
 
         peasyCam.beginHUD();
         translate(width / 2, 20);
-
         if (Event.levelIndex == 0) {
             if (!Event.customList) {
-                fill(0, 102, 153);
-                text(competition.name, 0, 0);
-                fill(255, 0, 0);
-                text(teamStats1.name, 0, 25);
+                drawTeamStatsInfo(competition, teamStats1);
             } else if (Event.customList) {
-                fill(0, 102, 153);
-                text(custom.name, 0, 0);
-                fill(255, 0, 0);
-                text(teamStats3.name, 0, 25);
+                drawTeamStatsInfo(custom, teamStats4);
             }
         } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 0) {
             fill(0, 102, 153);
             text(resultTeam.name, 0, 0);
         } else if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-            fill(0, 102, 153);
-            text(resultTeam.name, 0, 0);
-            fill(255, 0, 0);
-            text(playerStats1.name, 0, 25);
+            if (!Event.customList) {
+                drawPlayerStatsInfo(resultTeam, playerStats1);
+            } else if (Event.customList) {
+                drawPlayerStatsInfo(resultTeam, playerStats4);
+            }
         }
-
         peasyCam.endHUD();
 
         if (!Event.chartView) {
+
             peasyCam.beginHUD();
             translate(width / 2, height / 2);
             if (Event.levelIndex == 2 && Event.teamFieldIndex == 0) {
@@ -325,11 +319,11 @@ public class Main extends PApplet {
                 rotateX(PI / 2);
 
                 if (Event.levelIndex == 0) {
-                    teamChart3D.draw(width, height);
+                    teamChart3D.draw(peasyCam);
                 }
 
                 if (Event.levelIndex == 1 && Event.teamFieldIndex == 1) {
-                    playerChart3D.draw(width, height);
+                    playerChart3D.draw(peasyCam);
                 }
 
 //                translate(-gridSize / 2, -gridSize / 2, 0);
@@ -340,6 +334,20 @@ public class Main extends PApplet {
 
             userInterface.onFrontOfPeasyCam(peasyCam);
         }
+    }
+
+    private void drawTeamStatsInfo(Competition competition, TeamStats teamStats) {
+        fill(0, 102, 153);
+        text(competition.name, 0, 0);
+        fill(255, 0, 0);
+        text(teamStats.name, 0, 25);
+    }
+
+    private void drawPlayerStatsInfo(Team team, PlayerStats playerStats) {
+        fill(0, 102, 153);
+        text(team.name, 0, 0);
+        fill(255, 0, 0);
+        text(playerStats.name, 0, 25);
     }
 
     private void drawTeamLevelScene(ArrayList<Object3D<Team>> teamObjects3D, TeamStats teamStats1, TeamStats teamStats2, TeamStats teamStats3) {
@@ -397,6 +405,7 @@ public class Main extends PApplet {
         playerChart3D = playerChartInteraction.getChart3D(this, userInterface, playerStats1, playerStats2, playerStats3, Event.chartTypeIndex);
         if (Event.chartTypeIndex != 3) playerChart2D.draw(width, height);
     }
+
 
     //region MOVEMENT
     private void move() {

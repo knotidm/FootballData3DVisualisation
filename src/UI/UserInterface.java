@@ -89,7 +89,7 @@ public class UserInterface extends PApplet {
         levelBackButton = controlP5.addButton("LEVEL BACK").setPosition(10, 40).hide();
         levelText = controlP5.addTextlabel("LEVEL TEXT").setText("COMPETITION LEVEL").setColor(255).setPosition(85, 45);
 
-        customListButton = controlP5.addButton("CUSTOM LIST").setPosition(180, 40);
+        customListButton = controlP5.addButton("CUSTOM LIST").setPosition(190, 40);
 
         competition = controlP5.addScrollableList("COMPETITION").setType(ScrollableList.LIST)
                 .setPosition(10, 75)
