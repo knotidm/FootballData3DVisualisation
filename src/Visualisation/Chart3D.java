@@ -1,6 +1,5 @@
 package Visualisation;
 
-import Util.Misc;
 import hivis.data.DataEvent;
 import hivis.data.DataListener;
 import hivis.data.DataSeries;
