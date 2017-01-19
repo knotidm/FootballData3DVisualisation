@@ -45,7 +45,6 @@ public class Chart2D implements DataListener {
         xychart.showYAxis(true);
         xychart.setXFormat("#");
         xychart.setYFormat("#");
-        xychart.setPointSize(5);
 
         updateData();
     }
@@ -125,6 +124,7 @@ public class Chart2D implements DataListener {
                     barChart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 1:
+                    xychart.setPointSize(10);
 
                     xychart.draw(120, 60, width - 220, height - 100);
                     float[] xData = xychart.getXData();
@@ -137,11 +137,11 @@ public class Chart2D implements DataListener {
 
                     for (int i = 0; i < pVectors.size(); i++) {
                         PVector pVector = pVectors.get(i);
-                        if ((pApplet.mouseX >= (int) (pVector.x - 5) && pApplet.mouseX <= (int) (pVector.x + 5)) &&
-                                (pApplet.mouseY >= (int) (pVector.y - 5) && pApplet.mouseY <= (int) (pVector.y + 5))) {
-                            pApplet.text(dataTable.getSeries(2).asStringArray()[i], pApplet.mouseX, pApplet.mouseY);
-                        }
-//                        pApplet.text(dataTable.getSeries(2).asStringArray()[i], pVector.x, pVector.y);
+//                        if ((pApplet.mouseX >= (int) (pVector.x - 5) && pApplet.mouseX <= (int) (pVector.x + 5)) &&
+//                                (pApplet.mouseY >= (int) (pVector.y - 5) && pApplet.mouseY <= (int) (pVector.y + 5))) {
+//                            pApplet.text(dataTable.getSeries(2).asStringArray()[i], pApplet.mouseX, pApplet.mouseY - 40);
+//                        }
+                        pApplet.text(dataTable.getSeries(2).asStringArray()[i], pVector.x, pVector.y - 10);
                     }
 
                     break;
