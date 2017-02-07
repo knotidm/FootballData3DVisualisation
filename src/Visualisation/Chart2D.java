@@ -120,12 +120,10 @@ public class Chart2D implements DataListener {
         synchronized (dataTable) {
             switch (type) {
                 case 0:
-
                     barChart.draw(120, 60, width - 220, height - 100);
                     break;
                 case 1:
                     xychart.setPointSize(10);
-
                     xychart.draw(120, 60, width - 220, height - 100);
                     float[] xData = xychart.getXData();
                     float[] yData = xychart.getYData();
@@ -137,13 +135,15 @@ public class Chart2D implements DataListener {
 
                     for (int i = 0; i < pVectors.size(); i++) {
                         PVector pVector = pVectors.get(i);
-//                        if ((pApplet.mouseX >= (int) (pVector.x - 5) && pApplet.mouseX <= (int) (pVector.x + 5)) &&
-//                                (pApplet.mouseY >= (int) (pVector.y - 5) && pApplet.mouseY <= (int) (pVector.y + 5))) {
-//                            pApplet.text(dataTable.getSeries(2).asStringArray()[i], pApplet.mouseX, pApplet.mouseY - 40);
-//                        }
-                        pApplet.text(dataTable.getSeries(2).asStringArray()[i], pVector.x, pVector.y - 10);
+                        if (!pApplet.mousePressed) {
+                            if ((pApplet.mouseX >= (int) (pVector.x - 5) && pApplet.mouseX <= (int) (pVector.x + 5)) &&
+                                    (pApplet.mouseY >= (int) (pVector.y - 5) && pApplet.mouseY <= (int) (pVector.y + 5))) {
+                                pApplet.text(dataTable.getSeries(2).asStringArray()[i], pApplet.mouseX, pApplet.mouseY - 10);
+                            }
+                        } else if (pApplet.mousePressed) {
+                            pApplet.text(dataTable.getSeries(2).asStringArray()[i], pVector.x, pVector.y - 10);
+                        }
                     }
-
                     break;
                 case 2:
                     if (dataSeries.length() != 0) {
@@ -157,13 +157,12 @@ public class Chart2D implements DataListener {
                             pApplet.arc(width / 2, height / 2, 600, 600, start, stop, PIE);
                             start = stop;
                         }
-
                         pApplet.textSize(14);
                         for (int i = 0; i < colours.length; i++) {
                             pApplet.fill(colours[i]);
                             int y = i * 20;
-                            pApplet.text(dataTable.getSeries(0).asStringArray()[i], 25, 37 + y);
-                            pApplet.text(dataTable.getSeries(1).asStringArray()[i], 140, 37 + y);
+                            pApplet.text(dataTable.getSeries(0).asStringArray()[i], 55, 37 + y);
+                            pApplet.text(dataTable.getSeries(1).asStringArray()[i], 180, 37 + y);
                         }
                     }
                     break;

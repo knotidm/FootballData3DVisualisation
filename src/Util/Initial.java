@@ -39,7 +39,7 @@ public class Initial implements Runnable {
                         addCompetition(new Competition(Get.getJSONObject("http://api.football-data.org/v1/competitions/433")));
                         break;
                 }
-                Thread.sleep(50000);
+                Thread.sleep(60000);
             }
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());

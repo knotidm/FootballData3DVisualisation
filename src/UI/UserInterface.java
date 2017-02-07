@@ -22,20 +22,20 @@ public class UserInterface extends PApplet {
 
     public ScrollableList competition;
 
-    private ScrollableList teamStats1Mode;
-    private ScrollableList teamStats2Mode;
-    private ScrollableList teamStats3Mode;
-    private ScrollableList teamStats1;
-    private ScrollableList teamStats2;
-    private ScrollableList teamStats3;
+    public ScrollableList teamStats1Mode;
+    public ScrollableList teamStats2Mode;
+    public ScrollableList teamStats3Mode;
+    public ScrollableList teamStats1;
+    public ScrollableList teamStats2;
+    public ScrollableList teamStats3;
 
-    private ScrollableList playerStats1;
-    private ScrollableList playerStats2;
-    private ScrollableList playerStats3;
+    public ScrollableList playerStats1;
+    public ScrollableList playerStats2;
+    public ScrollableList playerStats3;
 
     private Button chartViewButton;
 
-    private ScrollableList chartType;
+    public ScrollableList chartType;
 
     public ScrollableList teamField;
 
@@ -99,47 +99,47 @@ public class UserInterface extends PApplet {
         teamStats1Mode = controlP5.addScrollableList("TEAM STATS 1 MODE").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(10, 190)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         teamStats2Mode = controlP5.addScrollableList("TEAM STATS 2 MODE").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(160, 190)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         teamStats3Mode = controlP5.addScrollableList("TEAM STATS 3 MODE").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("OVERALL", "HOME", "AWAY")).setPosition(160, 430)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         teamStats1 = controlP5.addScrollableList("TEAM STATS 1").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(1);
 
         teamStats2 = controlP5.addScrollableList("TEAM STATS 2").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(160, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         teamStats3 = controlP5.addScrollableList("TEAM STATS 3").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("PLAYED GAMES", "POINTS", "GOALS", "GOALS AGAINST", "GOAL DIFFERENCE", "WINS", "DRAWS", "LOSSES", "SQUAD MARKET VALUE", "AVERAGE AGE")).setPosition(160, 525)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         playerStats1 = controlP5.addScrollableList("PLAYER STATS 1").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(10, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         playerStats2 = controlP5.addScrollableList("PLAYER STATS 2").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(160, 285)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         playerStats3 = controlP5.addScrollableList("PLAYER STATS 3").setType(ScrollableList.LIST)
                 .addItems(Arrays.asList("JERSEY NUMBER", "MARKET VALUE", "AGE", "YEARS TO END CONTRACT")).setPosition(160, 525)
                 .setSize(140, 100).setBarHeight(20).setItemHeight(20)
-                .setOpen(false);
+                .setOpen(false).setValue(0);
 
         chartViewButton = controlP5.addButton("VIEW CHART").setPosition(10, 400);
 
@@ -156,19 +156,8 @@ public class UserInterface extends PApplet {
         Event.modeButtonClick(modeButton);
         Event.levelBackButtonClick(levelBackButton);
         Event.customListButtonClick(customListButton);
-        Event.competitionChange(competition);
-        Event.teamStats1ModeChange(teamStats1Mode);
-        Event.teamStats2ModeChange(teamStats2Mode);
-        Event.teamStats3ModeChange(teamStats3Mode);
-        Event.stats1Change(teamStats1);
-        Event.stats2Change(teamStats2);
-        Event.stats3Change(teamStats3);
-        Event.stats1Change(playerStats1);
-        Event.stats2Change(playerStats2);
-        Event.stats3Change(playerStats3);
         Event.chartViewButtonClick(chartViewButton);
-        Event.chartTypeChange(chartType);
-        Event.teamFieldChange(teamField, playerStats1);
+        Event.teamFieldChange(teamField);
     }
 
     @Override

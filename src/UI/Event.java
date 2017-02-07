@@ -10,17 +10,7 @@ public class Event {
     public static Integer modeIndex = 0;
     public static Integer levelIndex = 0;
     public static Boolean customList = false;
-    public static Integer competitionIndex = 0;
-    public static Integer teamStats1ModeIndex = 0;
-    public static Integer teamStats2ModeIndex = 0;
-    public static Integer teamStats3ModeIndex = 0;
-    public static Integer stats1Index = 0;
-    public static Integer stats2Index = 0;
-    public static Integer stats3Index = 0;
     public static Boolean chartView = false;
-    public static Integer chartTypeIndex = 0;
-    public static Integer teamFieldIndex = 0;
-    public static Integer clickedObjects3D = 0;
 
     static void modeButtonClick(Button modeButton) {
         modeButton.onClick(callbackEvent -> {
@@ -32,50 +22,23 @@ public class Event {
     static void levelBackButtonClick(Button levelBackButton) {
         levelBackButton.onClick(callbackEvent -> {
             levelIndex--;
-            clickedObjects3D = 0;
-            stats1Index = 0;
-            stats2Index = 0;
         });
     }
 
     static void customListButtonClick(Button customListButton) {
         customListButton.onClick(callbackEvent -> {
             if (!customList) {
-                customListButton.setLabel("CUSTOM LIST");
+                if (levelIndex == 0) {
+                    customListButton.setLabel("LEAGUE LIST");
+                } else if (levelIndex == 1) {
+                    customListButton.setLabel("PLAYER LIST");
+                }
                 customList = true;
             } else {
-                customListButton.setLabel("LEAGUE LIST");
+                customListButton.setLabel("CUSTOM LIST");
                 customList = false;
             }
         });
-    }
-
-    static void competitionChange(ScrollableList competition) {
-        competition.onChange(callbackEvent -> competitionIndex = (int) competition.getValue());
-    }
-
-    static void teamStats1ModeChange(ScrollableList teamStats1Mode) {
-        teamStats1Mode.onChange(callbackEvent -> teamStats1ModeIndex = (int) teamStats1Mode.getValue());
-    }
-
-    static void teamStats2ModeChange(ScrollableList teamStats2Mode) {
-        teamStats2Mode.onChange(callbackEvent -> teamStats2ModeIndex = (int) teamStats2Mode.getValue());
-    }
-
-    static void teamStats3ModeChange(ScrollableList teamStats3Mode) {
-        teamStats3Mode.onChange(callbackEvent -> teamStats3ModeIndex = (int) teamStats3Mode.getValue());
-    }
-
-    static void stats1Change(ScrollableList stats1) {
-        stats1.onChange(callbackEvent -> stats1Index = (int) stats1.getValue());
-    }
-
-    static void stats2Change(ScrollableList stats2) {
-        stats2.onChange(callbackEvent -> stats2Index = (int) stats2.getValue());
-    }
-
-    static void stats3Change(ScrollableList stats3) {
-        stats3.onChange(callbackEvent -> stats3Index = (int) stats3.getValue());
     }
 
     static void chartViewButtonClick(Button chartViewButton) {
@@ -86,23 +49,13 @@ public class Event {
             } else {
                 chartViewButton.setLabel("VIEW CHART");
                 chartView = false;
-                chartTypeIndex = 0;
             }
         });
     }
 
-    static void chartTypeChange(ScrollableList chartType) {
-        chartType.onChange(callbackEvent -> chartTypeIndex = (int) chartType.getValue());
-    }
-
-    static void teamFieldChange(ScrollableList teamField, ScrollableList playerStats) {
+    static void teamFieldChange(ScrollableList teamField) {
         teamField.onChange(callbackEvent -> {
-            if (teamField.isMouseOver()) {
-                levelIndex = 1;
-                teamFieldIndex = (int) teamField.getValue();
-                stats1Index = (int) playerStats.getValue();
-                stats2Index = (int) playerStats.getValue();
-            }
+            levelIndex = 1;
         });
     }
 
@@ -183,7 +136,7 @@ public class Event {
                 if (chartView) {
                     modeButton.hide();
                     modeText.hide();
-                    switch (chartTypeIndex) {
+                    switch ((int) chartType.getValue()) {
                         case 0:
                             teamStats2Mode.hide();
                             teamStats2.hide();
@@ -261,7 +214,7 @@ public class Event {
                     modeButton.hide();
                     modeText.hide();
 
-                    switch (chartTypeIndex) {
+                    switch ((int) chartType.getValue()) {
                         case 0:
                             playerStats2.hide();
                             playerStats3.hide();
@@ -319,10 +272,10 @@ public class Event {
                 chartViewButton.hide();
                 chartType.hide();
 
-                if (teamFieldIndex == 0) {
+                if ((int) teamField.getValue() == 0) {
                     levelText.setText("FIXTURE LEVEL");
                 }
-                if (teamFieldIndex == 1) {
+                if ((int) teamField.getValue() == 1) {
                     levelText.setText("PLAYER LEVEL");
                 }
 

@@ -78,38 +78,60 @@ public class Get {
 
     public static ArrayList<Object3D<Team>> getTeamObjects3D(PApplet pApplet, Competition competition, TeamStats teamStats, Integer gridSize) {
         ArrayList<Object3D<Team>> teamObjects3D = new ArrayList<>();
+        Float x = 0f;
+        Float y = 0f;
         for (Integer i = 0; i < competition.standings.size(); i++) {
+            if (i % 5 == 0) {
+                x = 0f;
+                y++;
+            }
             teamObjects3D.add(new Object3D<Team>(pApplet,
-                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector((gridSize / 5) * x, (gridSize / 5) * y, new ArrayList<>(teamStats.values).get(i)),
                     i,
                     Get.getTeam(competition, i),
                     new ArrayList<>(teamStats.values).get(i)
             ));
+            x++;
         }
         return teamObjects3D;
     }
 
     public static ArrayList<Object3D<Player>> getPlayerObjects3D(PApplet pApplet, Team team, PlayerStats playerStats, Integer gridSize) {
         ArrayList<Object3D<Player>> playerObjects3D = new ArrayList<>();
+        Float x = 0f;
+        Float y = 0f;
         for (Integer i = 0; i < team.players.size(); i++) {
+            if (i % 5 == 0) {
+                x = 0f;
+                y++;
+            }
             playerObjects3D.add(new Object3D<Player>(pApplet,
-                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector((gridSize / 5) * x, (gridSize / 5) * y, new ArrayList<>(playerStats.values).get(i)),
                     i,
                     new ArrayList<>(team.players).get(i),
                     new ArrayList<>(playerStats.values).get(i)
             ));
+            x++;
         }
         return playerObjects3D;
     }
 
     public static ArrayList<Object3D<Fixture>> getFixtureObjects3D(PApplet pApplet, Team team, Integer gridSize) {
         ArrayList<Object3D<Fixture>> fixtureObjects3D = new ArrayList<>();
+        Float x = 0f;
+        Float y = 0f;
         for (Integer i = 0; i < team.fixtures.size(); i++) {
+            if (i % 5 == 0) {
+                x = 0f;
+                y++;
+            }
             fixtureObjects3D.add(new Object3D<Fixture>(pApplet,
-                    new PVector(pApplet.random(gridSize), pApplet.random(gridSize), pApplet.random(gridSize / 4)),
+                    new PVector((gridSize / 5) * x, (gridSize / 5) * y, i),
                     i,
                     new ArrayList<>(team.fixtures).get(i),
-                    i));
+                    i
+            ));
+            x++;
         }
         return fixtureObjects3D;
     }

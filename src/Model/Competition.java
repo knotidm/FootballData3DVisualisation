@@ -16,7 +16,6 @@ public class Competition {
     public Integer numberOfMatchdays;
     public Integer numberOfGames;
 
-
     public Competition() {
         teams = new ArrayList<>();
         standings = new ArrayList<>();

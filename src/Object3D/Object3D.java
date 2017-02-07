@@ -39,12 +39,12 @@ public class Object3D<T> {
         if (isClicked) pApplet.stroke(150, 250, 0);
 
         pApplet.translate(location.x, location.y, location.z);
-        pApplet.box(size);
+        pApplet.box(size + statsValue);
 
         pApplet.noStroke();
         pApplet.fill(colour);
         pApplet.sphereDetail(1);
-        pApplet.sphere(size);
+        pApplet.sphere(size + statsValue);
 
         pApplet.rotateX(-PConstants.PI / 2);
         pApplet.hint(PConstants.DISABLE_DEPTH_TEST);

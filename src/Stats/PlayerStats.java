@@ -12,15 +12,15 @@ import java.util.GregorianCalendar;
 public class PlayerStats extends Stats {
     public Team team;
 
-    public PlayerStats(Team team, Integer playerStatsIndex) {
+    public PlayerStats(Team team, Integer statsIndex) {
         super();
         this.team = team;
         super.name = "";
-        switchStats(playerStatsIndex);
+        switchStats(statsIndex);
     }
 
-    public void switchStats(Integer playerStatsIndex) {
-        switch (playerStatsIndex) {
+    public void switchStats(Integer statsIndex) {
+        switch (statsIndex) {
             case 0:
                 values = jerseyNumber();
                 break;
